@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "patientsubreq";
+
+}
+<link rel="stylesheet" href="~/css/patientsubreq.css">
+
+
+<partial name="navbar">
+    <div class="container mt-5">
+        <div class="container-fluid d-flex justify-content-around">
+            <h6></h6>
+            <h2><b>I am ...</b></h2>
+            <a asp-controller="Home" asp-action="Index">
+                <button class="back btn btn-outline-info" onclick="location.href='./index.html'">
+                    <span class="h6 p-0 m-0 text-center" style="color: #10bce9;">&#60; Back</span>
+                </button>
+            </a>
+        </div>
+        <div class="row ">
+            <div class="box mt-3 col-12">
+                <a asp-controller="patient" asp-action="patientreq" class="btn btn-lg active" role="button" aria-pressed="true" style="background-color: #e8eaf1;text-align: left;"><b style=" color: #4367d3">PATIENT</b></a>
+            </div>
+            <br>
+            <div class="box mt-3">
+                <a asp-controller="patient" asp-action="familyfriendreq" class="btn btn-lg active" role="button" aria-pressed="true" style="background-color: #e5f3f8;text-align: left;">
+                    <b class=" color: #00adef
+      ">FAMILY/FRIEND</b>
+                </a>
+            </div>
+            <div class="box mt-3">
+                <a asp-controller="patient" asp-action="conciergereq" class="btn btn-lg active" role="button" aria-pressed="true" style="background-color: #e8f0e8;text-align: left;"><b style="color: #228b22;">CONCIERGE</b></a>
+            </div>
+            <div class="box mt-3">
+                <a asp-controller="patient" asp-action="businessinforeq" class="btn btn-lg active" role="button" aria-pressed="true" style="background-color: #f6e6ef;text-align: left;"><b style="color: #d90f81;">BUSINESS PARTNERS</b></a>
+            </div>
+        </div>
+
+    </div>
+    <div class="row d-flex position-absolute bottom-0 w-100">
+        <footer class="position-bottom bottom-0 py-3 " style="background-color: #282828; ">
+            <div class=" justify-content-md-end justify-content-center d-flex ">
+                <a class="text-decoration-none " href=" "><span class="text-white ">Terms of Conditions</span></a>
+                <span class="px-2 " style="color: grey; ">|</span>
+                <a class="text-decoration-none " href=" "><span class="text-white ">Privacy Policy</span></a>
+            </div>
+        </footer>
+    </div>
+    </div>

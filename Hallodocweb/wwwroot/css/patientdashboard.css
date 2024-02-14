@@ -1,0 +1,71 @@
+﻿body {
+    background-color: aliceblue;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.navbr {
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .2);
+}
+
+#logo {
+    width: 9rem;
+}
+
+.light {
+    width: 2rem;
+    float: right;
+}
+
+#logout {
+    color: rgb(0, 183, 255);
+    background-color: white;
+    border: 1px solid rgb(0, 183, 255);
+    border-radius: 5px;
+    width: auto;
+    height: 2.5rem;
+}
+
+    #logout:hover {
+        background-color: rgb(0, 183, 255);
+        color: white;
+    }
+
+#new-req {
+    color: rgb(0, 183, 255);
+    background-color: white;
+    border: 1px solid rgb(0, 183, 255);
+    border-radius: 5px;
+}
+
+    #new-req:hover {
+        background-color: rgb(0, 183, 255);
+        color: white;
+    }
+
+
+/*/ / Hide table rows in mobile view / /*/
+@media (max-width: 768px) {
+    #dataTable tr
+
+{
+    display: none;
+}
+
+}
+
+/*/ / Style for accordion headers / /*/
+.accordion-header {
+    background-color: #f5f5f5;
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/*Style for accordion content*/
+.accordion-content {
+    display: none;
+    padding: 10px;
+}

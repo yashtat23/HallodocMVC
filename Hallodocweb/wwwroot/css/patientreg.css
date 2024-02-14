@@ -1,0 +1,111 @@
+﻿.hallodoc-img {
+    width: 200px;
+    height: 100px;
+}
+
+.conatiner {
+    background-image: url(../img/bg-img.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+@media screen and (max-width: 768px) {
+    .conatiner {
+        background-size: cover;
+    }
+}
+
+.main {
+    margin-top: 40%;
+}
+
+.light {
+    position: fixed;
+    top: 2%;
+    right: 2%;
+    height: 40px;
+    width: 40px;
+}
+
+.back {
+    height: 15px;
+    width: 16px;
+}
+
+.form-floating > .form-control-plaintext ~ label,
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select ~ label {
+    color: #00b8e6;
+}
+
+.form-control:focus {
+    border: 1px solid #00b8e6;
+}
+
+#icon_2 {
+    display: none;
+}
+
+
+@media screen and (max-width:425px) {
+    .hallodoc-img {
+        display: none;
+    }
+
+    .main {
+        margin-top: 90%;
+    }
+}
+
+.dark-mode {
+    background-color: rgb(46, 44, 44);
+    color: white;
+}
+
+.footer {
+    text-align: center;
+    position: sticky;
+}
+
+.input-div {
+    color: blue;
+}
+
+.i1 {
+    float: right;
+    margin-left: 210px;
+}
+
+.i2 {
+    float: right;
+    margin-left: 240px;
+}
+
+.icon {
+    margin-top: -40px;
+    margin-right: 17px;
+}
+
+.user {
+    float: right;
+    margin-top: -40px;
+    margin-right: 10px;
+}
+
+.backToLogin {
+    text-align: center;
+    margin-top: 10px;
+}
+
+a {
+    text-decoration: none;
+    color: #00b8e6;
+}
+
+@media only screen and (max-width: 600px) {
+    .login {
+        margin-right: 30px;
+    }
+}

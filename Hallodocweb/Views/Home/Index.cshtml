@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="d-flex justify-content-center align-items-center">
+
+    <div class="d-flex flex-column main justify-content-between">
+
+        <div class="d-flex flex-column under">
+            <div class="d-flex justify-content-between ps-4">
+                <div>
+                    <img class="hallodoc-img" src="../img/hallodoc.png" alt="">
+                </div>
+
+                <div>
+                    <img onclick="myFunction()" class="light" src="../img/dark.png" alt="">
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 mt-5">
+                <a asp-controller="Patient" asp-action="patientsubreq">
+                    <button class="btn w-100 p-2 border-0 fw-medium" style="background-color: #00b8e6; color: white;"
+                            type="button">
+                        Submit A Request
+                    </button>
+                </a>
+
+                <a asp-controller="Patient" asp-action="patientreg">
+                    <button class="btn w-100 p-2 border-0 fw-medium" style="background-color: #00004d; color: white;"
+                            type="button">
+                        Registered Patients
+                    </button>
+                </a>
+            </div>
+            <div class="footer fw-medium p-2">Terms of Conditions &nbsp;|&nbsp; Privacy Policy</div>
+
+        </div>
+
+    </div>
+
+    <script src="./js/bootstrap.bundle.js"></script>
+    <script src="./js/custom.js"></script>
+</div>
+
+</html>

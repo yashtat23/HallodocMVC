@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Hallodocweb.props" />
+</Project>

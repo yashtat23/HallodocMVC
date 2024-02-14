@@ -1,0 +1,63 @@
+.main {
+    height: 100vh;
+}
+
+.hallodoc-img {
+    width: 200px;
+    height: 100px;
+}
+
+.light {
+    width: 30px;
+    height: 30px;
+}
+
+.under {
+    margin-top: 100%;
+}
+
+.terms {
+    background-color: #f8f8f9;
+    margin-bottom: 5%;
+}
+
+@media screen and (max-width:450px) {
+
+    .main {
+        justify-content: space-between;
+    }
+
+    .hallodoc-img {
+        display: none;
+    }
+
+    .light {
+        position: fixed;
+        right: 5%;
+        top: 2%;
+    }
+
+    .btn {
+        padding: 10px 0px;
+    }
+
+    a {
+        padding: 0px 20px;
+    }
+
+    .footer {
+        font-size: small;
+        margin-top: 80%;
+    }
+}
+
+.dark-mode {
+    background-color: rgb(46, 44, 44);
+    color: white;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 65%;
+    bottom: 10%;
+}
