@@ -56,7 +56,7 @@ namespace DataAccess.CustomModels
 
         public string phoneNo { get; set; }
 
-        public string relation { get; set; }
+        //public string relation { get; set; }
 
         public string symptoms { get; set; }
 

@@ -37,3 +37,6 @@ window.onclick = function (event) {
 $(window).on('load', function () {
     $('#myModal').modal('show');
 })
+
+
+

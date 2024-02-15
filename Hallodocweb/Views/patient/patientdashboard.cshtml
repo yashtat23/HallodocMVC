@@ -23,9 +23,7 @@
 
 <body style="background-color: aliceblue;">
 
-
-
-    <nav class="navbr navbar navbar-expand w-100 ">
+    <nav class="navbr navbar navbar-expand w-100 shadow">
 
         <div class="container-fluid">
             <div class="d-flex align-items-center">
@@ -51,10 +49,11 @@
                     </li>
             </div>
             <li class="nav-item">
+                <a asp-controller="patient" asp-action="patientreg">
                 <button id="logout" class="px-3">
                     <span class=" d-none d-md-block">Logout</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
                 </button>
-
+                </a>
             </li>
             <li class="nav-item">
                 <img onclick="myFunction()" class="light" src="~/img/dark.png" alt="">
@@ -62,13 +61,7 @@
             </ul>
         </div>
         </div>
-
-
-
     </nav>
-
-
-
 
     <hr class="m-0 hr_line d-none d-lg-block">
     <nav class="navbr navbar navbar-expand-lg py-0 pt-2 bg-body" style="z-index: 10;">
@@ -92,6 +85,7 @@
         </div>
     </nav>
 
+   
 
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
@@ -102,7 +96,7 @@
                     <h3 class="mb-4">Medical History</h3>
                     <div class="container-fluid bg-white shadow p-3 rounded-3">
                         <div class="text-end py-3">
-                            <button id="new-req">
+                            <button id="new-req" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 <Span class="px-3 py-2 d-none d-md-block">
                                     Create New
                                     Request
@@ -226,7 +220,40 @@
 
     </div>
 
+    @* modal *@
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#00B7FF ; color:white">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Create a New Request</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Here, I Want to create new request for...
+                        <br />
+                        <div class="d-flex justify-content-center gap-3 my-3">
+                            <button class="px-3 modal-b" id="button1" onclick="passId(event)">
+                                <span class="">Me</span>
+                            </button>
+                            <button class="px-3 modal-b" id="button2" onclick="passId(event)">
+                                <span class="">Some one Else</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mb-3 me-3 gap-3">
 
+                        <button id="continue" class="px-3 modal-b"  onclick="redirect()" >
+                            <span class="">Continue</span>
+                        </button>
+                        <button type="reset" class="px-3 modal-b" data-bs-dismiss="modal">
+                            <span class="">Cancel</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </body>
@@ -235,6 +262,8 @@
 </html>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    $('.modal').css('top', $(window).outerHeight() / 4 - ($(".modal-dialog").outerHeight()) / 2 + 'px');
+
     $(document).ready(function () {
         // Convert table rows to accordions in mobile view
         if ($(window).width() < 768) {
@@ -275,4 +304,23 @@
             });
         }
     });
+
+    let buttonId = null;
+
+    function passId(event) {
+        buttonId = event.target.id;
+        
+    }
+
+    function redirect() {
+        if (buttonId === 'button1') {
+            location.assign('patientsubinformation');
+        }
+        else if (buttonId === 'button2') {
+            location.assign('patientsomeoneelse');
+        } else {
+            // Default redirection if buttonId is not set or unexpected
+        }
+    }
+
 </script>

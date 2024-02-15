@@ -6,6 +6,7 @@ using DataAccess.DataContext;
 using DataAccess.DataModels;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.CustomModels;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace Hallodocweb.Controllers
 {
@@ -15,12 +16,14 @@ namespace Hallodocweb.Controllers
         private readonly IAuth _Auth;
         private readonly ApplicationDbContext _context;
         private readonly IPatientService _patientService;
-        public PatientController(ILogger<PatientController> logger, IAuth auth, ApplicationDbContext context, IPatientService patientService)
+        private readonly INotyfService _notyf;
+        public PatientController(ILogger<PatientController> logger, IAuth auth, ApplicationDbContext context, IPatientService patientService, INotyfService notyf)
         {
             _logger = logger;
             _Auth = auth;
             _context = context;
             _patientService = patientService;
+             _notyf= notyf;
         }
 
         [HttpGet]
@@ -46,9 +49,14 @@ namespace Hallodocweb.Controllers
         {
             if (_Auth.ValidateLogin(loginVm))
             {
+                _notyf.Success("Success Notification");
                 return RedirectToAction("patientdashboard", "patient");
             }
-            return View();
+            else
+            {
+                _notyf.Error("Some Error Message");
+                return View();
+            }
 
         }
 
@@ -146,5 +154,19 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
+        public IActionResult patientsubinformation()
+        {
+            return View();
+        }
+
+        public IActionResult patientsomeoneelse ()
+        {
+            return View();
+        }
+
+        public IActionResult patientcreateacc()
+        {
+            return View();
+        }
     }
 }

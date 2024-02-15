@@ -108,7 +108,7 @@ namespace BusinessLogic.Repository
             request.Lastname = familyReqModel.lastName;
             request.Phonenumber = familyReqModel.phoneNo;
             request.Email = familyReqModel.email;
-            request.Relationname = familyReqModel.relation;
+            //request.Relationname = familyReqModel.relation;
 
             _db.Requests.Add(request);
             _db.SaveChanges();
