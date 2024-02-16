@@ -1,6 +1,9 @@
-﻿@{
+﻿@using DataAccess.CustomModels;
+@{
     ViewData["Title"] = "patientdashboard";
 }
+@model MedicalHistoryList;
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +21,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
             crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
 </head>
 
@@ -43,8 +48,8 @@
                     </li>
                     <li class="nav-item p-2 fw-bolder">
                         <span class="d-flex gap-1">
-                            <span>Yash</span>
-                            <span>Variya</span>
+                            <span>@TempData["username"]</span>
+                            <span>@TempData["id"]</span>
                         </span>
                     </li>
             </div>
@@ -90,7 +95,7 @@
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
              tabindex="0">
-            <div class=" tab-content container-fluid p-5" id="myTabContent">
+            <div class=" tab-content container-fluid p-5" id="medicalHistory">
                 <div class="tab-pane fade show active" id="dashboard-tab-pane" role="tabpanel"
                      aria-labelledby="dashboard-tab" tabindex="0">
                     <h3 class="mb-4">Medical History</h3>
@@ -113,51 +118,25 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td scope="row">Sep 27,2023</td>
-                                        <td>Accepted</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="row">Sep 27,2023</td>
-                                        <td>Processing</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="row">Sep 27,2023</td>
-                                        <td>Closed</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="row">Sep 27,2023</td>
-                                        <td>Clear</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="row">Sep 27,2023</td>
-                                        <td>Processing</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="row">Sep 27,2023</td>
-                                        <td>Closed</td>
-                                        <td>
-                                            <a href="#" class="btn btn-outline-info fw-bold">
-                                                <span><i class="bi bi-file-earmark fw-bold"></i></span>
-                                                <span>Documents</span>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="row">Sep 27,2023</td>
-                                        <td>Clear</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="row">Sep 27,2023</td>
-                                        <td>Processing</td>
-                                        <td></td>
-                                    </tr>
+                                    @foreach (var items in Model.medicalHistoriesList)
+                                    {
+                                        <tr>
+                                            <td>@items.createdDate</td>
+                                            <td>@items.currentStatus</td>
+                                            <td>
+                                                <a href="#" class="btn btn-outline-info fw-bold" onclick="swapDivs()">
+                                                    <span><i class="bi bi-file-earmark fw-bold"></i></span>
+                                                    <span>
+                                                        View Documents (@items.document.Count())
+                                                        @* @foreach (var docs in items.document)
+                                                    {
+                                                    @docs
+                                                    }*@
+                                                    </span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -218,6 +197,136 @@
         </div>
 
 
+    </div>
+    
+    <div class="container-fluid mt-5" style="background-color: aliceblue; display:none" id="viewdocs">
+
+        <div class="container bg-white p-4 ">
+            <div class="d-flex justify-content-between mb-4">
+                <h3>Documents</h3>
+                <button onclick="swapDivs()" id="backview">&lt; Back</button>
+            </div>
+            <div class="row">
+                <p class="col-12">Patient Name</p>
+                <p class="col-12">
+                    <span class="fw-bolder fs-4">Testing Test</span>
+                    <span>(F34R34T5GVR42)</span>
+                </p>
+                <p class="col-12 py-3">Check here for any files that you or the doctors of your subsequents requestors have attached for you to review</p>
+                <div class="col-12 mb-4">
+                    <input class="form-control form-control-lg " id="formFileLg" type="file" multiple>
+                </div>
+                <div class="col-12 d-flex justify-content-between">
+                    <h3>Documents</h3>
+                    <button>Download All</button>
+                </div>
+                <!-- row--- -->
+            </div>
+
+            <!-- ----container    -->
+        </div>
+    </div>
+
+    </div>
+
+    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+        <form method="post" enctype="multipart/form-data" asp-controller="Patient" asp-action="AddPatient" class="container my-5 p-4" id="main-cont">
+
+            <div class="row">
+                <h5 class="col-12">General Information</h5>
+
+                <div class="col-6">
+                    <div class="input-div form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="">
+                        <label for="floatingInput">First Name</label>
+
+                    </div>
+
+                </div>
+                <div class="col-6">
+                    <div class="input-div form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput">Last Name</label>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-div form-floating mb-3">
+                        <input type="date" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput">Date Of Birth</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <h5>Contact Information</h5>
+                </div>
+
+
+
+                <div class="col-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                            <option selected>Type</option>
+                            <option value="1">Mobile</option>
+                            <option value="2">Landline</option>
+                        </select>
+                        <label for="floatingSelect">Works with selects</label>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-div form-floating mb-3">
+                        <input type="tel" name="phone" class="form-control p-3 ps-5" id="floatingInput">
+
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-div form-floating mb-3">
+                        <input name="email" type="email" class="form-control" id="email" placeholder="name@example.com">
+                        <label for="floatingInput">Email</label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <h5>Patient Location</h5>
+                </div>
+                <div class="col-6">
+                    <div class="input-div form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="">
+                        <label for="floatingInput">Street</label>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-div form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="">
+                        <label for="floatingInput">City</label>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-div form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="">
+                        <label for="floatingInput">State</label>
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="input-div form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="">
+                        <label for="floatingInput">Zip Code</label>
+                    </div>
+                </div>
+                <div class="col-1">
+                    <div class="form-floating mb-3">
+                        <button type="button" class="btn btn-outline-primary" style="height:3.4rem ;"> <i class="bi bi-geo-alt"></i> Map</button>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </form>
     </div>
 
     @* modal *@
@@ -309,7 +418,6 @@
 
     function passId(event) {
         buttonId = event.target.id;
-        
     }
 
     function redirect() {
@@ -320,6 +428,27 @@
             location.assign('patientsomeoneelse');
         } else {
             // Default redirection if buttonId is not set or unexpected
+        }
+    }
+
+
+    function viewDocs() {
+        var divToReplace = document.getElementById("medicalHistory");
+        var replacementDiv = document.getElementById("viewdocs");
+        divToReplace.innerHTML = replacementDiv.innerHTML;
+    };
+    function swapDivs() {
+        // Get references to the div elements
+        var div1 = document.getElementById("medicalHistory");
+        var div2 = document.getElementById("viewdocs");
+
+        // Toggle the visibility of the divs
+        if (div1.style.display === "none") {
+            div1.style.display = "block";
+            div2.style.display = "none";
+        } else {
+            div1.style.display = "none";
+            div2.style.display = "block";
         }
     }
 

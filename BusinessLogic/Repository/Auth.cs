@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 
-using BusinessLogic.Interfaces;
 using DataAccess.CustomModel;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.DataContext;
+using DataAccess.CustomModels;
+using DataAccess.DataModels;
 
 
 namespace BusinessLogic.Repository
@@ -22,6 +23,7 @@ namespace BusinessLogic.Repository
         {
             return _context.Aspnetusers.Any(Au => Au.Email == loginVm.Email && Au.Passwordhash == loginVm.Password);
         }
+
     }
 
 

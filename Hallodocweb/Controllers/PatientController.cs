@@ -38,23 +38,17 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
-        public IActionResult patientdashboard()
-        {
-            return View();
-        }
-
-
         [HttpPost]
         public IActionResult patientreg(LoginVm loginVm)
         {
             if (_Auth.ValidateLogin(loginVm))
             {
-                _notyf.Success("Success Notification");
+                _notyf.Success("Successfull Login");
                 return RedirectToAction("patientdashboard", "patient");
             }
             else
             {
-                _notyf.Error("Some Error Message");
+                _notyf.Error("Login Failed!!");
                 return View();
             }
 
@@ -167,6 +161,24 @@ namespace Hallodocweb.Controllers
         public IActionResult patientcreateacc()
         {
             return View();
+        }
+
+        public IActionResult PatientDashboard()
+        {
+
+            var infos = _patientService.GetMedicalHistory("abc@gmail.com");
+            var viewmodel = new MedicalHistoryList { medicalHistoriesList = infos };
+            return View(viewmodel);
+        }
+        public IActionResult SubmitMeInfo()
+        {
+            return View();
+        }
+
+        public IActionResult GetDcoumentsById(int requestId)
+        {
+            var list = _patientService.GetAllDocById(requestId);
+            return PartialView("_DocumentList", list.ToList());
         }
     }
 }

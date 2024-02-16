@@ -10,6 +10,7 @@ using DataAccess.DataContext;
 using DataAccess.CustomModels;
 using System.Collections;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessLogic.Repository
 {
@@ -52,6 +53,7 @@ namespace BusinessLogic.Repository
 
             _db.Requestclients.Add(info);
             _db.SaveChanges();
+
             var user = _db.Aspnetusers.Where(x => x.Id == "2").FirstOrDefault();
 
             User u = new User();
@@ -70,30 +72,34 @@ namespace BusinessLogic.Repository
 
             _db.Users.Add(u);
             _db.SaveChanges();
-            if (patientInfoModel.File != null && patientInfoModel.File.Length > 0)
+
+            foreach (IFormFile file in patientInfoModel.File)
             {
-                //get file name
-                var fileName = Path.GetFileName(patientInfoModel.File.FileName);
-
-                //define path
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedFiles", fileName);
-
-                // Copy the file to the desired location
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                if (file != null && file.Length > 0)
                 {
-                    patientInfoModel.File.CopyTo(stream);
-                }
+                    //get file name
+                    var fileName = Path.GetFileName(file.FileName);
 
-                Requestwisefile requestwisefile = new()
-                {
-                    Filename = fileName,
-                    Requestid = request.Requestid,
-                    Createddate = DateTime.Now
+                    //define path
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedFiles", fileName);
+
+                    // Copy the file to the desired location
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    Requestwisefile requestwisefile = new()
+                    {
+                        Filename = fileName,
+                        Requestid = request.Requestid,
+                        Createddate = DateTime.Now
+                    };
+
+                    _db.Requestwisefiles.Add(requestwisefile);
+                    _db.SaveChanges();
                 };
-
-                _db.Requestwisefiles.Add(requestwisefile);
-                _db.SaveChanges();
-            };
+            }
 
         }
 
@@ -252,6 +258,7 @@ namespace BusinessLogic.Repository
 
         }
 
+
         public Task<bool> IsEmailExists(string email)
         {
             bool isExist = _db.Aspnetusers.Any(x => x.Email == email);
@@ -261,6 +268,51 @@ namespace BusinessLogic.Repository
                 }
                 return Task.FromResult(false);
         }
-       
+
+        public List<PatientDashboard> GetPatientInfos()
+        {
+            var user = _db.Requests.Where(x => x.Email == "abc@gmail.com").FirstOrDefault();
+            return new List<PatientDashboard>
+            {
+                new PatientDashboard {createdDate = user.Createddate , currentStatus = "Test",
+                    document = "test"
+                },
+                new PatientDashboard {createdDate = DateTime.Now, currentStatus = "pending", document="myname.jpg"},
+                new PatientDashboard {createdDate = DateTime.Now, currentStatus = "active", document="hername.jpg"}
+            };
+        }
+
+
+
+        public List<MedicalHistory> GetMedicalHistory(string email)
+        {
+
+
+            var medicalhistory = (from request in _db.Requests
+                                  join requestfile in _db.Requestwisefiles
+                                  on request.Requestid equals requestfile.Requestid
+                                  where request.Email == email && request.Email != null
+                                  group requestfile by request.Requestid into groupedFiles
+                                  select new MedicalHistory
+                                  {
+                                      redId = groupedFiles.Select(x => x.Request.Requestid).FirstOrDefault(),
+                                      createdDate = groupedFiles.Select(x => x.Request.Createddate).FirstOrDefault(),
+                                      currentStatus = groupedFiles.Select(x => x.Request.Status).FirstOrDefault().ToString(),
+                                      document = groupedFiles.Select(x => x.Filename.ToString()).ToList()
+                                  }).ToList();
+
+
+            return medicalhistory;
+        }
+
+        public IQueryable<Requestwisefile>? GetAllDocById(int requestId)
+        {
+            var data = from request in _db.Requestwisefiles
+                       where request.Requestid == requestId
+                       select request;
+            return data;
+        }
+
+
     }
 }

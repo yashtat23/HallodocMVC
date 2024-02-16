@@ -1,4 +1,5 @@
 ﻿using DataAccess.CustomModels;
+using DataAccess.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,8 @@ namespace BusinessLogic.Interfaces
 
         void AddBusinessReq(BusinessReqModel businessReqModel);
         Task<bool> IsEmailExists(string email);
+
+        List<MedicalHistory> GetMedicalHistory(string email);
+        IQueryable<Requestwisefile>? GetAllDocById(int requestId);
     }
 }

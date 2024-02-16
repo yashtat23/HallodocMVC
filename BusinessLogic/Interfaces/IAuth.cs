@@ -16,7 +16,6 @@ namespace BusinessLogic.Interfaces
         public interface IAuthentication
         {
             public bool ValidateLogin(LoginVm loginVm);
-
         }
     }
 }

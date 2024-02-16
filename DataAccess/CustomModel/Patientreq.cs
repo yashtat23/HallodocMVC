@@ -41,8 +41,8 @@ namespace DataAccess.CustomModels
         //[Required(ErrorMessage = "Room Number is required")]
         public string roomno { get; set; }
 
-        public IFormFile File { get; set; }
-        
+        public List<IFormFile>? File { get; set; }
+
     }
 
     public class FamilyReqModel
@@ -123,55 +123,76 @@ namespace DataAccess.CustomModels
 
     public class BusinessReqModel
     {
-        [Required(ErrorMessage = "First Name is required")]
         public string firstName { get; set; }
 
-        [Required(ErrorMessage = "Last Name is required")]
+       
         public string lastName { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
         public string email { get; set; }
 
-        [Required(ErrorMessage = "Phone Number is required")]
+       
         public string phoneNo { get; set; }
 
-        [Required(ErrorMessage = "Business Name is required")]
+        
         public string businessName { get; set; }
 
-        [Required(ErrorMessage = "Case Number is required")]
+       
         public string caseNo { get; set; }
 
         public string symptoms { get; set; }
 
-        [Required(ErrorMessage = "First Name is required")]
+        
         public string patientFirstName { get; set; }
 
-        [Required(ErrorMessage = "Last Name is required")]
+        
         public string patientLastName { get; set; }
 
-        [Required(ErrorMessage = "Date of Birth is required")]
+       
         public DateTime patientDob { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
+        
         public string patientEmail { get; set; }
 
-        [Required(ErrorMessage = "Phone Number is required")]
+        
         public string patientPhoneNo { get; set; }
 
-        [Required(ErrorMessage = "Street is required")]
+       
         public string street { get; set; }
 
-        [Required(ErrorMessage = "City is required")]
+       
         public string city { get; set; }
 
-        [Required(ErrorMessage = "State is required")]
         public string state { get; set; }
-
-        [Required(ErrorMessage = "Zipcode is required")]
+     
         public string zipCode { get; set; }
 
-        [Required(ErrorMessage = "Room Number is required")]
         public int roomNo { get; set; }
 
+    }
+
+     //Dashboard
+
+    public class PatientDashboard
+    {
+        public DateTime createdDate { get; set; }
+        public string currentStatus { get; set; }
+        public string document { get; set; }
+    }
+
+    public class PatientDashboardInfo
+    {
+        public List<PatientDashboard> patientDashboardItems { get; set; }
+    }
+
+    public class MedicalHistory
+    {
+        public int redId { get; set; }
+        public DateTime createdDate { get; set; }
+        public string currentStatus { get; set; }
+        public List<string> document { get; set; }
+    }
+    public class MedicalHistoryList
+    {
+        public List<MedicalHistory> medicalHistoriesList { get; set; }
     }
 }

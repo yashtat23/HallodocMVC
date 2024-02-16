@@ -1,6 +1,7 @@
 ﻿@using DataAccess.CustomModels;
 @model PatientInfoModel;
 
+
 @{
     ViewData["Title"] = "patientreq";
 }
@@ -42,7 +43,11 @@
     <form method="post" enctype="multipart/form-data">
         <h4>Patient Information</h4>
         <div class="row mt-3">
-
+            <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
+                <input type="text" asp-for="symptoms" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <label for="floatingInput" class="email">First Name</label>
+                @* <span class="text-danger" asp-validation-for="firstname"></span> *@
+            </div>
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
                 <input type="text" asp-for="firstname" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput" class="email">First Name</label>
@@ -95,14 +100,14 @@
                 </div>
                 <div class="form-floating col-lg-6 col-md-12 col-sm-12">
                     <input type="text" asp-for="city" class="form-control" id="floatingPassword" placeholder="Password">
-                    <label for="floatingPassword" class="email">City</label
+                    <label for="floatingPassword" class="email">City</label>
                 </div>
-            </div>
+            
                 <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
                 <input type="text" asp-for="state" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput" class="email">State</label>
                 @* <span class="text-danger" asp-validation-for="firstname"></span> *@
-         </div>
+                </div>
                 <div class="form-floating col-lg-6 col-md-12 col-sm-12">
                     <input asp-for="zipcode" type="text" class="form-control" id="floatingPassword" placeholder="Password">
                     <label for="floatingPassword" class="email">Zip Code</label>
@@ -113,12 +118,12 @@
                     <label for="floatingInput" class="email">Room # / Suite (optional)</label>
                 @* <span class="text-danger" asp-validation-for="dateofbirth"></span> *@
                 </div>
-
+        </div>
             <h4>(Optional)Upload Photo Or Document</h4>
             <div class="form mb-3 col-lg-12 col-md-12 col-sm-12 d-flex">
 
                 <div class="input-group mb-3">
-                    <input asp-for="File" type="file" class="form-control" id="inputGroupFile02">
+                    <input asp-for="File" type="file" class="form-control" id="fromFilelg" multiple>
                     <label class="input-group-text bg-primary text-white" for="inputGroupFile02">
                         <i class="bi bi-cloud-arrow-up m-1"></i>&nbsp;Upload
                     </label>

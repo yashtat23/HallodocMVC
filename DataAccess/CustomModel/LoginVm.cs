@@ -11,4 +11,6 @@ namespace DataAccess.CustomModel
         [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
     }
+
+    
 }
