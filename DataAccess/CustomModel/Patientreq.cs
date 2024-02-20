@@ -10,36 +10,42 @@ namespace DataAccess.CustomModels
 {
     public class PatientInfoModel
     {
-        public string symptoms { get; set; }
+        public string? symptoms { get; set; }
 
-        //[Required(ErrorMessage = "First Name is required")]
-        public string firstname { get; set; }
+        [Required(ErrorMessage = "First Name is required")]
+        public string? firstname { get; set; }
 
-        public string lastname { get; set; }
+        public string? lastname { get; set; }
 
         //[Required(ErrorMessage = "Date of Birth is required")]
-        public DateTime Dateofbirth { get; set; }
+        public DateTime? Dateofbirth { get; set; }
 
-        //[Required(ErrorMessage = "Email is required")]
+        [Required(ErrorMessage = "Email is required")]
         public string email { get; set; }
 
         //[Required(ErrorMessage = "Phone Number is required")]
-        public string phonenumber { get; set; }
+        public string? phonenumber { get; set; }
 
         //[Required(ErrorMessage = "Street is required")]
-        public string street { get; set; }
+        public string? street { get; set; }
 
         //[Required(ErrorMessage = "City is required")]
-        public string city { get; set; }
+        public string? city { get; set; }
 
         //[Required(ErrorMessage = "State is required")]
-        public string state { get; set; }
+        public string? state { get; set; }
 
         //[Required(ErrorMessage = "Zipcode is required")]
-        public string zipcode { get; set; }
+        public string? zipcode { get; set; }
 
         //[Required(ErrorMessage = "Room Number is required")]
-        public string roomno { get; set; }
+        public string? roomno { get; set; }
+
+        [StringLength(15, MinimumLength = 4, ErrorMessage = "Password Have 4 to 15 Char")]
+        public string? password { get; set; }
+
+        [Compare("password", ErrorMessage = "Password Missmatch")]
+        public string? confirmPassword { get; set; }
 
         public List<IFormFile>? File { get; set; }
 
@@ -47,130 +53,135 @@ namespace DataAccess.CustomModels
 
     public class FamilyReqModel
     {
-        
-        public string firstName { get; set; }
 
-        public string lastName { get; set; }
+        public string? firstName { get; set; }
 
-        public string email { get; set; }
+        public string? lastName { get; set; }
 
-        public string phoneNo { get; set; }
+        public string? email { get; set; }
+
+        public string? phoneNo { get; set; }
 
         //public string relation { get; set; }
 
-        public string symptoms { get; set; }
+        public string? symptoms { get; set; }
 
+        [Required(ErrorMessage = "Firstname is required")]
         public string patientFirstName { get; set; }
 
-        public string patientLastName { get; set; }
+        public string? patientLastName { get; set; }
 
-        public DateTime patientDob { get; set; }
-       
-        public string patientEmail { get; set; }
-        
-        public string patientPhoneNo { get; set; }
-        
-        public string street { get; set; }
-     
-        public string city { get; set; }
-      
-        public string state { get; set; }
+        public DateTime? patientDob { get; set; }
 
-        public string zipCode { get; set; }
+        public string? patientEmail { get; set; }
+
+        public string? patientPhoneNo { get; set; }
+
+        public string? street { get; set; }
+
+        public string? city { get; set; }
+
+        public string? state { get; set; }
+
+        public string? zipCode { get; set; }
 
         //[Required(ErrorMessage = "Room Number is required")]
-        public int roomNo { get; set; }
+        public int? roomNo { get; set; }
 
-        public IFormFile File { get; set;}
+        public IFormFile? File { get; set; }
 
     }
 
     public class ConciergeReqModel
     {
-        
+        [Required(ErrorMessage = "Please Enter Your First Name")]
+
         public string firstName { get; set; }
-        
-        public string lastName { get; set; }
-        
-        public string email { get; set; }
-        
-        public string phoneNo { get; set; }
-       
-        public string hotelName { get; set; }
 
-        public string symptoms { get; set; }
-        
-        public string patientFirstName { get; set; }
-     
-        public string patientLastName { get; set; }
-       
-        public DateTime patientDob { get; set; }
-    
+        public string? lastName { get; set; }
+
+        public string? email { get; set; }
+
+        public string? phoneNo { get; set; }
+
+        public string? hotelName { get; set; }
+
+        public string? symptoms { get; set; }
+
+        public string? patientFirstName { get; set; }
+
+        public string? patientLastName { get; set; }
+
+        public DateTime? patientDob { get; set; }
+
+        [Required(ErrorMessage = "Please Enter Your Email")]
         public string patientEmail { get; set; }
-        
-        public string patientPhoneNo { get; set; }
-        
-        public string street { get; set; }
 
-        public string city { get; set; }
-       
-        public string state { get; set; }
+        public string? patientPhoneNo { get; set; }
 
-        public string zipCode { get; set; }
+        public string? street { get; set; }
 
-        public int roomNo { get; set; }
+        public string? city { get; set; }
+
+        public string? state { get; set; }
+
+        public string? zipCode { get; set; }
+
+        public int? roomNo { get; set; }
     }
 
     public class BusinessReqModel
     {
+        [Required(ErrorMessage = "Please Enter Your Email")]
         public string firstName { get; set; }
 
-       
-        public string lastName { get; set; }
 
-        public string email { get; set; }
+        public string? lastName { get; set; }
 
-       
-        public string phoneNo { get; set; }
 
-        
-        public string businessName { get; set; }
+        public string? email { get; set; }
 
-       
-        public string caseNo { get; set; }
 
-        public string symptoms { get; set; }
+        public string? phoneNo { get; set; }
 
-        
-        public string patientFirstName { get; set; }
 
-        
-        public string patientLastName { get; set; }
+        public string? businessName { get; set; }
 
-       
-        public DateTime patientDob { get; set; }
 
-        
-        public string patientEmail { get; set; }
+        public string? caseNo { get; set; }
 
-        
-        public string patientPhoneNo { get; set; }
+        public string? symptoms { get; set; }
 
-       
-        public string street { get; set; }
 
-       
-        public string city { get; set; }
+        public string? patientFirstName { get; set; }
 
-        public string state { get; set; }
-     
-        public string zipCode { get; set; }
 
-        public int roomNo { get; set; }
+        public string? patientLastName { get; set; }
+
+
+        public DateTime? patientDob { get; set; }
+
+
+        public string? patientEmail { get; set; }
+
+
+        public string? patientPhoneNo { get; set; }
+
+
+        public string? street { get; set; }
+
+
+        public string? city { get; set; }
+
+        public string? state { get; set; }
+
+        public string? zipCode { get; set; }
+
+        public int? roomNo { get; set; }
 
     }
 
-     //Dashboard
+    //Dashboard
 
     public class PatientDashboard
     {
@@ -186,13 +197,26 @@ namespace DataAccess.CustomModels
 
     public class MedicalHistory
     {
-        public int redId { get; set; }
+        public int reqId { get; set; }
         public DateTime createdDate { get; set; }
         public string currentStatus { get; set; }
         public List<string> document { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime DateOfBirth { get; set; }
+
+        public string PhoneNo { get; set; }
+
+        public string Street { get; set; }
+
+        public string City { get; set; }
+
+        public string ZipCode { get; set; }
+
+        public string State { get; set; }
+
+        public string Email { get; set; }
+
     }
-    public class MedicalHistoryList
-    {
-        public List<MedicalHistory> medicalHistoriesList { get; set; }
-    }
+  
 }

@@ -7,6 +7,14 @@ using DataAccess.DataModels;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.CustomModels;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Identity;
+using static BusinessLogic.Interfaces.IAuth;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mail;
+using System.Web;
+//using System.Web.Mvc;
 
 namespace Hallodocweb.Controllers
 {
@@ -17,13 +25,16 @@ namespace Hallodocweb.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IPatientService _patientService;
         private readonly INotyfService _notyf;
-        public PatientController(ILogger<PatientController> logger, IAuth auth, ApplicationDbContext context, IPatientService patientService, INotyfService notyf)
+        private readonly IHttpContextAccessor _htttpcontext;
+
+        public PatientController(ILogger<PatientController> logger, IAuth auth, ApplicationDbContext context, IPatientService patientService, INotyfService notyf,IHttpContextAccessor httpContext)
         {
             _logger = logger;
             _Auth = auth;
             _context = context;
             _patientService = patientService;
-             _notyf= notyf;
+             _notyf= notyf;     
+            _htttpcontext = httpContext;
         }
 
         [HttpGet]
@@ -39,19 +50,30 @@ namespace Hallodocweb.Controllers
         }
 
         [HttpPost]
-        public IActionResult patientreg(LoginVm loginVm)
+
+        public IActionResult patientreg(LoginVm loginvm)
         {
-            if (_Auth.ValidateLogin(loginVm))
+            if (ModelState.IsValid)
             {
-                _notyf.Success("Successfull Login");
-                return RedirectToAction("patientdashboard", "patient");
+                //User user = _context.Users.FirstOrDefault(u => u.Aspnetuserid == item.Id);
+                var user = _Auth.Login(loginvm);
+                if (user != null)
+                {
+                    _notyf.Success("Logged In Successfully !!");
+                    return RedirectToAction("patientdashboard", user);
+                }
+                else
+                {
+                    _notyf.Error("Invalid Credentials");
+
+                    //ViewBag.AuthFailedMessage = "Please enter valid username and password !!";
+                }
+                return View();
             }
             else
             {
-                _notyf.Error("Login Failed!!");
-                return View();
+                return View(loginvm);
             }
-
         }
 
         public IActionResult patientreg()
@@ -59,10 +81,10 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
 
         public IActionResult patientreq()
         {
@@ -143,9 +165,17 @@ namespace Hallodocweb.Controllers
             }
         }
 
+
         public IActionResult patientfpassword()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult patientfpassword(forgotpassword forgotpassword)
+        {
+            _Auth.Resetreq(forgotpassword);
+            return RedirectToAction("patientreg", "patient");
         }
 
         public IActionResult patientsubinformation()
@@ -163,22 +193,24 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
-        public IActionResult PatientDashboard()
+        public IActionResult patientdashboard(User user)
         {
-
-            var infos = _patientService.GetMedicalHistory("abc@gmail.com");
-            var viewmodel = new MedicalHistoryList { medicalHistoriesList = infos };
-            return View(viewmodel);
+            var infos = _patientService.GetMedicalHistory(user);
+            //var viewmodel = new MedicalHistory { medicalHistoriesList = infos };
+            return View(infos);
         }
         public IActionResult SubmitMeInfo()
         {
             return View();
         }
 
+        [HttpGet]
         public IActionResult GetDcoumentsById(int requestId)
         {
             var list = _patientService.GetAllDocById(requestId);
             return PartialView("_DocumentList", list.ToList());
         }
+
+        //sending email
     }
 }

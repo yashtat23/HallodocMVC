@@ -11,11 +11,12 @@ namespace BusinessLogic.Interfaces
 {
     public interface IAuth
     {
-        bool ValidateLogin(LoginVm loginVm);
+        public User Login(LoginVm loginVm);
+        
+        //sending email
+        public Task EmailSendar(string email, string subject, string message);
 
-        public interface IAuthentication
-        {
-            public bool ValidateLogin(LoginVm loginVm);
-        }
+        public void Resetreq(forgotpassword forgotpassword);
+
     }
 }

@@ -269,33 +269,31 @@ namespace BusinessLogic.Repository
                 return Task.FromResult(false);
         }
 
-        public List<PatientDashboard> GetPatientInfos()
+
+
+
+
+        public List<MedicalHistory> GetMedicalHistory(User user)
         {
-            var user = _db.Requests.Where(x => x.Email == "abc@gmail.com").FirstOrDefault();
-            return new List<PatientDashboard>
-            {
-                new PatientDashboard {createdDate = user.Createddate , currentStatus = "Test",
-                    document = "test"
-                },
-                new PatientDashboard {createdDate = DateTime.Now, currentStatus = "pending", document="myname.jpg"},
-                new PatientDashboard {createdDate = DateTime.Now, currentStatus = "active", document="hername.jpg"}
-            };
-        }
 
-
-
-        public List<MedicalHistory> GetMedicalHistory(string email)
-        {
 
 
             var medicalhistory = (from request in _db.Requests
                                   join requestfile in _db.Requestwisefiles
                                   on request.Requestid equals requestfile.Requestid
-                                  where request.Email == email && request.Email != null
+                                  where request.Email == user.Email && request.Email != null
                                   group requestfile by request.Requestid into groupedFiles
                                   select new MedicalHistory
                                   {
-                                      redId = groupedFiles.Select(x => x.Request.Requestid).FirstOrDefault(),
+                                      FirstName = user.Firstname,
+                                      LastName = user.Lastname,
+                                      PhoneNo = user.Mobile,
+                                      Email = user.Email,
+                                      Street = user.Street,
+                                      City = user.City,
+                                      State = user.State,
+                                      ZipCode = user.Zipcode,
+                                      reqId = groupedFiles.Select(x => x.Request.Requestid).FirstOrDefault(),
                                       createdDate = groupedFiles.Select(x => x.Request.Createddate).FirstOrDefault(),
                                       currentStatus = groupedFiles.Select(x => x.Request.Status).FirstOrDefault().ToString(),
                                       document = groupedFiles.Select(x => x.Filename.ToString()).ToList()

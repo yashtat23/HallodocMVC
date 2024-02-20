@@ -1,9 +1,10 @@
 ﻿@using DataAccess.CustomModels;
 @{
-    ViewData["Title"] = "patientdashboard";
+    ViewData["Title"] = "patient_dashboard";
 }
-@model MedicalHistoryList;
 
+
+@model IList<MedicalHistory>;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -48,16 +49,16 @@
                     </li>
                     <li class="nav-item p-2 fw-bolder">
                         <span class="d-flex gap-1">
-                            <span>@TempData["username"]</span>
-                            <span>@TempData["id"]</span>
+                            <span> @Model.FirstOrDefault().FirstName</span>
+                            <span> @Model.FirstOrDefault().LastName</span>
                         </span>
                     </li>
             </div>
             <li class="nav-item">
                 <a asp-controller="patient" asp-action="patientreg">
-                <button id="logout" class="px-3">
-                    <span class=" d-none d-md-block">Logout</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
-                </button>
+                    <button id="logout" class="px-3">
+                        <span class=" d-none d-md-block">Logout</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
+                    </button>
                 </a>
             </li>
             <li class="nav-item">
@@ -90,7 +91,7 @@
         </div>
     </nav>
 
-   
+
 
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
@@ -115,27 +116,28 @@
                                         <th scope="col">Created Date<i class="bi bi-arrow-down-short"></i></th>
                                         <th scope="col">Current Status</th>
                                         <th scope="col">Document</th>
+                                        <th scope="col">reqid</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var items in Model.medicalHistoriesList)
+                                    @if(Model != null)
                                     {
-                                        <tr>
-                                            <td>@items.createdDate</td>
-                                            <td>@items.currentStatus</td>
-                                            <td>
-                                                <a href="#" class="btn btn-outline-info fw-bold" onclick="swapDivs()">
-                                                    <span><i class="bi bi-file-earmark fw-bold"></i></span>
-                                                    <span>
-                                                        View Documents (@items.document.Count())
-                                                        @* @foreach (var docs in items.document)
-                                                    {
-                                                    @docs
-                                                    }*@
-                                                    </span>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        @foreach (var items in Model)
+                                        {
+                                            <tr>
+                                                <td>@items.createdDate</td>
+                                                <td>@items.currentStatus</td>
+                                                <td>
+                                                    <a href="#" class="btn btn-outline-info fw-bold" onclick="showDocuments(@items.reqId)">
+                                                        <span><i class="bi bi-file-earmark fw-bold"></i></span>
+                                                        <span>
+                                                            View Documents (@items.document.Count())
+                                                        </span>
+                                                    </a>
+                                                </td>
+                                                <td>@items.reqId</td>
+                                            </tr>
+                                        }
                                     }
                                 </tbody>
                             </table>
@@ -198,7 +200,7 @@
 
 
     </div>
-    
+
     <div class="container-fluid mt-5" style="background-color: aliceblue; display:none" id="viewdocs">
 
         <div class="container bg-white p-4 ">
@@ -209,16 +211,17 @@
             <div class="row">
                 <p class="col-12">Patient Name</p>
                 <p class="col-12">
-                    <span class="fw-bolder fs-4">Testing Test</span>
+                    <span class="fw-bolder fs-4">@Model.FirstOrDefault().FirstName @Model.FirstOrDefault().LastName </span>
                     <span>(F34R34T5GVR42)</span>
                 </p>
                 <p class="col-12 py-3">Check here for any files that you or the doctors of your subsequents requestors have attached for you to review</p>
-                <div class="col-12 mb-4">
-                    <input class="form-control form-control-lg " id="formFileLg" type="file" multiple>
+                <div class="input-group ">
+                    <input type="file" class="form-control" id="formFileLg" type="file" multiple>
+                    <label class="input-group-text bg-primary text-white" for="inputGroupFile02"><i class="bi bi-cloud-arrow-up m-1"></i>&nbsp;Upload</label>
+                    <br />
                 </div>
-                <div class="col-12 d-flex justify-content-between">
-                    <h3>Documents</h3>
-                    <button>Download All</button>
+                <div class="row" id="docList">
+
                 </div>
                 <!-- row--- -->
             </div>
@@ -237,22 +240,22 @@
 
                 <div class="col-6">
                     <div class="input-div form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="">
-                        <label for="floatingInput">First Name</label>
+                        <input asp-for="@Model.FirstOrDefault().FirstName" type="text" class="form-control" id="floatingInput" placeholder="">
+                        <label for="floatingInput"></label>
 
                     </div>
 
                 </div>
                 <div class="col-6">
                     <div class="input-div form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">Last Name</label>
+                        <input asp-for="@Model.FirstOrDefault().LastName" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput"></label>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="input-div form-floating mb-3">
                         <input type="date" class="form-control" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">Date Of Birth</label>
+                        <label for="floatingInput"></label>
                     </div>
                 </div>
             </div>
@@ -276,13 +279,13 @@
                 </div>
                 <div class="col-4">
                     <div class="input-div form-floating mb-3">
-                        <input type="tel" name="phone" class="form-control p-3 ps-5" id="floatingInput">
+                        <input asp-for="@Model.FirstOrDefault().PhoneNo" type="tel" name="phone" class="form-control p-3 ps-5" id="floatingInput">
 
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="input-div form-floating mb-3">
-                        <input name="email" type="email" class="form-control" id="email" placeholder="name@example.com">
+                        <input asp-for="@Model.FirstOrDefault().Email" name="email" type="email" class="form-control" id="email" placeholder="name@example.com">
                         <label for="floatingInput">Email</label>
                     </div>
                 </div>
@@ -294,25 +297,25 @@
                 </div>
                 <div class="col-6">
                     <div class="input-div form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="">
+                        <input asp-for="@Model.FirstOrDefault().Street" type="text" class="form-control" id="floatingInput" placeholder="">
                         <label for="floatingInput">Street</label>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="input-div form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="">
+                        <input asp-for="@Model.FirstOrDefault().City" type="text" class="form-control" id="floatingInput" placeholder="">
                         <label for="floatingInput">City</label>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="input-div form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="">
+                        <input asp-for="@Model.FirstOrDefault().State" type="text" class="form-control" id="floatingInput" placeholder="">
                         <label for="floatingInput">State</label>
                     </div>
                 </div>
                 <div class="col-5">
                     <div class="input-div form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="">
+                        <input asp-for="@Model.FirstOrDefault().ZipCode" type="text" class="form-control" id="floatingInput" placeholder="">
                         <label for="floatingInput">Zip Code</label>
                     </div>
                 </div>
@@ -352,7 +355,7 @@
                     </div>
                     <div class="d-flex justify-content-end mb-3 me-3 gap-3">
 
-                        <button id="continue" class="px-3 modal-b"  onclick="redirect()" >
+                        <button id="continue" class="px-3 modal-b" onclick="redirect()">
                             <span class="">Continue</span>
                         </button>
                         <button type="reset" class="px-3 modal-b" data-bs-dismiss="modal">
@@ -371,8 +374,6 @@
 </html>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $('.modal').css('top', $(window).outerHeight() / 4 - ($(".modal-dialog").outerHeight()) / 2 + 'px');
-
     $(document).ready(function () {
         // Convert table rows to accordions in mobile view
         if ($(window).width() < 768) {
@@ -414,10 +415,23 @@
         }
     });
 
+
+    const phoneInputField = document.querySelectorAll("input[type='tel']");
+    for (var i = 0; i < phoneInputField.length; i++) {
+        const phoneInput = window.intlTelInput(phoneInputField[i], {
+            utilsScript:
+                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+    }
+
+    //----------model-----------
+    $('.modal').css('top', $(window).outerHeight() / 4 - ($(".modal-dialog").outerHeight()) / 2 + 'px');
+
     let buttonId = null;
 
     function passId(event) {
         buttonId = event.target.id;
+
     }
 
     function redirect() {
@@ -430,7 +444,6 @@
             // Default redirection if buttonId is not set or unexpected
         }
     }
-
 
     function viewDocs() {
         var divToReplace = document.getElementById("medicalHistory");
@@ -450,6 +463,25 @@
             div1.style.display = "none";
             div2.style.display = "block";
         }
+    }
+
+    function showDocuments(requestId) {
+
+        $.ajax({
+            url: '/Patient/GetDcoumentsById',
+            type: 'GET',
+            data: { requestId: requestId },
+            success: function (response) {
+
+                $("#docList").html(response);
+            }
+        });
+
+
+
+
+        document.getElementById('medicalHistory').style.display = 'none';
+        document.getElementById('viewdocs').style.display = 'block';
     }
 
 </script>

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static DataAccess.CustomModels.MedicalHistory;
 
 namespace BusinessLogic.Interfaces
 {
@@ -19,7 +20,9 @@ namespace BusinessLogic.Interfaces
         void AddBusinessReq(BusinessReqModel businessReqModel);
         Task<bool> IsEmailExists(string email);
 
-        List<MedicalHistory> GetMedicalHistory(string email);
+        List<MedicalHistory> GetMedicalHistory(User user);
         IQueryable<Requestwisefile>? GetAllDocById(int requestId);
+
+        //public userProfile getUserData(int userid);
     }
 }
