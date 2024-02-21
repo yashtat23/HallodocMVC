@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Web;
+using Microsoft.AspNetCore.Authorization;
 //using System.Web.Mvc;
 
 namespace Hallodocweb.Controllers
@@ -27,13 +28,13 @@ namespace Hallodocweb.Controllers
         private readonly INotyfService _notyf;
         private readonly IHttpContextAccessor _htttpcontext;
 
-        public PatientController(ILogger<PatientController> logger, IAuth auth, ApplicationDbContext context, IPatientService patientService, INotyfService notyf,IHttpContextAccessor httpContext)
+        public PatientController(ILogger<PatientController> logger, IAuth auth, ApplicationDbContext context, IPatientService patientService, INotyfService notyf, IHttpContextAccessor httpContext)
         {
             _logger = logger;
             _Auth = auth;
             _context = context;
             _patientService = patientService;
-             _notyf= notyf;     
+            _notyf = notyf;
             _htttpcontext = httpContext;
         }
 
@@ -77,6 +78,12 @@ namespace Hallodocweb.Controllers
         }
 
         public IActionResult patientreg()
+        {
+            return View();
+        }
+
+
+        public IActionResult patientresetpass()
         {
             return View();
         }
@@ -171,11 +178,27 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
-        [HttpPost]
+        //[HttpPost]
+        //public IActionResult patientfpassword(forgotpassword forgotpassword)
+        //{
+        //    _Auth.Resetreq(forgotpassword);
+        //    return RedirectToAction("patientreg", "patient");
+        //}
+
+        [AllowAnonymous, HttpPost]
         public IActionResult patientfpassword(forgotpassword forgotpassword)
         {
-            _Auth.Resetreq(forgotpassword);
-            return RedirectToAction("patientreg", "patient");
+            string? user = _context.Aspnetusers.Where(e => e.Email == forgotpassword.forgotemail).Select(x => x.Id).FirstOrDefault();
+            if (user != null)
+            {
+                _Auth.Resetreq(forgotpassword);
+                return RedirectToAction("patientreg", "patient");
+            }
+            else
+            {
+                return View();
+            }
+
         }
 
         public IActionResult patientsubinformation()
@@ -183,7 +206,7 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
-        public IActionResult patientsomeoneelse ()
+        public IActionResult patientsomeoneelse()
         {
             return View();
         }
@@ -193,12 +216,15 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
-        public IActionResult patientdashboard(User user)
+        public IActionResult patientdashboard(User user, Requestwisefile requestwisefile)
         {
+            if()
             var infos = _patientService.GetMedicalHistory(user);
             //var viewmodel = new MedicalHistory { medicalHistoriesList = infos };
             return View(infos);
         }
+
+
         public IActionResult SubmitMeInfo()
         {
             return View();

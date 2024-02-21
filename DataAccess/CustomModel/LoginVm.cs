@@ -17,8 +17,5 @@ namespace DataAccess.CustomModel
     {
         [Required(ErrorMessage = "This Is required")]
         public string forgotemail { get; set; }
-
-        public string forgotpass { get; set; }
-        public string forgotconpass { get; set; }
     }
     }

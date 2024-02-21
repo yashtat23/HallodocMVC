@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "AdminLogin";
+}
+
+
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>login</title>
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="~/css/AdminLogin.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+
+    <body>
+    <div class="contianer-fluid overflow-hidden">
+            <div class="row">
+
+                <!-- left -->
+                <div class="col-lg-6 col-md-6 col-sm-12 left">
+                    <img class="w-100 vh-100" src="~/img/background.jpg" alt="banner">
+                </div>
+
+                <!-- right  -->
+                <div class="col-lg-6 col-md-6 col-sm-12 right">
+                    <img onclick="myFunction()" class="light" id="d-mode" src="~/img/dark.png" alt="dark">
+                    <div class="login">
+                    <img class="hallodoc-img" src="~/img/hallodoc.png" alt="logo">
+                        <h2>Login To Your Account</h2>
+                        <div class="  input-div form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Username">
+                            <label for="floatingInput">Username</label>
+                        </div>
+                        <div class=" input-div form-floating">
+                            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                            <label for="floatingPassword">Password</label>
+                        </div>
+
+                        <a asp-controller="Admin" asp-action="AdminDashboard" class="w-100 d-flex justify-content-center">
+                        <button>Log In</button>
+                        </a>
+                       
+
+                        <a href="patientforgotpassword.html" id="forget-pass">Forget Password?</a>
+                    </div>
+                    <footer>Terms of Conditions | Privacy Policy</footer>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="./js/bootstrap.bundle.js"></script>
+        <script src="./js/custom.js"></script>
+
+    </body>
+    </html>

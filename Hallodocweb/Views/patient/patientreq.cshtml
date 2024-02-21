@@ -1,7 +1,6 @@
 ﻿@using DataAccess.CustomModels;
 @model PatientInfoModel;
 
-
 @{
     ViewData["Title"] = "patientreq";
 }
@@ -80,15 +79,19 @@
             </div>
         </div>
 
-        <div class="row mt-2" id="passwordSection" style="display:none">
-            <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
-                <input type="password" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput" class="email">Create Password</label>
+        <div class="row mt-2">
+        <div id="passwordSection" class="col-6 " style="display:none">
+            <div class="input-div form-floating mb-3">
+                    <input asp-for="password" type="password" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <label for="floatingInput" class="hidenpass">Password</label>
             </div>
-            <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
-                <input type="password" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput" class="email">Confirm Password</label>
+        </div>
+        <div id="confirmPasswordSec" class="col-6" style="display:none">
+            <div class="input-div form-floating mb-3">
+                    <input asp-for="confirmPassword" type="password" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <label for="floatingInput" class="hidenpass">Confirm Password</label>
             </div>
+        </div>
         </div>
 
         <h4>Patient Location</h4>

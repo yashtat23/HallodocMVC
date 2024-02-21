@@ -25,6 +25,8 @@ namespace BusinessLogic.Repository
 
         public void AddPatientInfo(PatientInfoModel patientInfoModel)
         {
+            Guid id = Guid.NewGuid();
+
             Request request = new Request();
             request.Requesttypeid = 2;
             request.Status = 1;
@@ -54,7 +56,28 @@ namespace BusinessLogic.Repository
             _db.Requestclients.Add(info);
             _db.SaveChanges();
 
-            var user = _db.Aspnetusers.Where(x => x.Id == "2").FirstOrDefault();
+            var user = _db.Aspnetusers.Where(x => x.Email == patientInfoModel.email).FirstOrDefault();
+
+
+            Aspnetuser obj = _db.Aspnetusers.FirstOrDefault(rq => rq.Email == patientInfoModel.email);
+            if (obj == null)
+            {
+                if (patientInfoModel.password == patientInfoModel.confirmPassword)
+                {
+                    Aspnetuser aspnetuser = new()
+                    {
+                        Id = id.ToString(),
+                        Username = patientInfoModel.firstname,
+                        Passwordhash = patientInfoModel.password,
+                        Createddate = DateTime.Now,
+                        Email = patientInfoModel.email,
+                    };
+                    _db.Aspnetusers.Add(aspnetuser);
+                    _db.SaveChanges();
+                    user = aspnetuser;
+                }
+
+            }
 
             User u = new User();
             u.Aspnetuserid = user.Id;
@@ -102,6 +125,16 @@ namespace BusinessLogic.Repository
             }
 
         }
+
+        //public Task<bool> IsEmailExists(string email)
+        //{
+        //    bool isExist = _db.Aspnetusers.Any(x => x.Email == email);
+        //    if (isExist)
+        //    {
+        //        return Task.FromResult(true);
+        //    }
+        //    return Task.FromResult(false);
+        //}
 
         public void AddFamilyReq(FamilyReqModel familyReqModel)
         {
@@ -262,11 +295,11 @@ namespace BusinessLogic.Repository
         public Task<bool> IsEmailExists(string email)
         {
             bool isExist = _db.Aspnetusers.Any(x => x.Email == email);
-                if (isExist)
-               {
-                    return Task.FromResult(true);
-                }
-                return Task.FromResult(false);
+            if (isExist)
+            {
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
         }
 
 
@@ -275,9 +308,6 @@ namespace BusinessLogic.Repository
 
         public List<MedicalHistory> GetMedicalHistory(User user)
         {
-
-
-
             var medicalhistory = (from request in _db.Requests
                                   join requestfile in _db.Requestwisefiles
                                   on request.Requestid equals requestfile.Requestid
@@ -288,6 +318,7 @@ namespace BusinessLogic.Repository
                                       FirstName = user.Firstname,
                                       LastName = user.Lastname,
                                       PhoneNo = user.Mobile,
+                                      dateOfBirth = user.Strmonth + user.Intdate + user.Intyear,
                                       Email = user.Email,
                                       Street = user.Street,
                                       City = user.City,

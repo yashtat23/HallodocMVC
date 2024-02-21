@@ -45,6 +45,18 @@
       "PackagePath": "staticwebassets\\UploadedFiles\\Fig9. Admin dashboard in Unpaid state.jpg"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Patient site_forget password_mobile.png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\Patient site_forget password_mobile.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Patient site_login_mobile.png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\Patient site_login_mobile.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Patient site_mobile.png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\Patient site_mobile.png"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Report.txt",
       "PackagePath": "staticwebassets\\UploadedFiles\\Report.txt"
     },
@@ -59,6 +71,14 @@
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\light.png",
       "PackagePath": "staticwebassets\\UploadedFiles\\light.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\css\\AdminDashboard.css",
+      "PackagePath": "staticwebassets\\css\\AdminDashboard.css"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\css\\AdminLogin.css",
+      "PackagePath": "staticwebassets\\css\\AdminLogin.css"
     },
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\css\\patientdashboard.css",

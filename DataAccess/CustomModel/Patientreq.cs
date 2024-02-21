@@ -41,10 +41,8 @@ namespace DataAccess.CustomModels
         //[Required(ErrorMessage = "Room Number is required")]
         public string? roomno { get; set; }
 
-        [StringLength(15, MinimumLength = 4, ErrorMessage = "Password Have 4 to 15 Char")]
         public string? password { get; set; }
 
-        [Compare("password", ErrorMessage = "Password Missmatch")]
         public string? confirmPassword { get; set; }
 
         public List<IFormFile>? File { get; set; }
@@ -216,6 +214,8 @@ namespace DataAccess.CustomModels
         public string State { get; set; }
 
         public string Email { get; set; }
+
+        public string dateOfBirth { get; set; }
 
     }
   

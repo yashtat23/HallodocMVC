@@ -9,6 +9,7 @@ using DataAccess.CustomModels;
 using DataAccess.DataModels;
 using System.Net.Mail;
 using System.Net;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BusinessLogic.Repository
 {
@@ -48,28 +49,53 @@ namespace BusinessLogic.Repository
         public Task EmailSendar(string email, string subject, string message)
         {
 
-            var mail = "yashvariya2024@gmail.com";
-            var password = "mwgg tnsg guhv xcrv";
+            string mail = "tatva.dotnet.yashvariya@outlook.com";
+            string password = "Itzvariya@23";
 
-            var client = new SmtpClient("smtp.gmail.com", 587)
+            SmtpClient client = new SmtpClient("smtp.office365.com")
             {
+                Port = 587,
+                Credentials = new NetworkCredential(mail, password),
                 EnableSsl = true,
-                Credentials = new NetworkCredential(mail, password)
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false
             };
-            return client.SendMailAsync(new MailMessage(from: mail, to: email, subject, message));
+
+            MailMessage mailMessage = new()
+            {
+                From = new MailAddress(mail, "HalloDoc"),
+                Subject = "Set up your Account",
+                IsBodyHtml = true,
+
+                Body = message
+            };
+
+            //"<h1>Hello , world!!</h1>" +
+            //    "<a href=\"https://localhost:7130/Patient/patientresetpasss" + "" + "\" >reset pass link</a>"
+
+
+            mailMessage.To.Add(email);
+
+            client.Send(mailMessage);
+
+            //var client = new SmtpClient("smtp.office365.com", 587)
+            //{
+            //    EnableSsl = true,
+            //    DeliveryMethod = SmtpDeliveryMethod.Network,
+            //    UseDefaultCredentials = false,
+            //    Credentials = new NetworkCredential(mail, password)
+            //};
+            //return client.SendMailAsync(new MailMessage(from: mail, to: email, subject:"hi", message));
+            return Task.CompletedTask;
         }
-        
+
         public void Resetreq(forgotpassword forgotpassword)
         {
             var receiver = forgotpassword.forgotemail;
             var subject = "Create Account";
-            var message = "Tap on link for Create Account: https://localhost:44311/Patient/patientreg";
-
+            var message = "Tap on link for Create Account: https://localhost:7130/Patient/patientresetpasss";
             EmailSendar(receiver, subject, message);
         }
-
-
-
     }
 
 

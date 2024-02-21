@@ -18,6 +18,7 @@ namespace BusinessLogic.Interfaces
         void AddConciergeReq(ConciergeReqModel conciergeReqModel);
 
         void AddBusinessReq(BusinessReqModel businessReqModel);
+
         Task<bool> IsEmailExists(string email);
 
         List<MedicalHistory> GetMedicalHistory(User user);

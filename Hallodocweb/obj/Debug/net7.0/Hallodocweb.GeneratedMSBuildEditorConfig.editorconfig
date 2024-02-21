@@ -16,6 +16,14 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = D:\Final Project\Hallodoc\Hallodocweb
 build_property._RazorSourceGeneratorDebug = 
 
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/AdminDashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQWRtaW5EYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/AdminLogin.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQWRtaW5Mb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -54,6 +62,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Final Project/Hallodoc/Hallodocweb/Views/patient/patientreq.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NccGF0aWVudFxwYXRpZW50cmVxLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Final Project/Hallodoc/Hallodocweb/Views/patient/patientresetpass.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccGF0aWVudFxwYXRpZW50cmVzZXRwYXNzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Final Project/Hallodoc/Hallodocweb/Views/patient/patientsomeoneelse.cshtml]
