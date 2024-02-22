@@ -218,7 +218,6 @@ namespace Hallodocweb.Controllers
 
         public IActionResult patientdashboard(User user, Requestwisefile requestwisefile)
         {
-            if()
             var infos = _patientService.GetMedicalHistory(user);
             //var viewmodel = new MedicalHistory { medicalHistoriesList = infos };
             return View(infos);

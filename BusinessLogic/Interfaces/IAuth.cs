@@ -20,6 +20,6 @@ namespace BusinessLogic.Interfaces
         //Task<bool> IsEmailExists(string email);
 
         //Task<bool> IsEmailExists(string email);
-
+        
     }
 }

@@ -45,7 +45,7 @@ namespace BusinessLogic.Repository
             }
             return user;
         }
-
+    
         public Task EmailSendar(string email, string subject, string message)
         {
 
