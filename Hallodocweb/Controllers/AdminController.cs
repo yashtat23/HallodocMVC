@@ -20,7 +20,6 @@ namespace Hallodocweb.Controllers
             _notyf = notyf;
         }
 
-       
         public IActionResult AdminLogin(AdminLogin adminLogin)
         {
             if (ModelState.IsValid)
@@ -47,6 +46,11 @@ namespace Hallodocweb.Controllers
         {
             var list = _adminService.GetRequestsByStatus();
             return View(list);
+        }
+
+        public IActionResult ViewCase()
+        {
+            return View();
         }
 
         public IActionResult Index()

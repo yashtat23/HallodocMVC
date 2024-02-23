@@ -61,12 +61,20 @@
       "PackagePath": "staticwebassets\\UploadedFiles\\Report.txt"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\back (3).png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\back (3).png"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\back.png",
       "PackagePath": "staticwebassets\\UploadedFiles\\back.png"
     },
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\background.jpg",
       "PackagePath": "staticwebassets\\UploadedFiles\\background.jpg"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\email.png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\email.png"
     },
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\light.png",
@@ -119,6 +127,10 @@
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\img\\dark.png",
       "PackagePath": "staticwebassets\\img\\dark.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\img\\email.png",
+      "PackagePath": "staticwebassets\\img\\email.png"
     },
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\img\\error.png",

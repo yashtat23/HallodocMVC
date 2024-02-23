@@ -11,32 +11,36 @@ using DataAccess.CustomModels;
 using System.Collections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessLogic.Repository
 {
     public class PatientService : IPatientService
     {
         private readonly ApplicationDbContext _db;
+        private readonly IHttpContextAccessor _http;
 
-        public PatientService(ApplicationDbContext db)
+        public PatientService(ApplicationDbContext db,IHttpContextAccessor http)
         {
             _db = db;
+            _http = http;
         }
 
         public void AddPatientInfo(PatientInfoModel patientInfoModel)
         {
             Guid id = Guid.NewGuid();
 
-            Request request = new Request();
-            request.Requesttypeid = 2;
-            request.Status = 1;
-            request.Createddate = DateTime.Now;
-            request.Isurgentemailsent = new BitArray(1);
-            request.Firstname = patientInfoModel.firstname;
-            request.Lastname = patientInfoModel.lastname;
-            request.Phonenumber = patientInfoModel.phonenumber;
-            request.Email = patientInfoModel.email;
-
+            Request request = new()
+            {
+                Requesttypeid = 2,
+                Status = 1,
+                Createddate = DateTime.Now,
+                Isurgentemailsent = new BitArray(1),
+                Firstname = patientInfoModel.firstname,
+                Lastname = patientInfoModel.lastname,
+                Phonenumber = patientInfoModel.phonenumber,
+                Email = patientInfoModel.email
+            };
             _db.Requests.Add(request);
             _db.SaveChanges();
 
@@ -334,7 +338,7 @@ namespace BusinessLogic.Repository
             return medicalhistory;
         }
 
-        public IQueryable<Requestwisefile>? GetAllDocById(int requestId)
+        public IQueryable<Requestwisefile>? GetAllDocById(Int64 requestId)
         {
             var data = from request in _db.Requestwisefiles
                        where request.Requestid == requestId
@@ -342,6 +346,42 @@ namespace BusinessLogic.Repository
             return data;
         }
 
+        public void AddFile(IFormFile file)
+        {
+            var fileName = Path.GetFileName(file.FileName);
+
+            //define path
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedFiles", fileName);
+
+            // Copy the file to the desired location
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+            var u = _http.HttpContext.Session.GetInt32("rid");
+            Requestwisefile requestwisefile = new()
+            {
+                Filename = fileName,
+                Requestid = (int)u,
+                Createddate = DateTime.Now
+            };
+            _db.Requestwisefiles.Add(requestwisefile);
+            _db.SaveChanges();
+        }
+
+        public List<PatientInfoModel> subinformation(PatientInfoModel patientInfoModel)
+        {
+            var y = (from Request in _db.Requests
+                     where patientInfoModel != null
+                     select new PatientInfoModel
+                     {
+                         firstname = patientInfoModel.firstname,
+                         lastname = patientInfoModel.lastname,
+                         email = patientInfoModel.email,
+                         phonenumber = patientInfoModel.phonenumber,
+                     }).ToList();
+        return y;
+        }
 
     }
 }

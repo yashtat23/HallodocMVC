@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccess.DataModels;
 using Microsoft.AspNetCore.Http;
 
 namespace DataAccess.CustomModels
@@ -217,6 +218,14 @@ namespace DataAccess.CustomModels
 
         public string dateOfBirth { get; set; }
 
+        public User? User { get; set; }
+
+        public List<MedicalHistory> MedicalHistoryList { get; set; }
+    }
+
+    public class subinformation
+    {
+        public List<PatientInfoModel> subinformationModels { get; set; }
     }
   
 }

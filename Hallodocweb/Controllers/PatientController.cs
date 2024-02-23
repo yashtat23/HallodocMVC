@@ -201,9 +201,15 @@ namespace Hallodocweb.Controllers
 
         }
 
-        public IActionResult patientsubinformation()
+        //public IActionResult patientsubinformation()
+        //{
+        //    return View();
+        //}
+
+        public IActionResult patientsubinformation(PatientInfoModel patientInfo)
         {
-            return View();
+            var y = _patientService.subinformation(patientInfo);
+            return View(y);
         }
 
         public IActionResult patientsomeoneelse()
@@ -217,25 +223,51 @@ namespace Hallodocweb.Controllers
         }
 
         public IActionResult patientdashboard(User user, Requestwisefile requestwisefile)
-        {
+        {            
             var infos = _patientService.GetMedicalHistory(user);
-            //var viewmodel = new MedicalHistory { medicalHistoriesList = infos };
-            return View(infos);
+            var viewmodel = new MedicalHistory { MedicalHistoryList = infos , User = user };
+            return View(viewmodel);
         }
-
 
         public IActionResult SubmitMeInfo()
         {
             return View();
         }
 
-        [HttpGet]
-        public IActionResult GetDcoumentsById(int requestId)
+        public IActionResult _DocumentList(int rid)
         {
-            var list = _patientService.GetAllDocById(requestId);
-            return PartialView("_DocumentList", list.ToList());
+            HttpContext.Session.SetInt32("rid", rid);
+            var y = _patientService.GetAllDocById(rid);
+            return View(y);
         }
 
+        [HttpPost]
+        public IActionResult _DocumentList()
+        {
+            var rid = HttpContext.Session.GetInt32("rid");
+            var file = HttpContext.Request.Form.Files.FirstOrDefault();
+            _patientService.AddFile(file);
+            return RedirectToAction("_DocumentList",rid);
+        }
+
+        //[HttpGet]
+        //public IActionResult GetDcoumentsById(int requestId)
+        //{
+        //    var list = _patientService.GetAllDocById(requestId);
+        //    return PartialView("_DocumentList", list.ToList());
+        //}
+
         //sending email
+     
+        public IActionResult UpdateProfile(User user)
+        {
+            user.Firstname = user.Firstname;
+            return View(user);
+        }
+
+        public IActionResult _Profile()
+        {
+            return View();
+        }
     }
 }

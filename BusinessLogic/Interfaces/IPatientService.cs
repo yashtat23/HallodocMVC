@@ -1,5 +1,6 @@
 ﻿using DataAccess.CustomModels;
 using DataAccess.DataModels;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,11 @@ namespace BusinessLogic.Interfaces
         Task<bool> IsEmailExists(string email);
 
         List<MedicalHistory> GetMedicalHistory(User user);
-        IQueryable<Requestwisefile>? GetAllDocById(int requestId);
+        IQueryable<Requestwisefile>? GetAllDocById(Int64 requestId);
+
+        void AddFile(IFormFile file);
+
+        List<PatientInfoModel> subinformation(PatientInfoModel patientInfoModel);
 
         //public userProfile getUserData(int userid);
     }

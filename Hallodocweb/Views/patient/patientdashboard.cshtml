@@ -3,8 +3,7 @@
     ViewData["Title"] = "patient_dashboard";
 }
 
-
-@model IList<MedicalHistory>;
+@model MedicalHistory;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -49,8 +48,8 @@
                     </li>
                     <li class="nav-item p-2 fw-bolder">
                         <span class="d-flex gap-1">
-                            <span> @Model.FirstOrDefault().FirstName</span>
-                            <span> @Model.FirstOrDefault().LastName</span>
+                            <span> @Model?.User?.Firstname</span>
+                            <span> @Model?.User?.Firstname</span>
                         </span>
                     </li>
             </div>
@@ -81,10 +80,12 @@
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
-                                type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
-                            Profile
-                        </button>
+                        <a>
+                            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
+                                    type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
+                                Profile
+                            </button>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -120,15 +121,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if(Model != null)
+                                    @if (Model != null)
                                     {
-                                        @foreach (var items in Model)
+                                        @foreach (var items in Model.MedicalHistoryList)
                                         {
                                             <tr>
                                                 <td>@items.createdDate</td>
                                                 <td>@items.currentStatus</td>
                                                 <td>
-                                                    <a href="#" class="btn btn-outline-info fw-bold" onclick="showDocuments(@items.reqId)">
+                                                    <a class="btn btn-outline-info fw-bold" asp-controller="patient" asp-action="_DocumentList" asp-route-rid=@items.reqId>
                                                         <span><i class="bi bi-file-earmark fw-bold"></i></span>
                                                         <span>
                                                             View Documents (@items.document.Count())
@@ -149,7 +150,6 @@
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#flush-collapseOne" aria-expanded="false"
                                             aria-controls="flush-collapseOne">
-                                        
                                     </button>
                                 </h2>
                                 <div id="flush-collapseOne" class="accordion-collapse collapse"
@@ -211,17 +211,16 @@
             <div class="row">
                 <p class="col-12">Patient Name</p>
                 <p class="col-12">
-                    <span class="fw-bolder fs-4">@Model.FirstOrDefault().FirstName @Model.FirstOrDefault().LastName </span>
+                    <span class="fw-bolder fs-4">Yash Variya </span>
                     <span>(F34R34T5GVR42)</span>
                 </p>
                 <p class="col-12 py-3">Check here for any files that you or the doctors of your subsequents requestors have attached for you to review</p>
-                <form class="input-group " method="post">
-                    <input type="file" class="form-control" id="formFileLg" type="file" multiple>
-                    <button type="submit" class="input-group-text bg-primary text-white" for="inputGroupFile02"><i class="bi bi-cloud-arrow-up m-1"></i>&nbsp;Upload</button>
-                    <br />
-                </form>
+                @* <form class="input-group " method="post" enctype="multipart/form-data">
+                <input type="file" class="form-control" id="formFileLg" type="file" multiple>
+                <button type="submit" class="input-group-text bg-primary text-white" for="inputGroupFile02"><i class="bi bi-cloud-arrow-up m-1"></i>&nbsp;Upload</button>
+                <br />
+                </form> *@
                 <div class="row" id="docList">
-
                 </div>
                 <!-- row--- -->
             </div>
@@ -230,107 +229,110 @@
         </div>
     </div>
 
-    </div>
+    @await Html.PartialAsync("_Profile", Model?.User)
+    @* @* Profile *@
+   @*  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+        <form method="post" enctype="multipart/form-data" asp-controller="Patient" asp-action="UpdateProfile" class="container my-5 p-4" id="main-cont">
+            <fieldset id="fset" disabled>
+                <div class="row">
+                    <h5 class="col-12">General Information</h5>
 
-    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-        <form method="post" enctype="multipart/form-data" asp-controller="Patient" asp-action="AddPatient" class="container my-5 p-4" id="main-cont">
+                    <div class="col-6">
+                        <div class="input-div form-floating mb-3">
+                            <input asp-for="@Model.FirstOrDefault().FirstName" type="text" class="form-control" id="floatingInput" placeholder="">
+                            <label for="floatingInput"></label>
 
-            <div class="row">
-                <h5 class="col-12">General Information</h5>
+                        </div>
 
-                <div class="col-6">
-                    <div class="input-div form-floating mb-3">
-                        <input asp-for="@Model.FirstOrDefault().FirstName" type="text" class="form-control" id="floatingInput" placeholder="">
-                        <label for="floatingInput"></label>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-div form-floating mb-3">
+                            <input asp-for="@Model.FirstOrDefault().LastName" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                            <label for="floatingInput"></label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-div form-floating mb-3">
+                            <input type="date" class="form-control" id="floatingInput" placeholder="name@example.com">
+                            <label for="floatingInput"></label>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="col-12">
+                        <h5>Contact Information</h5>
+                    </div>
+
+                    <div class="col-2">
+                        <div class="form-floating">
+                            <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                <option selected>Type</option>
+                                <option value="1">Mobile</option>
+                                <option value="2">Landline</option>
+                            </select>
+                            <label for="floatingSelect">Works with selects</label>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="input-div form-floating mb-3">
+                            <input asp-for="@Model.FirstOrDefault().PhoneNo" type="tel" name="phone" class="form-control p-3 ps-5" id="floatingInput">
+
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-div form-floating mb-3">
+                            <input asp-for="@Model.FirstOrDefault().Email" name="email" type="email" class="form-control" id="email" placeholder="name@example.com">
+                            <label for="floatingInput">Email</label>
+                        </div>
                     </div>
 
                 </div>
-                <div class="col-6">
-                    <div class="input-div form-floating mb-3">
-                        <input asp-for="@Model.FirstOrDefault().LastName" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput"></label>
+                <div class="row">
+                    <div class="col-12">
+                        <h5>Patient Location</h5>
                     </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-div form-floating mb-3">
-                        <input type="date" class="form-control" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput"></label>
+                    <div class="col-6">
+                        <div class="input-div form-floating mb-3">
+                            <input asp-for="@Model.FirstOrDefault().Street" type="text" class="form-control" id="floatingInput" placeholder="">
+                            <label for="floatingInput">Street</label>
+                        </div>
                     </div>
+                    <div class="col-6">
+                        <div class="input-div form-floating mb-3">
+                            <input asp-for="@Model.FirstOrDefault().City" type="text" class="form-control" id="floatingInput" placeholder="">
+                            <label for="floatingInput">City</label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-div form-floating mb-3">
+                            <input asp-for="@Model.FirstOrDefault().State" type="text" class="form-control" id="floatingInput" placeholder="">
+                            <label for="floatingInput">State</label>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="input-div form-floating mb-3">
+                            <input asp-for="@Model.FirstOrDefault().ZipCode" type="text" class="form-control" id="floatingInput" placeholder="">
+                            <label for="floatingInput">Zip Code</label>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="form-floating mb-3">
+                            <button type="button" class="btn btn-outline-primary" style="height:3.4rem ;"> <i class="bi bi-geo-alt"></i> Map</button>
+                        </div>
+                    </div>
+
                 </div>
+            </fieldset>
+            <div class="col-lg-12 d-flex justify-content-end  my-3  ">
+                <button type="button" class="btn btn-info text-light px-4  me-4" id="edit">Edit</button>
             </div>
-
-            <div class="row">
-                <div class="col-12">
-                    <h5>Contact Information</h5>
-                </div>
-
-
-
-                <div class="col-2">
-                    <div class="form-floating">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                            <option selected>Type</option>
-                            <option value="1">Mobile</option>
-                            <option value="2">Landline</option>
-                        </select>
-                        <label for="floatingSelect">Works with selects</label>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="input-div form-floating mb-3">
-                        <input asp-for="@Model.FirstOrDefault().PhoneNo" type="tel" name="phone" class="form-control p-3 ps-5" id="floatingInput">
-
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-div form-floating mb-3">
-                        <input asp-for="@Model.FirstOrDefault().Email" name="email" type="email" class="form-control" id="email" placeholder="name@example.com">
-                        <label for="floatingInput">Email</label>
-                    </div>
-                </div>
-
+            <div class="d-flex savebutton justify-content-end  gap-3 me-2 mb-5">
+                <button class="btn btn-info text-white d-none" type="submit" id="save">Save</button>
+                <button class="btn border-info text-info d-none" type="button" id="cancel">Cancel</button>
             </div>
-            <div class="row">
-                <div class="col-12">
-                    <h5>Patient Location</h5>
-                </div>
-                <div class="col-6">
-                    <div class="input-div form-floating mb-3">
-                        <input asp-for="@Model.FirstOrDefault().Street" type="text" class="form-control" id="floatingInput" placeholder="">
-                        <label for="floatingInput">Street</label>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-div form-floating mb-3">
-                        <input asp-for="@Model.FirstOrDefault().City" type="text" class="form-control" id="floatingInput" placeholder="">
-                        <label for="floatingInput">City</label>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-div form-floating mb-3">
-                        <input asp-for="@Model.FirstOrDefault().State" type="text" class="form-control" id="floatingInput" placeholder="">
-                        <label for="floatingInput">State</label>
-                    </div>
-                </div>
-                <div class="col-5">
-                    <div class="input-div form-floating mb-3">
-                        <input asp-for="@Model.FirstOrDefault().ZipCode" type="text" class="form-control" id="floatingInput" placeholder="">
-                        <label for="floatingInput">Zip Code</label>
-                    </div>
-                </div>
-                <div class="col-1">
-                    <div class="form-floating mb-3">
-                        <button type="button" class="btn btn-outline-primary" style="height:3.4rem ;"> <i class="bi bi-geo-alt"></i> Map</button>
-                    </div>
-                </div>
-
-            </div>
-
-
-
         </form>
-    </div>
+    </div>  *@
 
     @* modal *@
     <div class="modal-dialog modal-dialog-centered">
@@ -483,5 +485,24 @@
         document.getElementById('medicalHistory').style.display = 'none';
         document.getElementById('viewdocs').style.display = 'block';
     }
+
+    // edit
+    document.getElementById("edit").addEventListener("click", () => {
+
+
+        document.getElementById("fset").removeAttribute("disabled");
+        document.getElementById("edit").classList.add("d-none");
+        document.getElementById("cancel").classList.remove("d-none");
+        document.getElementById("save").classList.remove("d-none");
+
+
+    });
+
+    document.getElementById("cancel").addEventListener("click", () => {
+        document.getElementById("fset").setAttribute("disabled", "");
+        document.getElementById("edit").classList.remove("d-none");
+        document.getElementById("cancel").classList.add("d-none");
+        document.getElementById("save").classList.add("d-none");
+    });
 
 </script>
