@@ -44,6 +44,7 @@ namespace DataAccess.CustomModels
 
         public string? password { get; set; }
 
+        [Compare("password",ErrorMessage ="Password Missmatch")]
         public string? confirmPassword { get; set; }
 
         public List<IFormFile>? File { get; set; }

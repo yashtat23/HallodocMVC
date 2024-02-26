@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BusinessLogic.Interfaces;
 using DataAccess.DataModels;
 using DataAccess.CustomModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogic.Repository
 {
@@ -50,10 +51,8 @@ namespace BusinessLogic.Repository
 
             var result = query.ToList();
 
-
             return result;
         }
-
 
     }
 }

@@ -1,0 +1,79 @@
+.email {
+    margin-left: 10px;
+    color: black;
+}
+
+.first {
+    color: black;
+}
+
+.modebtn {
+    width: 45px;
+    height: 45px;
+}
+
+.logo {
+    width: 150px;
+    height: 100px;
+}
+
+.dark-mode {
+    background-color: rgb(46, 44, 44);
+    color: white;
+}
+
+h3 {
+    color: black;
+}
+
+.dark-mode #footr {
+    background-color: white;
+}
+
+#lnone {
+    background-color: white;
+}
+
+#warning-icon {
+    justify-content: center;
+    align-items: center;
+}
+
+#footr {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(46, 44, 44);
+    color: white;
+    height: 3rem;
+}
+
+
+footer p {
+    font-size: large;
+    float: right;
+    padding: 0.25rem 1rem 0 0;
+
+}
+
+.form-floating>.form-control-plaintext~label,
+.form-floating>.form-control:focus~label,
+.form-floating>.form-control:not(:placeholder-shown)~label,
+.form-floating>.form-select~label {
+    color: #00b8e6;
+}
+
+.form-floating>.form-control-plaintext~label::after,
+.form-floating>.form-control:focus~label::after,
+.form-floating>.form-control:not(:placeholder-shown)~label::after,
+.form-floating>.form-select~label::after {
+    background-color: transparent;
+}
+
+.form-control:focus {
+    border: 1px solid #00b8e6;
+}
+
+.iti {
+    width: 100%;
+}

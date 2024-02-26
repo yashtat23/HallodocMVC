@@ -1,11 +1,28 @@
 ﻿<div class="status-tab row mt-3 mx-0  mx-md-3">
-    <div class="col-4 col-md-2 p-1 p-md-3 ">
+    <div class="col-4 col-md-2 p-1 p-md-3" >
         <button class=" statustablinks darkblue " onclick="openTab(event, 'tab1')">
             <div class="d-flex flex-column align-items-start">
                 <span>
                     <i class="d-none d-md-block bi bi-plus-circle-dotted"></i> New
                 </span>
-                <span class="fs-5">1432</span>
+                <span class="fs-5">
+                    @if (Model == null)
+                    {
+                        <span>-</span>
+                    }
+                    else
+                    {
+                        int count = 0;
+                        foreach (var item in Model)
+                        {
+                            if (item.status == 1)
+                            {
+                                count++;
+                            }
+                        }
+                        <span>@count</span>
+                    }
+                </span>
 
             </div>
         </button>
@@ -16,7 +33,24 @@
                 <span>
                     <i class="d-none d-md-block bi bi-person-exclamation"></i> Pending
                 </span>
-                <span class="fs-5">1432</span>
+                <span class="fs-5">
+                    @if(Model == null)
+                    {
+                        <span>-</span>
+                    }
+                    else
+                    {
+                        int count = 0;
+                        foreach(var item in Model)
+                        {
+                            if(item.status == 2)
+                            {
+                                count++;
+                            }
+                        }
+                        <span>@count</span>
+                    }
+                </span>
 
             </div>
         </button>
@@ -28,7 +62,24 @@
                 <span>
                     <i class="d-none d-md-block bi bi-check2-circle"></i> Active
                 </span>
-                <span class="fs-5">1432</span>
+                <span class="fs-5">
+                    @if (Model == null)
+                    {
+                        <span>-</span>
+                    }
+                    else
+                    {
+                        int count = 0;
+                        foreach (var item in Model)
+                        {
+                            if ((item.status == 4 || item.status == 5))
+                            {
+                                count++;
+                            }
+                        }
+                        <span>@count</span>
+                    }
+                </span>
 
             </div>
         </button>
@@ -40,7 +91,24 @@
                 <span>
                     <i class="d-none d-md-block bi bi-arrow-clockwise"></i> Conclude
                 </span>
-                <span class="fs-5">1432</span>
+                <span class="fs-5">
+                    @if (Model == null)
+                    {
+                        <span>-</span>
+                    }
+                    else
+                    {
+                        int count = 0;
+                        foreach (var item in Model)
+                        {
+                            if (item.status == 6)
+                            {
+                                count++;
+                            }
+                        }
+                        <span>@count</span>
+                    }
+                </span>
 
             </div>
         </button>
@@ -52,7 +120,26 @@
                 <span>
                     <i class="d-none d-md-block bi bi-person-lock"></i> To Close
                 </span>
-                <span class="fs-5">1432</span>
+                <span class="fs-5">
+                    <span class="fs-5">
+                        @if (Model == null)
+                        {
+                            <span>-</span>
+                        }
+                        else
+                        {
+                            int count = 0;
+                            foreach (var item in Model)
+                            {
+                                if ((item.status == 3 || item.status == 7) || item.status == 8)
+                                {
+                                    count++;
+                                }
+                            }
+                            <span>@count</span>
+                        }
+                    </span>
+                </span>
 
             </div>
         </button>
@@ -64,7 +151,24 @@
                 <span>
                     <i class="d-none d-md-block bi bi-currency-dollar"></i> Unpaid
                 </span>
-                <span class="fs-5">1432</span>
+                <span class="fs-5">
+                    @if (Model == null)
+                    {
+                        <span>-</span>
+                    }
+                    else
+                    {
+                        int count = 0;
+                        foreach (var item in Model)
+                        {
+                            if (item.status == 9)
+                            {
+                                count++;
+                            }
+                        }
+                        <span>@count</span>
+                    }
+                </span>
 
             </div>
         </button>
@@ -80,23 +184,23 @@
             <span class="fs-4">Patients</span>
             <span style="color: darkblue;">(New)</span>
         </span>
-        <span class="d-flex gap-1 gap-md-3">
-            <button class="action-btn">
+        <span class="d-flex gap-1 gap-md-2">
+            <button class="action-btn my-3 d-flex gap-2">
                 <i class="bi bi-send"></i> <span class="d-none d-md-block">
                     Send
-                    Link
+                    Link                  
                 </span>
             </button>
-            <button class="action-btn">
+            <button class="action-btn my-3 d-flex gap-2">
                 <i class="bi bi-journal-text"></i> <span class="d-none d-md-block">Create Requests</span>
             </button>
-            <button class="action-btn">
+            <button class="action-btn my-3 d-flex gap-2">
                 <i class="bi bi-reply"></i> <span class="d-none d-md-block">Export</span>
             </button>
-            <button class="action-btn">
+            <button class="action-btn my-3 d-flex gap-2">
                 <i class="bi bi-reply-all"></i> <span class="d-none d-md-block">Export All</span>
             </button>
-            <button class="action-btn">
+            <button class="action-btn my-3 d-flex gap-2">
                 <i class="bi bi-person"></i> <span class="d-none d-md-block">
                     Request
                     DTY Support
@@ -146,23 +250,18 @@
 </div>
 
 <div id="tab2" class="statustabcontent">
-    <h3>Tab 2 Content</h3>
-    <p>This is the content of tab 2.</p>
+    <partial name="_PendingRequests" />
 </div>
 
 <div id="tab3" class="statustabcontent">
-    <h3>Tab 3 Content</h3>
-    <p>This is the content of tab 3.</p>
+   <partial name="_ActiveRequests" />
 </div>
 <div id="tab4" class="statustabcontent">
-    <h3>Tab 3 Content</h3>
-    <p>This is the content of tab 3.</p>
+    <partial name="_ConcludeRequests" />
 </div>
 <div id="tab5" class="statustabcontent">
-    <h3>Tab 3 Content</h3>
-    <p>This is the content of tab 3.</p>
+    <partial name="_TocloseRequests" />
 </div>
 <div id="tab6" class="statustabcontent">
-    <h3>Tab 3 Content</h3>
-    <p>This is the content of tab 3.</p>
+    <partial name="_UnpaidRequests" />
 </div>

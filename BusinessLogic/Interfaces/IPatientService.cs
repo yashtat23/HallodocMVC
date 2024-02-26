@@ -29,6 +29,7 @@ namespace BusinessLogic.Interfaces
 
         List<PatientInfoModel> subinformation(PatientInfoModel patientInfoModel);
 
-        //public userProfile getUserData(int userid);
+        void Editing(string email, User model);
+
     }
 }

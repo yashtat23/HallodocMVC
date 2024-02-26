@@ -100,33 +100,7 @@ namespace BusinessLogic.Repository
             _db.Users.Add(u);
             _db.SaveChanges();
 
-            foreach (IFormFile file in patientInfoModel.File)
-            {
-                if (file != null && file.Length > 0)
-                {
-                    //get file name
-                    var fileName = Path.GetFileName(file.FileName);
-
-                    //define path
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedFiles", fileName);
-
-                    // Copy the file to the desired location
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        file.CopyTo(stream);
-                    }
-
-                    Requestwisefile requestwisefile = new()
-                    {
-                        Filename = fileName,
-                        Requestid = request.Requestid,
-                        Createddate = DateTime.Now
-                    };
-
-                    _db.Requestwisefiles.Add(requestwisefile);
-                    _db.SaveChanges();
-                };
-            }
+           
 
         }
 
@@ -383,5 +357,26 @@ namespace BusinessLogic.Repository
         return y;
         }
 
+        public void Editing(string email, User model)
+        {
+            var userdata = _db.Users.Where(x => x.Email == email).FirstOrDefault();
+
+            if (userdata.Email == model.Email)
+            {
+                userdata.Firstname = model.Firstname;
+                userdata.Lastname = model.Lastname;
+                userdata.Mobile = model.Mobile;
+                userdata.Email = model.Email;
+                userdata.Street = model.Street;
+                userdata.City = model.City;
+                userdata.State = model.State;
+                userdata.Zipcode = model.Zipcode;
+                userdata.Modifieddate = DateTime.Now;
+
+                _db.Users.Update(userdata);
+                _db.SaveChanges();
+            }
+
+        }
     }
 }

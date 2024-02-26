@@ -4,6 +4,7 @@ using DataAccess.CustomModel;
 using DataAccess.CustomModels;
 using AspNetCore;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using BusinessLogic.Repository;
 
 namespace Hallodocweb.Controllers
 {
@@ -43,7 +44,7 @@ namespace Hallodocweb.Controllers
         }
 
         public IActionResult AdminDashboard()
-        {
+         {
             var list = _adminService.GetRequestsByStatus();
             return View(list);
         }

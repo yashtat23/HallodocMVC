@@ -15,6 +15,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Web;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Cryptography;
 //using System.Web.Mvc;
 
 namespace Hallodocweb.Controllers
@@ -60,6 +61,7 @@ namespace Hallodocweb.Controllers
                 var user = _Auth.Login(loginvm);
                 if (user != null)
                 {
+                    HttpContext.Session.SetString("Email", loginvm.Email);
                     _notyf.Success("Logged In Successfully !!");
                     return RedirectToAction("patientdashboard", user);
                 }
@@ -268,6 +270,14 @@ namespace Hallodocweb.Controllers
         public IActionResult _Profile()
         {
             return View();
+        }
+
+        public IActionResult Editing(User model)
+        {
+            var rid = HttpContext.Session.GetInt32("rid");
+            var email = HttpContext.Session.GetString("Email");
+            _patientService.Editing(email, model);
+            return PartialView("_Profile",rid);
         }
     }
 }

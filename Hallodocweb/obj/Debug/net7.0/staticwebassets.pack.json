@@ -45,6 +45,14 @@
       "PackagePath": "staticwebassets\\UploadedFiles\\Fig9. Admin dashboard in Unpaid state.jpg"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\HalloDoc - DB.xlsx",
+      "PackagePath": "staticwebassets\\UploadedFiles\\HalloDoc - DB.xlsx"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\NorthWind.sql",
+      "PackagePath": "staticwebassets\\UploadedFiles\\NorthWind.sql"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Patient site_forget password_mobile.png",
       "PackagePath": "staticwebassets\\UploadedFiles\\Patient site_forget password_mobile.png"
     },
@@ -73,12 +81,32 @@
       "PackagePath": "staticwebassets\\UploadedFiles\\background.jpg"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\dbjdkf",
+      "PackagePath": "staticwebassets\\UploadedFiles"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\email.png",
       "PackagePath": "staticwebassets\\UploadedFiles\\email.png"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\images-modified2 (1).jfif",
+      "PackagePath": "staticwebassets\\UploadedFiles\\images-modified2 (1).jfif"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\images-modified2.jfif",
+      "PackagePath": "staticwebassets\\UploadedFiles\\images-modified2.jfif"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\index.html",
+      "PackagePath": "staticwebassets\\UploadedFiles\\index.html"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\light.png",
       "PackagePath": "staticwebassets\\UploadedFiles\\light.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\pationtreq.css",
+      "PackagePath": "staticwebassets\\UploadedFiles\\pationtreq.css"
     },
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\css\\AdminDashboard.css",

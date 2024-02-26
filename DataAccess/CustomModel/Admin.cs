@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccess.DataModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -47,6 +48,15 @@ namespace DataAccess.CustomModel
             public int? requestTypeId { get; set; }
 
             public int? status { get; set; }
+        }
+
+        //public List<Requestclient> Requestclients { get; set; }
+
+        public class Viewcase
+        {
+            public string Firstname {  get; set; }
+
+            public string Lastname { get; set; }
         }
 
     }

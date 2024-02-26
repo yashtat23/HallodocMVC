@@ -6,7 +6,7 @@
 @model User;
 
 <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-    <form enctype="multipart/form-data" asp-controller="Patient" asp-action="UpdateProfile" class="container my-5 p-4" id="main-cont">
+    <form enctype="multipart/form-data" asp-controller="Patient" asp-action="Editing" class="container my-5 p-4" id="main-cont">
         <fieldset id="fset" disabled>
             <div class="row">
                 <h5 class="col-12">General Information</h5>
@@ -15,7 +15,6 @@
                     <div class="input-div form-floating mb-3">
                         <input asp-for="@Model.Firstname" type="text" class="form-control" id="floatingInput" placeholder="">
                         <label for="floatingInput"></label>
-
                     </div>
 
                 </div>
@@ -106,4 +105,4 @@
             <button class="btn border-info text-info d-none" type="button" id="cancel">Cancel</button>
         </div>
     </form>
-</div>
+</div> 
