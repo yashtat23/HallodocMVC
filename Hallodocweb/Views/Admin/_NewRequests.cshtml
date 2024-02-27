@@ -1,5 +1,5 @@
 ﻿<div class="d-none d-md-block">
-    <table class="table table-hover data-table" id="dtBasicExample">
+    <table class="table table-hover data-table d-md-table d-none" id="dtBasicExample">
         <thead class="table-secondary">
             <tr>
                 <th scope="col">Name</th>
@@ -124,7 +124,7 @@
                                     </button>
                                     <ul class="dropdown-menu table_dropdowns">
                                         <li>
-                                            <a class="dropdown-item" asp-controller="Admin" asp-action="ViewCase">
+                                            <a class="dropdown-item" href="@Url.Action("ViewCase", new {Requestclientid = item.Requestclientid , RequestTypeId = item.requestTypeId})">
                                                 <i class="bi bi-file-earmark-text"></i>
                                                 ViewCase
                                             </a>
@@ -136,7 +136,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">
+                                            <a class="dropdown-item" asp-controller="Admin" asp-action="ViewNote">
                                                 <i class="bi bi-file-earmark-text"></i>
                                                 ViewNotes
                                             </a>
@@ -174,8 +174,13 @@
 </div>
 
 <!-- accordions -->
-<div class="accordion accordion-flush d-block d-md-none" id="accordionFlushExample">
+<div class="accordion accordion-flush d-md-none d-block" id="accordionFlushExample">
 </div>
+
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 
 <script>
     $(document).ready(function () {

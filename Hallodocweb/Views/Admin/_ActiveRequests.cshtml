@@ -124,7 +124,7 @@
                                     </button>
                                     <ul class="dropdown-menu table_dropdowns">
                                         <li>
-                                            <a class="dropdown-item" asp-controller="Admin" asp-action="ViewCase">
+                                            <a class="dropdown-item" href="@Url.Action("ViewCase", new {Requestclientid = item.Requestclientid})">
                                                 <i class="bi bi-file-earmark-text"></i>
                                                 ViewCase
                                             </a>

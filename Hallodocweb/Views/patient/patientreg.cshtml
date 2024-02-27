@@ -4,6 +4,7 @@
     ViewData["Title"] = "patientreg";
 }
 <link rel="stylesheet" href="~/css/patientreg.css" />
+<link rel="stylesheet" href="~/css/dark-mode.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
 
 <div class="conatiner d-flex flex-column justify-content-center align-items-center">
@@ -15,7 +16,7 @@
             </div>
 
             <div>
-                <img onclick="myFunction()" class="light" class="light" src="../img/dark.png" alt="">
+                <img onclick="toggleDarkMode()" class="light" src="../img/dark.png" alt="">
             </div>
         </div>
 
@@ -78,6 +79,7 @@
 
 
 <script src="~/js/site.js"></script>
+<script src="~/js/dark-mode.js"></script>
 <script>
     function myPassword() {
         var x = document.getElementById("myInput");

@@ -2,10 +2,10 @@
     <div class="col-4 col-md-2 p-1 p-md-3" >
         <button class=" statustablinks darkblue " onclick="openTab(event, 'tab1')">
             <div class="d-flex flex-column align-items-start">
-                <span>
+                <span class="d-flex gap-2">
                     <i class="d-none d-md-block bi bi-plus-circle-dotted"></i> New
-                </span>
-                <span class="fs-5">
+               </span>
+                <span class="fs-5 fw-bolder">
                     @if (Model == null)
                     {
                         <span>-</span>
@@ -23,17 +23,16 @@
                         <span>@count</span>
                     }
                 </span>
-
             </div>
         </button>
     </div>
     <div class="col-4 col-md-2 p-1 p-md-3">
         <button class="col-md-2 statustablinks lightblue" onclick="openTab(event, 'tab2')">
             <div class="d-flex flex-column align-items-start">
-                <span>
+                <span class="d-flex gap-2">
                     <i class="d-none d-md-block bi bi-person-exclamation"></i> Pending
                 </span>
-                <span class="fs-5">
+                <span class="fs-5 fw-bolder">
                     @if(Model == null)
                     {
                         <span>-</span>
@@ -59,10 +58,10 @@
     <div class="col-4 col-md-2  p-1 p-md-3">
         <button class="col-md-2 statustablinks green" onclick="openTab(event, 'tab3')">
             <div class="d-flex flex-column align-items-start">
-                <span>
+                <span class="d-flex gap-2">
                     <i class="d-none d-md-block bi bi-check2-circle"></i> Active
                 </span>
-                <span class="fs-5">
+                <span class="fs-5 fw-bolder">
                     @if (Model == null)
                     {
                         <span>-</span>
@@ -88,10 +87,10 @@
     <div class="col-4 col-md-2 p-1 p-md-3">
         <button class="col-md-2 statustablinks pink" onclick="openTab(event, 'tab4')">
             <div class="d-flex flex-column align-items-start">
-                <span>
+                <span class="d-flex gap-2">
                     <i class="d-none d-md-block bi bi-arrow-clockwise"></i> Conclude
                 </span>
-                <span class="fs-5">
+                <span class="fs-5 fw-bolder">
                     @if (Model == null)
                     {
                         <span>-</span>
@@ -117,11 +116,11 @@
     <div class="col-4 col-md-2 p-1 p-md-3">
         <button class="col-md-2 statustablinks blue" onclick="openTab(event, 'tab5')">
             <div class="d-flex flex-column align-items-start">
-                <span>
+                <span class="d-flex gap-2">
                     <i class="d-none d-md-block bi bi-person-lock"></i> To Close
                 </span>
                 <span class="fs-5">
-                    <span class="fs-5">
+                    <span class="fs-5 fw-bolder">
                         @if (Model == null)
                         {
                             <span>-</span>
@@ -148,10 +147,10 @@
     <div class="col-4 col-md-2 p-1 p-md-3">
         <button class="col-md-2 statustablinks purple" onclick="openTab(event, 'tab6')">
             <div class="d-flex flex-column align-items-start">
-                <span>
+                <span class="d-flex gap-2">
                     <i class="d-none d-md-block bi bi-currency-dollar"></i> Unpaid
                 </span>
-                <span class="fs-5">
+                <span class="fs-5 fw-bolder">
                     @if (Model == null)
                     {
                         <span>-</span>

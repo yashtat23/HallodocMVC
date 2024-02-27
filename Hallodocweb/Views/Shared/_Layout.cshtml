@@ -24,6 +24,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="media/css/jquery.dataTables.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.min.js"></script>
+    <script type="text/javascript" language="javascript" src="media/js/jquery.dataTables.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#dtBasicExample').DataTable(
+                console.log("hjdgchjsagkj")
+                    // info: true,
+                    // ordering: true,
+                    paging: true,
+                searching: true
+            );
+        });
+    </script>
 
     @await Component.InvokeAsync("Notyf")
     @RenderSection("Scripts", required: false)

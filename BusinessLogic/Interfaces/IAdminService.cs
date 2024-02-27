@@ -13,5 +13,7 @@ namespace BusinessLogic.Interfaces
         bool AdminLogin(AdminLogin adminLogin);
 
         List<AdminDashTableModel> GetRequestsByStatus();
+
+        ViewCaseViewModel ViewCaseViewModel(int Requestclientid, int RequestTypeId);
     }
 }

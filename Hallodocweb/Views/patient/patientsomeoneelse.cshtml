@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <link rel="stylesheet" href="~/css/patientreq.css" />
-
+<link rel="stylesheet" href="~/css/dark-mode.css" />
 @await Html.PartialAsync("nav")
 
 <div class="container">
@@ -102,7 +102,7 @@
 </div>
 
 @await Html.PartialAsync("footer")
-
+<script src="~/js/dark-mode.js"></script>
 <script>
     const phoneInputField = document.querySelectorAll("input[type='tel']");
     for (var i = 0; i < phoneInputField.length; i++) {

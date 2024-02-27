@@ -1,5 +1,5 @@
 ﻿<div class="d-none d-md-block">
-    <table class="table table-hover data-table" id="dtBasicExample">
+    <table class="table table-hover data-table" id="dttable">
         <thead class="table-secondary">
             <tr>
                 <th scope="col">Name</th>
@@ -124,7 +124,7 @@
                                     </button>
                                     <ul class="dropdown-menu table_dropdowns">
                                         <li>
-                                            <a class="dropdown-item" asp-controller="Admin" asp-action="ViewCase">
+                                            <a class="dropdown-item" href="@Url.Action("ViewCase", new {Requestclientid = item.Requestclientid})">
                                                 <i class="bi bi-file-earmark-text"></i>
                                                 ViewCase
                                             </a>
@@ -176,17 +176,28 @@
 <!-- accordions -->
 <div class="accordion accordion-flush d-block d-md-none" id="accordionFlushExample">
 </div>
+    <link rel="stylesheet" href=
+"https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+     <!-- jQuery library file -->
+     <script type="text/javascript"
+     src="https://code.jquery.com/jquery-3.5.1.js">
+     </script>
+
+      <!-- Datatable plugin JS library file -->
+     <script type="text/javascript" src=
+"https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
+     </script>
+
 
 <script>
     $(document).ready(function () {
-        $('#dtBasicExample').DataTable(
-            //info: true,
-            //ordering: true,
-            //paging: true,
-            //searching: true
+        $('#dttable').DataTable(
+            console.log("hjdgchjsagkj")
+            // info: true,
+            // ordering: true,
+            paging: true,
+            searching: true
         );
     });
-            // $(document).ready(function () {
-            //     $('#new_table').DataTable({ "searching": false, "lengthChange": false, "pageLength": 7 });
-            // });
 </script>

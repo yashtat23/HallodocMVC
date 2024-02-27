@@ -19,7 +19,7 @@ namespace DataAccess.CustomModels
         public string? lastname { get; set; }
 
         //[Required(ErrorMessage = "Date of Birth is required")]
-        public DateTime? Dateofbirth { get; set; }
+        public DateOnly Dateofbirth { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
         public string email { get; set; }
@@ -201,6 +201,10 @@ namespace DataAccess.CustomModels
         public DateTime createdDate { get; set; }
         public string currentStatus { get; set; }
         public List<string> document { get; set; }
+
+
+
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }

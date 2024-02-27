@@ -2,6 +2,7 @@
     ViewData["Title"] = "Index";
 }
 
+<link rel="stylesheet" href="~/css/dark-mode.css" />
 
 <div class="d-flex justify-content-center align-items-center" style="margin-top:-20px">
 
@@ -14,7 +15,7 @@
                 </div>
 
                 <div>
-                    <img onclick="myFunction()" class="light" src="../img/dark.png" alt="">
+                    <img    class="light" src="../img/dark.png" alt="">
                 </div>
             </div>
 
@@ -32,6 +33,13 @@
                         Registered Patients
                     </button>
                 </a>
+
+                <a asp-controller="Admin" asp-action="AdminLogin">
+                    <button class="btn w-100 p-2 border-0 fw-medium" style="background-color: mediumpurple; color: white;"
+                            type="button">
+                        Admin
+                    </button>
+                </a>
             </div>
             <div class="footer fw-medium p-2">Terms of Conditions &nbsp;|&nbsp; Privacy Policy</div>
 
@@ -41,6 +49,7 @@
 
     <script src="./js/bootstrap.bundle.js"></script>
     <script src="./js/custom.js"></script>
+    <script src="./js/dark-mode.js"></script>
 </div>
 
-</html>
+

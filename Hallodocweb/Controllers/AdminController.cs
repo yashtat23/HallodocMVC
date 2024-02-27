@@ -49,7 +49,13 @@ namespace Hallodocweb.Controllers
             return View(list);
         }
 
-        public IActionResult ViewCase()
+        public IActionResult ViewCase(int Requestclientid, int RequestTypeId)
+        {
+            var obj = _adminService.ViewCaseViewModel(Requestclientid, RequestTypeId);
+
+            return View(obj);
+        }
+        public IActionResult ViewNote()
         {
             return View();
         }
@@ -58,5 +64,6 @@ namespace Hallodocweb.Controllers
         {
             return View();
         }
+
     }
 }

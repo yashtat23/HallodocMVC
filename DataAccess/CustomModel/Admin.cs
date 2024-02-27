@@ -7,57 +7,75 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccess.CustomModel
-{ 
-        public class AdminLogin
-        {
-            [Required(ErrorMessage = "Email is required")]
-            public string Email { get; set; }
+{
+    public class AdminLogin
+    {
+        [Required(ErrorMessage = "Email is required")]
+        public string Email { get; set; }
 
-            [Required(ErrorMessage = "Password is required")]
-            public string Password { get; set; }
-        }
-
-        public class AdminDashTableModel
-        {
-            public string? firstName { get; set; }
-
-            public string? lastName { get; set; }
-
-            public string strMonth { get; set; }
-            public int? intYear { get; set; }
-            public int? intDate { get; set; }
-
-            public string? requestorFname { get; set; }
-
-            public string? requestorLname { get; set; }
-
-            public DateTime createdDate { get; set; }
-
-            public string? mobileNo { get; set; }
-
-            public string? city { get; set; }
-
-            public string? street { get; set; }
-
-            public string? zipCode { get; set; }
-
-            public string? state { get; set; }
-
-            public string? notes { get; set; }
-
-            public int? requestTypeId { get; set; }
-
-            public int? status { get; set; }
-        }
-
-        //public List<Requestclient> Requestclients { get; set; }
-
-        public class Viewcase
-        {
-            public string Firstname {  get; set; }
-
-            public string Lastname { get; set; }
-        }
-
+        [Required(ErrorMessage = "Password is required")]
+        public string Password { get; set; }
     }
+
+    public class AdminDashTableModel
+    {
+        public int? reqId { get; set; }
+        public string? firstName { get; set; }
+
+        public string? lastName { get; set; }
+
+        public string strMonth { get; set; }
+        public int? intYear { get; set; }
+        public int? intDate { get; set; }
+
+        public string? requestorFname { get; set; }
+
+        public string? requestorLname { get; set; }
+
+        public DateTime createdDate { get; set; }
+
+        public string? mobileNo { get; set; }
+
+        public string? city { get; set; }
+
+        public string? street { get; set; }
+
+        public string? zipCode { get; set; }
+
+        public string? state { get; set; }
+
+        public string? notes { get; set; }
+
+        public int? requestTypeId { get; set; }
+
+        public int? status { get; set; }
+
+        public int Requestclientid { get; set; }
+    }
+
+    //public List<Requestclient> Requestclients { get; set; }
+
+    public class ViewCaseViewModel
+    {
+        public int Requestclientid { get; set; }
+        public int? RequestTypeId { get; set; }
+        public int? Requestid { get; set; }
+        public string Firstname { get; set; } = null!;
+        public string? Lastname { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public string? Phonenumber { get; set; }
+        public string? Address { get; set; }
+        public int? Regionid { get; set; }
+        public string? Notes { get; set; }
+        public string? Email { get; set; }
+        public string? Strmonth { get; set; }
+        public string? Street { get; set; }
+        public string? City { get; set; }
+        public string? State { get; set; }
+        public string? Zipcode { get; set; }
+        public string? Room { get; set; }
+        public string? ConfirmationNumber { get; set; }
+    }
+
+}
 

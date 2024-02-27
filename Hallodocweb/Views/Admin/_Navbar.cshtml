@@ -1,0 +1,44 @@
+﻿<link rel="stylesheet" href="~/css/dark-mode.css" />
+
+<nav class="bg-white navbr navbar navbar-expand w-100 ">
+
+    <div class="container-fluid">
+        <div class="d-flex align-items-center">
+            <button class="navbar-toggler d-block d-lg-none" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation" style="height: 50%;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <img class="navbar-brand ms-3 w-25 h-25" id="logo" src="~/img/hallodoc.png" alt="logo">
+
+        </div>
+        <div>
+            <ul class="navbar-nav ms-auto d-flex flex-nowrap align-items-center gap-2">
+                <div class="d-none d-sm-flex  justify-content-center align-items-center ">
+                <li class="nav-item">
+                    <span>Welcome</span>
+                </li>
+                <li class="nav-item p-2 fw-bolder">
+                    <span class="d-flex gap-1">
+                        <span>Yash</span>
+                        <span>Variya</span>
+                    </span>
+                </li>
+        </div>
+        <li class="nav-item">
+            <button id="logout" class="px-2">
+                <span class=" d-none d-md-block">Logout</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
+            </button>
+
+        </li>
+        <li class="nav-item">
+            <img onclick="toggleDarkMode()" class="light" src="~/img/dark.png" alt="">
+        </li>
+        </ul>
+    </div>
+    </div>
+
+
+    <!-- tabs -->
+</nav>
+<script src="~/js/dark-mode.js"></script>

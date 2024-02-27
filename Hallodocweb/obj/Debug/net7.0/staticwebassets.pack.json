@@ -69,6 +69,22 @@
       "PackagePath": "staticwebassets\\UploadedFiles\\Report.txt"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\ass-4-1-1.png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\ass-4-1-1.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\ass-4-2.png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\ass-4-2.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\ass-4-3.png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\ass-4-3.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\ass-4-4.png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\ass-4-4.png"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\back (3).png",
       "PackagePath": "staticwebassets\\UploadedFiles\\back (3).png"
     },
@@ -117,6 +133,14 @@
       "PackagePath": "staticwebassets\\css\\AdminLogin.css"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\css\\ViewNote.css",
+      "PackagePath": "staticwebassets\\css\\ViewNote.css"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\css\\dark-mode.css",
+      "PackagePath": "staticwebassets\\css\\dark-mode.css"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\css\\patientdashboard.css",
       "PackagePath": "staticwebassets\\css\\patientdashboard.css"
     },
@@ -141,6 +165,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\img\\admin.svg",
+      "PackagePath": "staticwebassets\\img\\admin.svg"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\img\\back.png",
       "PackagePath": "staticwebassets\\img\\back.png"
     },
@@ -157,6 +185,10 @@
       "PackagePath": "staticwebassets\\img\\dark.png"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\img\\doctor.svg",
+      "PackagePath": "staticwebassets\\img\\doctor.svg"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\img\\email.png",
       "PackagePath": "staticwebassets\\img\\email.png"
     },
@@ -171,6 +203,14 @@
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\img\\light.png",
       "PackagePath": "staticwebassets\\img\\light.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\img\\transfer.svg",
+      "PackagePath": "staticwebassets\\img\\transfer.svg"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\js\\dark-mode.js",
+      "PackagePath": "staticwebassets\\js\\dark-mode.js"
     },
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\js\\site.js",

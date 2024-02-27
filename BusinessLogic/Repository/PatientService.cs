@@ -28,23 +28,69 @@ namespace BusinessLogic.Repository
 
         public void AddPatientInfo(PatientInfoModel patientInfoModel)
         {
-            Guid id = Guid.NewGuid();
 
-            Request request = new()
+
+            var aspnetuser = _db.Aspnetusers.Where(m => m.Email == patientInfoModel.email).FirstOrDefault();
+            User u = new User();
+            if (aspnetuser == null)
             {
-                Requesttypeid = 2,
-                Status = 1,
-                Createddate = DateTime.Now,
-                Isurgentemailsent = new BitArray(1),
-                Firstname = patientInfoModel.firstname,
-                Lastname = patientInfoModel.lastname,
-                Phonenumber = patientInfoModel.phonenumber,
-                Email = patientInfoModel.email
-            };
+                Aspnetuser aspnetuser1 = new Aspnetuser();
+                aspnetuser1.Id = Guid.NewGuid().ToString();
+                aspnetuser1.Passwordhash = patientInfoModel.password;
+                aspnetuser1.Email = patientInfoModel.email;
+                string username = patientInfoModel.firstname + patientInfoModel.lastname;
+                aspnetuser1.Username = username;
+                aspnetuser1.Phonenumber = patientInfoModel.phonenumber;
+                aspnetuser1.Createddate = DateTime.Now;
+                aspnetuser1.Modifieddate = DateTime.Now;
+                _db.Aspnetusers.Add(aspnetuser1);
+
+
+
+                u.Aspnetuserid = aspnetuser1.Id;
+                u.Firstname = patientInfoModel.firstname;
+                u.Lastname = patientInfoModel.lastname;
+                u.Email = patientInfoModel.email;
+                u.Mobile = patientInfoModel.phonenumber;
+                u.Street = patientInfoModel.street;
+                u.City = patientInfoModel.city;
+                u.State = patientInfoModel.state;
+                u.Zipcode = patientInfoModel.zipcode;
+                u.Createdby = patientInfoModel.firstname + patientInfoModel.lastname;
+                u.Intyear = int.Parse(patientInfoModel.Dateofbirth.ToString("yyyy"));
+                u.Intdate = int.Parse(patientInfoModel.Dateofbirth.ToString("dd"));
+                u.Strmonth = patientInfoModel.Dateofbirth.ToString("MMM");
+                u.Createddate = DateTime.Now;
+                u.Modifieddate = DateTime.Now;
+                u.Status = 1;
+                u.Regionid = 1;
+
+                _db.Users.Add(u);
+                _db.SaveChanges();
+            }
+            else
+            {
+                u = _db.Users.Where(m => m.Email == patientInfoModel.email).FirstOrDefault();
+            }
+
+
+            Request request = new Request();
+            request.Requesttypeid = 2;
+            request.Status = 1;
+            request.Createddate = DateTime.Now;
+            request.Isurgentemailsent = new BitArray(1);
+            request.Firstname = patientInfoModel.firstname;
+            request.Lastname = patientInfoModel.lastname;
+            request.Phonenumber = patientInfoModel.phonenumber;
+            request.Email = patientInfoModel.email;
+
+
+
             _db.Requests.Add(request);
             _db.SaveChanges();
 
             Requestclient info = new Requestclient();
+            info.Request = request;
             info.Requestid = request.Requestid;
             info.Notes = patientInfoModel.symptoms;
             info.Firstname = patientInfoModel.firstname;
@@ -55,54 +101,50 @@ namespace BusinessLogic.Repository
             info.City = patientInfoModel.city;
             info.State = patientInfoModel.state;
             info.Zipcode = patientInfoModel.zipcode;
+            info.Intyear = int.Parse(patientInfoModel.Dateofbirth.ToString("yyyy"));
+            info.Intdate = int.Parse(patientInfoModel.Dateofbirth.ToString("dd"));
+            info.Strmonth = patientInfoModel.Dateofbirth.ToString("MMM");
+            info.Regionid = 1;
 
-
-            _db.Requestclients.Add(info);
+            _db.Requestclients.Add(info)
+;
             _db.SaveChanges();
 
-            var user = _db.Aspnetusers.Where(x => x.Email == patientInfoModel.email).FirstOrDefault();
 
 
-            Aspnetuser obj = _db.Aspnetusers.FirstOrDefault(rq => rq.Email == patientInfoModel.email);
-            if (obj == null)
+            if (patientInfoModel.File != null)
             {
-                if (patientInfoModel.password == patientInfoModel.confirmPassword)
+                foreach (IFormFile file in patientInfoModel.File)
                 {
-                    Aspnetuser aspnetuser = new()
+                    if (file != null && file.Length > 0)
                     {
-                        Id = id.ToString(),
-                        Username = patientInfoModel.firstname,
-                        Passwordhash = patientInfoModel.password,
-                        Createddate = DateTime.Now,
-                        Email = patientInfoModel.email,
+                        //get file name
+                        var fileName = Path.GetFileName(file.FileName);
+
+                        //define path
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedFiles", fileName);
+
+                        // Copy the file to the desired location
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            file.CopyTo(stream)
+                   ;
+                        }
+
+                        Requestwisefile requestwisefile = new()
+                        {
+                            Filename = fileName,
+                            Requestid = request.Requestid,
+                            Createddate = DateTime.Now
+                        };
+
+                        _db.Requestwisefiles.Add(requestwisefile);
+                        _db.SaveChanges();
                     };
-                    _db.Aspnetusers.Add(aspnetuser);
-                    _db.SaveChanges();
-                    user = aspnetuser;
                 }
-
             }
-
-            User u = new User();
-            u.Aspnetuserid = user.Id;
-            u.Firstname = patientInfoModel.firstname;
-            u.Lastname = patientInfoModel.lastname;
-            u.Email = patientInfoModel.email;
-            u.Mobile = patientInfoModel.phonenumber;
-            u.Street = patientInfoModel.street;
-            u.City = patientInfoModel.city;
-            u.State = patientInfoModel.state;
-            u.Zipcode = patientInfoModel.zipcode;
-            u.Createdby = user.Username;
-            u.Createddate = DateTime.Now;
-            //u.roomno = patientInfoModel.roomno;
-
-            _db.Users.Add(u);
-            _db.SaveChanges();
-
-           
-
         }
+
 
         //public Task<bool> IsEmailExists(string email)
         //{
@@ -307,8 +349,6 @@ namespace BusinessLogic.Repository
                                       currentStatus = groupedFiles.Select(x => x.Request.Status).FirstOrDefault().ToString(),
                                       document = groupedFiles.Select(x => x.Filename.ToString()).ToList()
                                   }).ToList();
-
-
             return medicalhistory;
         }
 

@@ -16,6 +16,7 @@ using System.Net.Mail;
 using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Cryptography;
+using System.Text;
 //using System.Web.Mvc;
 
 namespace Hallodocweb.Controllers
@@ -37,6 +38,22 @@ namespace Hallodocweb.Controllers
             _patientService = patientService;
             _notyf = notyf;
             _htttpcontext = httpContext;
+        }
+
+        public static string GenerateSHA256(string input)
+        {
+            var bytes = Encoding.UTF8.GetBytes(input);
+            using (var hashEngine = SHA256.Create())
+            {
+                var hashedBytes = hashEngine.ComputeHash(bytes, 0, bytes.Length);
+                var sb = new StringBuilder();
+                foreach (var b in hashedBytes)
+                {
+                    var hex = b.ToString("x2");
+                    sb.Append(hex);
+                }
+                return sb.ToString();
+            }
         }
 
         [HttpGet]
@@ -106,8 +123,13 @@ namespace Hallodocweb.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (patientInfoModel.password != null)
+                {
+                    patientInfoModel.password = GenerateSHA256(patientInfoModel.password);
+                }
                 _patientService.AddPatientInfo(patientInfoModel);
-                return RedirectToAction("patientsubreq");
+                _notyf.Success("Submit Successfully !!");
+                return RedirectToAction("patientsubreq", "Patient");
             }
             else
             {
@@ -225,9 +247,10 @@ namespace Hallodocweb.Controllers
         }
 
         public IActionResult patientdashboard(User user, Requestwisefile requestwisefile)
-        {            
+        {
+            //var rid = HttpContext.Session.GetInt32("rid");
             var infos = _patientService.GetMedicalHistory(user);
-            var viewmodel = new MedicalHistory { MedicalHistoryList = infos , User = user };
+            var viewmodel = new MedicalHistory { MedicalHistoryList = infos , User = user};
             return View(viewmodel);
         }
 
@@ -249,7 +272,7 @@ namespace Hallodocweb.Controllers
             var rid = HttpContext.Session.GetInt32("rid");
             var file = HttpContext.Request.Form.Files.FirstOrDefault();
             _patientService.AddFile(file);
-            return RedirectToAction("_DocumentList",rid);
+            return RedirectToAction("_DocumentList","Patient",rid);
         }
 
         //[HttpGet]
