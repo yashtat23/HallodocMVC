@@ -124,7 +124,7 @@
                                     </button>
                                     <ul class="dropdown-menu table_dropdowns">
                                         <li>
-                                            <a class="dropdown-item" href="@Url.Action("ViewCase", new {Requestclientid = item.Requestclientid})">
+                                            <a class="dropdown-item" href="@Url.Action("ViewCase", new {Requestclientid = item.Requestclientid , RequestTypeId = item.requestTypeId})">
                                                 <i class="bi bi-file-earmark-text"></i>
                                                 ViewCase
                                             </a>
@@ -139,24 +139,6 @@
                                             <a class="dropdown-item" href="#">
                                                 <i class="bi bi-file-earmark-text"></i>
                                                 ViewNotes
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">
-                                                <i class="bi bi-file-earmark-text"></i>
-                                                Orders
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">
-                                                <i class="bi bi-file-earmark-text"></i>
-                                                Doctor Notes
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">
-                                                <i class="bi bi-file-earmark-text"></i>
-                                                Encounter
                                             </a>
                                         </li>
                                     </ul>

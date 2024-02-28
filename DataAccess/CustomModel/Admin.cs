@@ -51,6 +51,8 @@ namespace DataAccess.CustomModel
         public int? status { get; set; }
 
         public int Requestclientid { get; set; }
+
+      
     }
 
     //public List<Requestclient> Requestclients { get; set; }
@@ -75,6 +77,17 @@ namespace DataAccess.CustomModel
         public string? Zipcode { get; set; }
         public string? Room { get; set; }
         public string? ConfirmationNumber { get; set; }
+    }
+
+    public class ViewNotesViewModel
+    {
+        public List<Requeststatuslog>? TransferNotes { get; set; }
+        public string? PhysicianNotes { get; set; }
+
+        public string? AdminNotes { get; set; }
+        public string? AdditionalNotes { get; set; }
+
+        public int ReqId { get; set; }
     }
 
 }

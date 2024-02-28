@@ -25,17 +25,7 @@ namespace Hallodocweb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = _adminService.AdminLogin(adminLogin);
-                if (user != null)
-                {
-                    _notyf.Success("Successfully Login!!");
-                    return RedirectToAction("AdminDashboard",user);
-                }
-                else
-                {
-                    _notyf.Error("Invalid Credentials");
-                }
-                return View();
+                return RedirectToAction("AdminDashboard");
             }
             else
             {
@@ -43,22 +33,72 @@ namespace Hallodocweb.Controllers
             }
         }
 
-        public IActionResult AdminDashboard()
-         {
-            var list = _adminService.GetRequestsByStatus();
-            return View(list);
+
+        public IActionResult GetRequestsByStatus(int tabNo)
+        {
+            var list = _adminService.GetRequestsByStatus(tabNo);
+            if (tabNo == 1)
+            {
+                return PartialView("_NewRequests", list);
+            }
+            else if (tabNo == 2)
+            {
+                return PartialView("_PendingRequests", list);
+            }
+            else if (tabNo == 3)
+            {
+                return PartialView("_ActiveRequests", list);
+            }
+            else if (tabNo == 4)
+            {
+                return PartialView("_ConcludeRequests", list);
+            }
+            else if (tabNo == 5)
+            {
+                return PartialView("_ToCloseRequests", list);
+            }
+            else if (tabNo == 6)
+            {
+                return PartialView("_UnpaidRequests", list);
+            }
+            return View();
         }
 
+        public IActionResult AdminDashboard()
+        {
+
+            return View();
+        }
         public IActionResult ViewCase(int Requestclientid, int RequestTypeId)
         {
             var obj = _adminService.ViewCaseViewModel(Requestclientid, RequestTypeId);
 
             return View(obj);
+
         }
-        public IActionResult ViewNote()
+
+        [HttpPost]
+        public IActionResult UpdateNotes(ViewNotesViewModel model)
         {
+            int? reqId = HttpContext.Session.GetInt32("RNId");
+            bool isUpdated =  _adminService.UpdateAdminNotes(model.AdditionalNotes,(int)reqId);
+            if (isUpdated)
+            {
+                _notyf.Success("Saved Changes !!");
+                return RedirectToAction("ViewNote","Admin",new { ReqId = reqId });
+
+            }
             return View();
         }
+
+        public IActionResult ViewNote(int ReqId)
+        {
+            HttpContext.Session.SetInt32("RNId", ReqId);
+            ViewNotesViewModel data = _adminService.ViewNotes(ReqId);
+            return View(data);
+        }
+        
+
 
         public IActionResult Index()
         {

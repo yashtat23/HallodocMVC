@@ -3,7 +3,6 @@
     ViewData["Title"] = "AdminDashboard";
 }
 
-@model IList<AdminDashTableModel>;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -188,6 +187,27 @@
 
             // Activate the clicked tab link
             evt.currentTarget.className += " active";
+
+            if (tabName == 'tab1') {
+                showNewRequests(1);
+            }
+            if (tabName == 'tab2') {
+                showNewRequests(2);
+            }
+            if (tabName == 'tab3') {
+                showNewRequests(3);
+            }
+            if (tabName == 'tab4') {
+                showNewRequests(4);
+            }
+            if (tabName == 'tab5') {
+                showNewRequests(5);
+            }
+            if (tabName == 'tab6') {
+                showNewRequests(6);
+            }
+
+
         }
 
         $(document).ready(function () {
@@ -240,7 +260,77 @@
             }
         });
 
+
+
+
+        $(document).ready(function () {
+
+            $('#dtBasicExample').DataTable({
+                "initComplete": function (settings, json) {
+
+                    $('#my-search-input').val(settings.oPreviousSearch.sSearch);
+
+                    $('#my-search-input').on('keyup', function () {
+                        var searchValue = $(this).val();
+                        settings.oPreviousSearch.sSearch = searchValue;
+                        settings.oApi._fnReDraw(settings);
+                    });
+                },
+                "lengthMenu": [[5, 10, -1], [5, 10, "All"]],
+                "pageLength": 5,
+                language: {
+                    oPaginate: {
+                        sNext: '<i class="bi bi-caret-right-fill text-info"></i>',
+                        sPrevious: '<i class="bi bi-caret-left-fill text-info"></i>'
+                    }
+                }
+            });
+            $('.dataTables_filter').hide();
+        });
+
+        $(document).ready(function () {
+            $('#dtBasicExample').DataTable(
+                //info: true,
+                //ordering: true,
+                //paging: true,
+                //searching: true
+            );
+        });
+
+
+        function showNewRequests(status) {
+            $.ajax({
+                url: '/Admin/GetRequestsByStatus',
+                type: 'GET',
+                data: { tabNo: status },
+                success: function (response) {
+                    if (status == 1) {
+                        $("#tab1").html(response);
+                    }
+                    if (status == 2) {
+                        $("#tab2").html(response);
+                    }
+                    if (status == 3) {
+                        $("#tab3").html(response);
+                    }
+                    if (status == 4) {
+                        $("#tab4").html(response);
+                    }
+                    if (status == 5) {
+                        $("#tab5").html(response);
+                    }
+                    if (status == 6) {
+                        $("#tab6").html(response);
+                    }
+                }
+            });
+        }
+
     </script>
+
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
 
 
 </body>

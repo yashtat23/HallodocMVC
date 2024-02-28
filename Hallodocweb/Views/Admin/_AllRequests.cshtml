@@ -179,7 +179,7 @@
 
 <div class="container-fluid p-4 pb-0">
     <div class="d-flex justify-content-between">
-        <span class="fw-bold">
+        <span class="fw-bold">  
             <span class="fs-4">Patients</span>
             <span style="color: darkblue;">(New)</span>
         </span>
@@ -210,7 +210,7 @@
     <div class="row mt-3 bg-white">
         <div class="col-12 col-md-2 pt-2">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" placeholder="Search">
+                <input type="text" class="form-control" id="my-search-input" placeholder="Search">
                 <label for="floatingInput"><i class="bi bi-search"></i> Search</label>
             </div>
         </div>
@@ -227,11 +227,11 @@
         <div class="col-md-4">
         </div>
         <div class="col-12 col-md-4 d-flex justify-content-around align-items-center">
-
+             
             <div class="d-none d-md-block">
                 <div>All</div>
             </div>
-            <div><span class="patient_circle"></span><span>Patient</span></div>
+            <div><span class="patient_circle "></span><span>Patient</span></div>
             <div><span class="family_circle"></span><span>Friend/Family</span></div>
             <div><span class="business_circle"></span><span> Business</span></div>
             <div><span class="concierge_circle"></span><span> Concierge</span></div>
@@ -244,23 +244,50 @@
 
 <div id="tab1" class="statustabcontent">
     <!-- table -->
-    <partial name="_NewRequests" />
+   
 
 </div>
 
 <div id="tab2" class="statustabcontent">
-    <partial name="_PendingRequests" />
+@*     <partial name="_PendingRequests" /> *@
 </div>
 
 <div id="tab3" class="statustabcontent">
-   <partial name="_ActiveRequests" />
+@*    <partial name="_ActiveRequests" /> *@
 </div>
 <div id="tab4" class="statustabcontent">
-    <partial name="_ConcludeRequests" />
+@*     <partial name="_ConcludeRequests" /> *@
 </div>
 <div id="tab5" class="statustabcontent">
-    <partial name="_TocloseRequests" />
+@*     <partial name="_TocloseRequests" /> *@
 </div>
 <div id="tab6" class="statustabcontent">
-    <partial name="_UnpaidRequests" />
+    @* <partial name="_UnpaidRequests" /> *@
 </div>
+
+<style>
+    $(document).ready(function () {
+
+         $('#dtBasicExample').DataTable({
+             "initComplete": function (settings, json) {
+
+                 $('#my-search-input').val(settings.oPreviousSearch.sSearch);
+
+                 $('#my-search-input').on('keyup', function () {
+                     var searchValue = $(this).val();
+                     settings.oPreviousSearch.sSearch = searchValue;
+                     settings.oApi._fnReDraw(settings);
+                 });
+             },
+             "lengthMenu": [[5, 10, -1], [5, 10, "All"]],
+             "pageLength": 5,
+             language: {
+                 oPaginate: {
+                     sNext: '<i class="bi bi-caret-right-fill text-info"></i>',
+                     sPrevious: '<i class="bi bi-caret-left-fill text-info"></i>'
+                 }
+             }
+         });
+         $('.dataTables_filter').hide();
+     });
+</style>

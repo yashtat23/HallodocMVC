@@ -1,4 +1,7 @@
-﻿<div class="d-none d-md-block">
+﻿
+@using DataAccess.CustomModel;
+@model List<AdminDashTableModel>;
+<div class="d-none d-md-block">
     <table class="table table-hover data-table d-md-table d-none" id="dtBasicExample">
         <thead class="table-secondary">
             <tr>
@@ -124,39 +127,33 @@
                                     </button>
                                     <ul class="dropdown-menu table_dropdowns">
                                         <li>
+                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#AssignModal" href="#">
+                                                <i class="bi bi-card-checklist"></i>
+                                                Assign Case
+                                            </a>
+                                        </li>
+                                        <li>                                           
+                                             <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal" href="#">
+                                                <i class="bi bi-x-circle"></i>
+                                                Cancel Case
+                                            </a>                                          
+                                        </li>
+                                        <li>
                                             <a class="dropdown-item" href="@Url.Action("ViewCase", new {Requestclientid = item.Requestclientid , RequestTypeId = item.requestTypeId})">
                                                 <i class="bi bi-file-earmark-text"></i>
                                                 ViewCase
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">
-                                                <i class="bi bi-file-earmark-text"></i>
-                                                ViewUploads
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" asp-controller="Admin" asp-action="ViewNote">
+                                            <a class="dropdown-item" href="@Url.Action("ViewNote", new {ReqId = item.reqId})">
                                                 <i class="bi bi-file-earmark-text"></i>
                                                 ViewNotes
                                             </a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="#">
-                                                <i class="bi bi-file-earmark-text"></i>
-                                                Orders
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">
-                                                <i class="bi bi-file-earmark-text"></i>
-                                                Doctor Notes
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">
-                                                <i class="bi bi-file-earmark-text"></i>
-                                                Encounter
+                                                <i class="bi bi-ban"></i>
+                                                Block Patient
                                             </a>
                                         </li>
                                     </ul>
@@ -173,22 +170,8 @@
     </table>
 </div>
 
+<partial name="_Models"/>
+
 <!-- accordions -->
 <div class="accordion accordion-flush d-md-none d-block" id="accordionFlushExample">
 </div>
-
-
-
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $('#dtBasicExample').DataTable(
-            //info: true,
-            //ordering: true,
-            //paging: true,
-            //searching: true
-        );
-    });
-</script>
