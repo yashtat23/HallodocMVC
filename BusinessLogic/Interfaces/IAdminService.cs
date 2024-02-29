@@ -10,9 +10,12 @@ namespace BusinessLogic.Interfaces
 {
     public interface IAdminService
     {
-        bool AdminLogin(AdminLogin adminLogin);
+        //bool AdminLogin(AdminLogin adminLogin);
+        Aspnetuser GetAspnetuser(string email);
 
         List<AdminDashTableModel> GetRequestsByStatus(int status);
+
+        StatusCountModel GetStatusCount();
 
         ViewCaseViewModel ViewCaseViewModel(int Requestclientid, int RequestTypeId);
 

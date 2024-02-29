@@ -78,7 +78,7 @@
                 <ul class=" bg-white ps-5 nav nav-underline" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
-                                data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
+                                data-bs-target="#home-tab-pane" type="button" onclick="ShowAllRequests()" role="tab" aria-controls="home-tab-pane"
                                 aria-selected="true">
                             Dashboard
                         </button>
@@ -136,7 +136,7 @@
              tabindex="0">
 
 
-            <partial name="_AllRequests" />
+            
 
         </div>
         <!-- tab2  pending -->
@@ -326,9 +326,20 @@
             });
         }
 
-    </script>
+        function ShowAllRequests() {
+            $.ajax({
+                url: '/Admin/GetCount',
+                type: 'GET',
+
+                success: function (response) {
+                    $("#home-tab-pane").html(response);
+                }
+            });
+        }
 
     </script>
+
+   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     
 

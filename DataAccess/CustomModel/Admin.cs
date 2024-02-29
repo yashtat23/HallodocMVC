@@ -8,13 +8,33 @@ using System.Threading.Tasks;
 
 namespace DataAccess.CustomModel
 {
-    public class AdminLogin
+    //public class AdminLogin
+    //{
+    //    [Required(ErrorMessage = "Email is required")]
+    //    public string Email { get; set; }
+
+    //    [Required(ErrorMessage = "Password is required")]
+    //    public string Password { get; set; }
+    //}
+
+    public class AdminLoginModel
     {
         [Required(ErrorMessage = "Email is required")]
-        public string Email { get; set; }
+        public string email { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
-        public string Password { get; set; }
+        public string password { get; set; }
+    }
+
+    public class StatusCountModel
+    {
+        public int NewCount { get; set; }
+        public int PendingCount { get; set; }
+        public int ActiveCount { get; set; }
+        public int ConcludeCount { get; set; }
+        public int ToCloseCount { get; set; }
+        public int UnpaidCount { get; set; }
+
     }
 
     public class AdminDashTableModel

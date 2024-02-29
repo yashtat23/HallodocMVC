@@ -24,10 +24,16 @@ namespace BusinessLogic.Repository
             _db = db;
         }
 
-        public bool AdminLogin(AdminLogin adminLogin)
+        public Aspnetuser GetAspnetuser(string email)
         {
-            return _db.Aspnetusers.Any(x=>x.Email == adminLogin.Email && x.Passwordhash==adminLogin.Password);
+            var aspNetUser = _db.Aspnetusers.FirstOrDefault(x => x.Email == email);
+            return aspNetUser;
         }
+
+        //public bool AdminLogin(AdminLogin adminLogin)
+        //{
+        //    return _db.Aspnetusers.Any(x=>x.Email == adminLogin.Email && x.Passwordhash==adminLogin.Password);
+        //}
 
         public List<AdminDashTableModel> GetRequestsByStatus(int tabNo)
         {
@@ -93,18 +99,60 @@ namespace BusinessLogic.Repository
 
         public bool UpdateAdminNotes(string additionalNotes,int reqId)
         {
-           var reqNotes = _db.Requestnotes.FirstOrDefault(x=>x.Requestid == reqId);
+            var reqNotes = _db.Requestnotes.FirstOrDefault(x => x.Requestid == reqId);
             try
             {
-                reqNotes.Adminnotes = additionalNotes;
-                _db.Requestnotes.Update(reqNotes);
-                _db.SaveChanges();
 
+                if (reqNotes == null)
+                {
+                    Requestnote rn = new Requestnote();
+                    rn.Requestid = reqId;
+                    rn.Adminnotes = additionalNotes;
+                    rn.Createdby = "admin";
+                    //here instead of admin , add id of the admin through which admin is loggedIn 
+                    rn.Createddate = DateTime.Now;
+                    _db.Requestnotes.Add(rn);
+                    _db.SaveChanges();
+                }
+                else
+                {
+                    reqNotes.Adminnotes = additionalNotes;
+                    reqNotes.Modifieddate = DateTime.Now;
+                    reqNotes.Modifiedby = "admin";
+                    //here instead of admin , add id of the admin through which admin is loggedIn 
+                    _db.Requestnotes.Update(reqNotes);
+                    _db.SaveChanges();
+                }
                 return true;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return false;
             }
+        }
+
+        public StatusCountModel GetStatusCount()
+        {
+            var requestsWithClients = _db.Requests
+     .Join(_db.Requestclients,
+         r => r.Requestid,
+         rc => rc.Requestid,
+         (r, rc) => new { Request = r, RequestClient = rc })
+     .ToList();
+
+            StatusCountModel statusCount = new StatusCountModel
+            {
+                NewCount = requestsWithClients.Count(x => x.Request.Status == (int)StatusEnum.Unassigned),
+                PendingCount = requestsWithClients.Count(x => x.Request.Status == (int)StatusEnum.Accepted),
+                ActiveCount = requestsWithClients.Count(x => x.Request.Status == (int)StatusEnum.MDEnRoute || x.Request.Status == (int)StatusEnum.MDOnSite),
+                ConcludeCount = requestsWithClients.Count(x => x.Request.Status == (int)StatusEnum.Conclude),
+                ToCloseCount = requestsWithClients.Count(x => (x.Request.Status == (int)StatusEnum.Cancelled || x.Request.Status == (int)StatusEnum.CancelledByPatient) || x.Request.Status == (int)StatusEnum.Closed),
+                UnpaidCount = requestsWithClients.Count(x => x.Request.Status == (int)StatusEnum.Unpaid)
+            };
+
+            return statusCount;
+
+
         }
 
         public ViewCaseViewModel ViewCaseViewModel(int Requestclientid, int RequestTypeId)
@@ -132,13 +180,28 @@ namespace BusinessLogic.Repository
         {
             var data = _db.Requeststatuslogs.Where(a => a.Requestid == ReqId).FirstOrDefault();
             var data1 = _db.Requestnotes.Where(a => a.Requestid == ReqId).FirstOrDefault();
-            ViewNotesViewModel model = new ViewNotesViewModel();
+
             var list = _db.Requeststatuslogs.Where(x => x.Requestid == ReqId).ToList();
-            
+            ViewNotesViewModel model = new ViewNotesViewModel();
+            if (model == null)
+            {
+
+
+                model.TransferNotes = null;
+                model.PhysicianNotes = null;
+                model.AdminNotes = null;
+
+            }
 
             model.TransferNotes = list;
-            model.PhysicianNotes = data1.Physiciannotes;
-            model.AdminNotes = data1.Adminnotes;
+            if (data1 != null)
+            {
+                model.PhysicianNotes = data1.Physiciannotes;
+                model.AdminNotes = data1.Adminnotes;
+            }
+
+
+
 
 
             return model;

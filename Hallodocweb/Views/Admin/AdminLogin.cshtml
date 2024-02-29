@@ -1,7 +1,8 @@
 ﻿@{
     ViewData["Title"] = "AdminLogin";
 }
-@model DataAccess.CustomModel.AdminLogin;
+@using DataAccess.CustomModel;
+@model AdminLoginModel;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,13 +34,13 @@
                     <h2>Login To Your Account</h2>
                     <form method="post">
                         <div class="input-div form-floating mb-3 w-100">
-                            <input asp-for="Email" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                            <input asp-for="email" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
 
                             <label for="floatingInput">Email</label>
 
                         </div>
                         <div class="input-div form-floating mb-3 w-100">
-                            <input asp-for="Password" type="password" class="form-control" id="floatingInput" placeholder="name@example.com">
+                            <input asp-for="password" type="password" class="form-control" id="floatingInput" placeholder="name@example.com">
 
                             <label for="floatingInput">Password</label>
 

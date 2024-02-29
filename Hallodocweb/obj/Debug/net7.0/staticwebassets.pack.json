@@ -69,6 +69,10 @@
       "PackagePath": "staticwebassets\\UploadedFiles\\Report.txt"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\admin.svg",
+      "PackagePath": "staticwebassets\\UploadedFiles\\admin.svg"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\ass-4-1-1.png",
       "PackagePath": "staticwebassets\\UploadedFiles\\ass-4-1-1.png"
     },
@@ -95,6 +99,10 @@
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\background.jpg",
       "PackagePath": "staticwebassets\\UploadedFiles\\background.jpg"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\dashboard.html",
+      "PackagePath": "staticwebassets\\UploadedFiles\\dashboard.html"
     },
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\dbjdkf",

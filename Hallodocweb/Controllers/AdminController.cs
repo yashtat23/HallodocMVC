@@ -5,6 +5,8 @@ using DataAccess.CustomModels;
 using AspNetCore;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using BusinessLogic.Repository;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace Hallodocweb.Controllers
 {
@@ -21,18 +23,67 @@ namespace Hallodocweb.Controllers
             _notyf = notyf;
         }
 
-        public IActionResult AdminLogin(AdminLogin adminLogin)
+        public static string GenerateSHA256(string input)
+        {
+            var bytes = Encoding.UTF8.GetBytes(input);
+            using (var hashEngine = SHA256.Create())
+            {
+                var hashedBytes = hashEngine.ComputeHash(bytes, 0, bytes.Length);
+                var sb = new StringBuilder();
+                foreach (var b in hashedBytes)
+                {
+                    var hex = b.ToString("x2");
+                    sb.Append(hex);
+                }
+                return sb.ToString();
+            }
+        }
+        public IActionResult AdminLogin(AdminLoginModel adminLoginModel)
         {
             if (ModelState.IsValid)
             {
-                return RedirectToAction("AdminDashboard");
+                var aspnetuser = _adminService.GetAspnetuser(adminLoginModel.email);
+                if (aspnetuser != null)
+                {
+                    adminLoginModel.password = GenerateSHA256(adminLoginModel.password);
+                    if (aspnetuser.Passwordhash == adminLoginModel.password)
+                    {
+                        _notyf.Success("Logged in Successfully");
+                        return RedirectToAction("AdminDashboard", "Admin");
+                    }
+                    else
+                    {
+                        _notyf.Error("Password is incorrect");
+
+                        return View();
+                    }
+                }
+                _notyf.Error("Email is incorrect");
+                return View();
             }
             else
             {
-                return View(adminLogin);
+                return View(adminLoginModel);
             }
         }
 
+        //public IActionResult AdminLogin(AdminLogin adminLogin)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        return RedirectToAction("AdminDashboard");
+        //    }
+        //    else
+        //    {
+        //        return View(adminLogin);
+        //    }
+        //}
+
+        public IActionResult GetCount()
+        {
+            var statusCountModel = _adminService.GetStatusCount();
+            return PartialView("_AllRequests", statusCountModel);
+        }
 
         public IActionResult GetRequestsByStatus(int tabNo)
         {
@@ -84,7 +135,7 @@ namespace Hallodocweb.Controllers
             bool isUpdated =  _adminService.UpdateAdminNotes(model.AdditionalNotes,(int)reqId);
             if (isUpdated)
             {
-                _notyf.Success("Saved Changes !!");
+                _notyf.Success("Saved Changes!!");
                 return RedirectToAction("ViewNote","Admin",new { ReqId = reqId });
 
             }
@@ -98,8 +149,6 @@ namespace Hallodocweb.Controllers
             return View(data);
         }
         
-
-
         public IActionResult Index()
         {
             return View();
