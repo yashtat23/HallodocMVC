@@ -154,5 +154,48 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
+        public IActionResult CancelCase(int reqId)
+        {
+            HttpContext.Session.SetInt32("CancelReqId", reqId);
+            var model = _adminService.CancelCase(reqId);
+            return PartialView("_CancelCase", model);
+        }
+
+        public IActionResult SubmitCancelCase(CancelCaseModel cancelCaseModel)
+        {
+            cancelCaseModel.reqId = HttpContext.Session.GetInt32("CancelReqId");
+            bool isCancelled = _adminService.SubmitCancelCase(cancelCaseModel);
+            if (isCancelled)
+            {
+                _notyf.Success("Cancelled successfully");
+                return RedirectToAction("AdminDashboard", "Admin");
+            }
+            return View();
+        }
+
+
+        public IActionResult GetPhysicianData(int regionId)
+        {
+            var physicianData = _adminService.GetPhysician(regionId);
+            return Json(physicianData);
+        }
+
+        [HttpPost]
+        public IActionResult AssignCasePost(AssignCaseModel assignCaseModel)
+        {
+            _adminService.AssignCasePostData(assignCaseModel, assignCaseModel.requestId);
+            return Ok();
+        }
+
+        public IActionResult assignCase(int requestId )
+        {
+            AssignCaseModel assignCase = new AssignCaseModel
+            {
+                requestId = requestId,
+                region = _adminService.GetRegion(),
+            };
+            return PartialView("_AssignCase", assignCase);
+        }
+
     }
 }

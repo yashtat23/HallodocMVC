@@ -151,8 +151,6 @@ namespace BusinessLogic.Repository
             };
 
             return statusCount;
-
-
         }
 
         public ViewCaseViewModel ViewCaseViewModel(int Requestclientid, int RequestTypeId)
@@ -178,34 +176,110 @@ namespace BusinessLogic.Repository
 
         public ViewNotesViewModel ViewNotes(int ReqId)
         {
-            var data = _db.Requeststatuslogs.Where(a => a.Requestid == ReqId).FirstOrDefault();
-            var data1 = _db.Requestnotes.Where(a => a.Requestid == ReqId).FirstOrDefault();
 
-            var list = _db.Requeststatuslogs.Where(x => x.Requestid == ReqId).ToList();
+            var requestNotes = _db.Requestnotes.Where(x => x.Requestid == ReqId).FirstOrDefault();
+            var requeststatuslog = _db.Requeststatuslogs.Where(x => x.Requestid == ReqId).FirstOrDefault();
             ViewNotesViewModel model = new ViewNotesViewModel();
             if (model == null)
             {
-
-
                 model.TransferNotes = null;
                 model.PhysicianNotes = null;
                 model.AdminNotes = null;
-
             }
 
-            model.TransferNotes = list;
-            if (data1 != null)
+            if (requestNotes != null)
             {
-                model.PhysicianNotes = data1.Physiciannotes;
-                model.AdminNotes = data1.Adminnotes;
+                model.PhysicianNotes = requestNotes.Physiciannotes;
+                model.AdminNotes = requestNotes.Adminnotes;
             }
-
-
-
-
+            if (requeststatuslog != null)
+            {
+                model.TransferNotes = requeststatuslog.Notes;
+            }
 
             return model;
+        }
+
+        public CancelCaseModel CancelCase(int reqId)
+        {
+            var casetags = _db.Casetags.ToList();
+            var request = _db.Requests.Where(x => x.Requestid == reqId).FirstOrDefault();
+            CancelCaseModel model = new()
+            {
+                PatientFName = request.Firstname,
+                PatientLName = request.Lastname,
+                casetaglist = casetags
+
+            };
+            return model;
+        }
+
+        public bool SubmitCancelCase(CancelCaseModel cancelCaseModel)
+        {
+            try
+            {
+                var req = _db.Requests.Where(x => x.Requestid == cancelCaseModel.reqId).FirstOrDefault();
+                req.Status = (int)StatusEnum.Cancelled;
+                req.Casetag = cancelCaseModel.casetag.ToString();
+                var reqStatusLog = _db.Requeststatuslogs.Where(x => x.Requestid == cancelCaseModel.reqId).FirstOrDefault();
+                if (reqStatusLog == null)
+                {
+                    Requeststatuslog rsl = new Requeststatuslog();
+                    rsl.Requestid = (int)cancelCaseModel.reqId;
+                    rsl.Status = (int)StatusEnum.Cancelled;
+                    rsl.Notes = cancelCaseModel.notes;
+                    rsl.Createddate = DateTime.Now;
+                    _db.Requeststatuslogs.Add(rsl);
+                    _db.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    reqStatusLog.Status = (int)StatusEnum.Cancelled;
+                    reqStatusLog.Notes = cancelCaseModel.notes;
+                    _db.Requeststatuslogs.Update(reqStatusLog);
+                    _db.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
 
         }
+
+        public List<Region> GetRegion()
+        {
+            var region = _db.Regions.ToList();
+            return region;
+        }
+        public List<Physician> GetPhysician(int regionId)
+        {
+            var physician = _db.Physicians.Where(i=>i.Regionid == regionId).ToList();
+            return physician;
+        }
+
+             
+        public void AssignCasePostData(AssignCaseModel assignCaseModel, int requestId)
+        {
+            var reqData = _db.Requests.Where(i => i.Requestid == requestId).FirstOrDefault();
+
+            var reqstatusData = new Requeststatuslog()
+            {
+                Requestid = requestId,
+                Notes = assignCaseModel.additionalNotes,
+                Createddate = DateTime.Now,
+                Status = 2
+            };
+            reqData.Status = 2;
+            reqData.Physicianid = assignCaseModel.physicanNo;
+
+            _db.Add(reqstatusData);
+            _db.SaveChanges();
+
+        }
+
+
     }
 }

@@ -1,4 +1,7 @@
-﻿<div class="d-none d-md-block">
+﻿@using DataAccess.CustomModel;
+@model List<AdminDashTableModel>;
+
+<div class="d-none d-md-block">
     <table class="table table-hover data-table" id="dtBasicExample">
         <thead class="table-secondary">
             <tr>
@@ -136,7 +139,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">
+                                            <a class="dropdown-item" href="@Url.Action("ViewNote", new {ReqId = item.reqId})">
                                                 <i class="bi bi-file-earmark-text"></i>
                                                 ViewNotes
                                             </a>
@@ -181,7 +184,6 @@
 
             }
         </tbody>
-
     </table>
 </div>
 

@@ -113,16 +113,22 @@
                         role = "Concierge";
                     }
 
-                    <tr class="tablerows ">
+                    <tr class="tablerows @role">
                         @*1*@
                         <td style="background:@bgColor">
-                            <div class="table_name_email">
+                            <div class="table_name_email d-flex justify-content-between">
+
+                                <div class="d-flex">
 
                                 @item.firstName, @item.lastName
-                                <a href="">
+                                </div>
+                                <div class="d-flex">
+
+                                <button class="btn btn-outline-light shadow-none" href="">
                                     @* <img src="~/img/email.png" style="height:20px;width:20px"> *@
                                     <i class="bi bi-envelope"></i>
-                                </a>
+                                </button>
+                                </div>
                             </div>
                         </td>
                         @*2*@
@@ -200,13 +206,13 @@
                                     </button>
                                     <ul class="dropdown-menu table_dropdowns">
                                         <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#AssignModal" href="#">
+                                            <a class="dropdown-item" onclick="AssignCase(@item.reqId)">
                                                 <i class="bi bi-card-checklist"></i>
                                                 Assign Case
                                             </a>
                                         </li>
-                                        <li>                                           
-                                             <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal" href="#">
+                                        <li>
+                                            <a class="dropdown-item" onclick="showCancelCase(@item.reqId)">
                                                 <i class="bi bi-x-circle"></i>
                                                 Cancel Case
                                             </a>                                          
@@ -242,13 +248,10 @@
 
     </table>
 </div>
-
-<partial name="_Models"/>
-
+<div id="modelContent"></div>
 <!-- accordions -->
 <div class="accordion accordion-flush d-md-none d-block" id="accordionFlushExample">
 </div>
-    
 <script>
 
     function allElements() {
@@ -519,8 +522,6 @@
             c[i].style.display = "none";
         }
 
-
-
         let d = document.getElementsByClassName("Business");
 
 
@@ -531,6 +532,7 @@
 
     }
 
+    // pagination
     $(document).ready(function () {
 
         $('.data-table').DataTable({
@@ -557,5 +559,27 @@
         // $('.dataTables_length').hide();
         $('.dataTables_filter').hide();
     });
+
+    function AssignCase(requestid) {
+        event.preventDefault();
+        console.log(requestid);
+        $.ajax({
+            method: "GET",
+            url: "/Admin/assignCase",
+            async: false,
+            data: { requestid: requestid }
+            ,
+
+            success: function (result) {
+                $('#modelContent').html(result);
+                $('#AssignModal').modal('show');
+            },
+            error: function () {
+                alert('Error loading partial view');
+            }
+        })
+    }
+
+   
 
 </script>

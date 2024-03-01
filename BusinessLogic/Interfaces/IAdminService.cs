@@ -22,5 +22,15 @@ namespace BusinessLogic.Interfaces
         ViewNotesViewModel ViewNotes(int ReqId);
 
         bool UpdateAdminNotes(string additionalNotes,int reqId);
+
+        CancelCaseModel CancelCase(int reqId);
+
+        bool SubmitCancelCase(CancelCaseModel cancelCaseModel);
+
+        public List<Region> GetRegion();
+
+        public List<Physician> GetPhysician(int regionId);
+
+        void AssignCasePostData(AssignCaseModel assignCaseModel, int requestId);
     }
 }

@@ -101,13 +101,38 @@ namespace DataAccess.CustomModel
 
     public class ViewNotesViewModel
     {
-        public List<Requeststatuslog>? TransferNotes { get; set; }
+        public string? TransferNotes { get; set; }
         public string? PhysicianNotes { get; set; }
 
         public string? AdminNotes { get; set; }
         public string? AdditionalNotes { get; set; }
 
         public int ReqId { get; set; }
+    }
+
+    public class CancelCaseModel
+    {
+        public string? PatientFName { get; set; }
+        public string? PatientLName { get; set; }
+        public List<Casetag>? casetaglist { get; set; }
+
+
+        public int? casetag { get; set; }
+        public int? reqId { get; set; }
+        public string? notes { get; set; }
+    }
+
+    public class AssignCaseModel
+    {
+        public List<Region> region { get; set; }
+
+        public List<Physician> physician { get; set; }
+        public int requestId { get; set; }
+
+        public int physicanNo {  get; set; }
+
+        public string additionalNotes { get; set; }
+
     }
 
 }
