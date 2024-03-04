@@ -135,5 +135,12 @@ namespace DataAccess.CustomModel
 
     }
 
+    public class BlockCaseModel
+    {
+        public int? ReqId { get; set; }
+        public string? reason { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+    }
 }
 

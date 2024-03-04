@@ -322,10 +322,6 @@ namespace BusinessLogic.Repository
             return Task.FromResult(false);
         }
 
-
-
-
-
         public List<MedicalHistory> GetMedicalHistory(User user)
         {
             var medicalhistory = (from request in _db.Requests

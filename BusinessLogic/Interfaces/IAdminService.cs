@@ -32,5 +32,8 @@ namespace BusinessLogic.Interfaces
         public List<Physician> GetPhysician(int regionId);
 
         void AssignCasePostData(AssignCaseModel assignCaseModel, int requestId);
+
+        BlockCaseModel BlockCase(int reqId);
+        bool SubmitBlockCase(BlockCaseModel blockCaseModel);
     }
 }

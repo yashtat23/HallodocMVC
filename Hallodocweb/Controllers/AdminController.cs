@@ -15,12 +15,14 @@ namespace Hallodocweb.Controllers
         private readonly ILogger<AdminController> _logger;
         private readonly IAdminService _adminService;
         private readonly INotyfService _notyf;
+        private readonly IPatientService _petientService;
 
-        public AdminController(ILogger<AdminController> logger,IAdminService adminService, INotyfService notyf)
+        public AdminController(ILogger<AdminController> logger,IAdminService adminService, INotyfService notyf, IPatientService petientService)
         {
             _logger = logger;
             _adminService = adminService;
             _notyf = notyf;
+            _petientService = petientService;
         }
 
         public static string GenerateSHA256(string input)
@@ -194,7 +196,45 @@ namespace Hallodocweb.Controllers
                 requestId = requestId,
                 region = _adminService.GetRegion(),
             };
+            _notyf.Success("Assign Successfully!");
             return PartialView("_AssignCase", assignCase);
+        }
+
+        public IActionResult BlockCase(int reqId)
+        {
+            HttpContext.Session.SetInt32("BlockReqId", reqId);
+            var model = _adminService.BlockCase(reqId);
+            return PartialView("_BlockCase", model);
+        }
+
+        [HttpPost]
+        public IActionResult SubmitBlockCase(BlockCaseModel blockCaseModel)
+        {
+            blockCaseModel.ReqId = HttpContext.Session.GetInt32("BlockReqId");
+            bool isBlocked = _adminService.SubmitBlockCase(blockCaseModel);
+            if (isBlocked)
+            {
+                _notyf.Success("Blocked Successfully");
+                return RedirectToAction("AdminDashboard", "Admin");
+            }
+            _notyf.Error("BlockCase Failed");
+            return RedirectToAction("AdminDashboard", "Admin");
+        }
+
+        public IActionResult ViewUploads(int Rid)
+        {
+            HttpContext.Session.SetInt32("rid", Rid);
+            var y = _petientService.GetAllDocById(Rid);
+            return View(y);
+        }
+
+        [HttpPost]
+        public IActionResult ViewUploads()
+        {
+            int? rid = (int)HttpContext.Session.GetInt32("rid");
+            var file = HttpContext.Request.Form.Files.FirstOrDefault();
+            _petientService.AddFile(file);
+            return RedirectToAction("ViewUploads", "Admin", new { Rid = rid });
         }
 
     }

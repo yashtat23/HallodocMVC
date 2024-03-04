@@ -19,22 +19,30 @@
                 if (item.status == 2)
                 {
                     var bgColor = "He";
+                    var role = "hello";
 
                     @if (item.requestTypeId == 1)
                     {
-                        bgColor = "#60be5e";
+                        bgColor = "#d76879";
+                        role = "Business";
                     }
                     else if (item.requestTypeId == 2)
                     {
-                        bgColor = "#e69232";
+                        bgColor = "#60be5e";
+                        role = "Patient";
+
+
                     }
                     else if (item.requestTypeId == 3)
                     {
-                        bgColor = "#d76879";
+                        bgColor = "#e69232";
+                        role = "FamilyFriend";
+
                     }
                     else if (item.requestTypeId == 4)
                     {
                         bgColor = "#0b7ebf";
+                        role = "Concierge";
                     }
 
                     <tr class="tablerows ">
@@ -130,13 +138,13 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">
+                                            <a class="dropdown-item" asp-controller="Admin" asp-action="ViewUploads" asp-route-Rid="@item.reqId">
                                                 <i class="bi bi-file-earmark-text"></i>
                                                 View Uploads
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">
+                                            <a class="dropdown-item" href="@Url.Action("ViewNote", new {ReqId = item.reqId})">
                                                 <i class="bi bi-file-earmark-text"></i>
                                                 View Notes
                                             </a>

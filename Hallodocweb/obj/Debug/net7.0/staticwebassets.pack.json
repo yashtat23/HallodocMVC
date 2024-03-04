@@ -17,6 +17,10 @@
       "PackagePath": "staticwebassets\\UploadedFiles\\7774236_3736765.jpg"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Close case_mobile.png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\Close case_mobile.png"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Fig Contact your Provider.jpg",
       "PackagePath": "staticwebassets\\UploadedFiles\\Fig Contact your Provider.jpg"
     },
@@ -69,6 +73,10 @@
       "PackagePath": "staticwebassets\\UploadedFiles\\Report.txt"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\SRS-23-24-Trainees-14Feb24.pdf",
+      "PackagePath": "staticwebassets\\UploadedFiles\\SRS-23-24-Trainees-14Feb24.pdf"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\admin.svg",
       "PackagePath": "staticwebassets\\UploadedFiles\\admin.svg"
     },
@@ -101,12 +109,20 @@
       "PackagePath": "staticwebassets\\UploadedFiles\\background.jpg"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\bg-img.jpg",
+      "PackagePath": "staticwebassets\\UploadedFiles\\bg-img.jpg"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\dashboard.html",
       "PackagePath": "staticwebassets\\UploadedFiles\\dashboard.html"
     },
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\dbjdkf",
       "PackagePath": "staticwebassets\\UploadedFiles"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\doctor.svg",
+      "PackagePath": "staticwebassets\\UploadedFiles\\doctor.svg"
     },
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\email.png",

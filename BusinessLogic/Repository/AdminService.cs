@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using DataAccess.Enum;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Collections;
 
 namespace BusinessLogic.Repository
 {
@@ -280,6 +281,60 @@ namespace BusinessLogic.Repository
 
         }
 
+        public BlockCaseModel BlockCase(int reqId)
+        {
+            var reqClient = _db.Requestclients.Where(x => x.Requestid == reqId).FirstOrDefault();
+            BlockCaseModel model = new()
+            {
+                ReqId = reqId,
+                firstName = reqClient.Firstname,
+                lastName = reqClient.Lastname,
+                reason = null
+            };
+
+            return model;
+        }
+
+        public bool SubmitBlockCase(BlockCaseModel blockCaseModel)
+        {
+            try
+            {
+                var request = _db.Requests.FirstOrDefault(r => r.Requestid == blockCaseModel.ReqId);
+                if (request != null)
+                {
+                    if (request.Isdeleted == null)
+                    {
+                        request.Isdeleted = new BitArray(1);
+                        request.Isdeleted[0] = true;
+                        request.Status = (int)StatusEnum.Clear;
+                        request.Modifieddate = DateTime.Now;
+
+                        _db.Requests.Update(request);
+
+                    }
+                    Blockrequest blockrequest = new Blockrequest();
+
+                    blockrequest.Phonenumber = request.Phonenumber == null ? "+91" : request.Phonenumber;
+                    blockrequest.Email = request.Email;
+                    blockrequest.Reason = blockCaseModel.reason;
+                    blockrequest.Requestid = (int)blockCaseModel.ReqId;
+                    blockrequest.Createddate = DateTime.Now;
+
+                    _db.Blockrequests.Add(blockrequest);
+                    _db.SaveChanges();
+                    return true;
+
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
 
     }
 }

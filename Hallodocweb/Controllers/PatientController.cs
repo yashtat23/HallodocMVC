@@ -220,6 +220,7 @@ namespace Hallodocweb.Controllers
             }
             else
             {
+                _notyf.Error("Please Enter a Valid email adrress");
                 return View();
             }
 
@@ -259,20 +260,20 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
-        public IActionResult _DocumentList(int rid)
+        public IActionResult _DocumentList(int Rid)
         {
-            HttpContext.Session.SetInt32("rid", rid);
-            var y = _patientService.GetAllDocById(rid);
+            HttpContext.Session.SetInt32("rid", Rid);
+            var y = _patientService.GetAllDocById(Rid);
             return View(y);
         }
 
         [HttpPost]
         public IActionResult _DocumentList()
         {
-            var rid = HttpContext.Session.GetInt32("rid");
+            int? rid = (int)HttpContext.Session.GetInt32("rid");
             var file = HttpContext.Request.Form.Files.FirstOrDefault();
             _patientService.AddFile(file);
-            return RedirectToAction("_DocumentList","Patient",rid);
+            return RedirectToAction("_DocumentList","Patient", new { Rid = rid });
         }
 
         //[HttpGet]
@@ -300,7 +301,7 @@ namespace Hallodocweb.Controllers
             var rid = HttpContext.Session.GetInt32("rid");
             var email = HttpContext.Session.GetString("Email");
             _patientService.Editing(email, model);
-            return PartialView("_Profile",rid);
+            return PartialView("_Profile", new { Rid = rid});
         }
     }
 }
