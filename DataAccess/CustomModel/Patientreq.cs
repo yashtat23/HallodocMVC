@@ -183,50 +183,48 @@ namespace DataAccess.CustomModels
 
     //Dashboard
 
-    public class PatientDashboard
-    {
-        public DateTime createdDate { get; set; }
-        public string currentStatus { get; set; }
-        public string document { get; set; }
-    }
-
-    public class PatientDashboardInfo
-    {
-        public List<PatientDashboard> patientDashboardItems { get; set; }
-    }
-
     public class MedicalHistory
     {
+
         public int reqId { get; set; }
         public DateTime createdDate { get; set; }
-        public string currentStatus { get; set; }
+        public int currentStatus { get; set; }
         public List<string> document { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public DateTime DateOfBirth { get; set; }
 
-        public string PhoneNo { get; set; }
 
-        public string Street { get; set; }
+    }
+    public class MedicalHistoryList
+    {
+        public List<MedicalHistory>? medicalHistoriesList { get; set; }
+        public int? id { get; set; }
+        public string? firstName { get; set; }
+        public string? lastName { get; set; }
+    }
 
-        public string City { get; set; }
+    public class Profile
+    {
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
-        public string ZipCode { get; set; }
+        public string? PhoneNo { get; set; }
 
-        public string State { get; set; }
+        public string? Street { get; set; }
 
-        public string Email { get; set; }
+        public string? City { get; set; }
 
-        public string dateOfBirth { get; set; }
+        public string? ZipCode { get; set; }
 
-        public User? User { get; set; }
+        public string? State { get; set; }
 
-        public List<MedicalHistory> MedicalHistoryList { get; set; }
+        public string? Email { get; set; }
+        public int? userId { get; set; }
     }
 
     public class subinformation
     {
         public List<PatientInfoModel> subinformationModels { get; set; }
     }
+
   
 }

@@ -1,9 +1,9 @@
 ﻿@using DataAccess.CustomModels;
 @{
-    ViewData["Title"] = "patient_dashboard";
+    ViewData["Title"] = "patientdashboard";
 }
 
-@model MedicalHistory;
+@model MedicalHistoryList;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -48,8 +48,8 @@
                     </li>
                     <li class="nav-item p-2 fw-bolder">
                         <span class="d-flex gap-1">
-                            <span> @Model?.User?.Firstname</span>
-                            <span> @Model?.User?.Lastname</span>
+                            <span> @Model.firstName</span>
+                            <span> @Model.lastName</span>
                         </span>
                     </li>
             </div>
@@ -82,7 +82,7 @@
                     <li class="nav-item" role="presentation">
                         <a>
                             <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
-                                    type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
+                                    type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false" onclick="ShowProfile(@Model.id)">
                                 Profile
                             </button>
                         </a>
@@ -121,9 +121,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (Model != null)
+                                    @if (Model.medicalHistoriesList.Count != null)
                                     {
-                                        @foreach (var items in Model.MedicalHistoryList)
+                                        @foreach (var items in Model.medicalHistoriesList)
                                         {
                                             <tr>
                                                 <td>@items.createdDate</td>
@@ -229,110 +229,9 @@
         </div>
     </div>
 
-    @await Html.PartialAsync("_Profile", Model?.User)
-    @* @* Profile *@
-   @*  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-        <form method="post" enctype="multipart/form-data" asp-controller="Patient" asp-action="UpdateProfile" class="container my-5 p-4" id="main-cont">
-            <fieldset id="fset" disabled>
-                <div class="row">
-                    <h5 class="col-12">General Information</h5>
-
-                    <div class="col-6">
-                        <div class="input-div form-floating mb-3">
-                            <input asp-for="@Model.FirstOrDefault().FirstName" type="text" class="form-control" id="floatingInput" placeholder="">
-                            <label for="floatingInput"></label>
-
-                        </div>
-
-                    </div>
-                    <div class="col-6">
-                        <div class="input-div form-floating mb-3">
-                            <input asp-for="@Model.FirstOrDefault().LastName" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-                            <label for="floatingInput"></label>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-div form-floating mb-3">
-                            <input type="date" class="form-control" id="floatingInput" placeholder="name@example.com">
-                            <label for="floatingInput"></label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12">
-                        <h5>Contact Information</h5>
-                    </div>
-
-                    <div class="col-2">
-                        <div class="form-floating">
-                            <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                                <option selected>Type</option>
-                                <option value="1">Mobile</option>
-                                <option value="2">Landline</option>
-                            </select>
-                            <label for="floatingSelect">Works with selects</label>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="input-div form-floating mb-3">
-                            <input asp-for="@Model.FirstOrDefault().PhoneNo" type="tel" name="phone" class="form-control p-3 ps-5" id="floatingInput">
-
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-div form-floating mb-3">
-                            <input asp-for="@Model.FirstOrDefault().Email" name="email" type="email" class="form-control" id="email" placeholder="name@example.com">
-                            <label for="floatingInput">Email</label>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <h5>Patient Location</h5>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-div form-floating mb-3">
-                            <input asp-for="@Model.FirstOrDefault().Street" type="text" class="form-control" id="floatingInput" placeholder="">
-                            <label for="floatingInput">Street</label>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-div form-floating mb-3">
-                            <input asp-for="@Model.FirstOrDefault().City" type="text" class="form-control" id="floatingInput" placeholder="">
-                            <label for="floatingInput">City</label>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-div form-floating mb-3">
-                            <input asp-for="@Model.FirstOrDefault().State" type="text" class="form-control" id="floatingInput" placeholder="">
-                            <label for="floatingInput">State</label>
-                        </div>
-                    </div>
-                    <div class="col-5">
-                        <div class="input-div form-floating mb-3">
-                            <input asp-for="@Model.FirstOrDefault().ZipCode" type="text" class="form-control" id="floatingInput" placeholder="">
-                            <label for="floatingInput">Zip Code</label>
-                        </div>
-                    </div>
-                    <div class="col-1">
-                        <div class="form-floating mb-3">
-                            <button type="button" class="btn btn-outline-primary" style="height:3.4rem ;"> <i class="bi bi-geo-alt"></i> Map</button>
-                        </div>
-                    </div>
-
-                </div>
-            </fieldset>
-            <div class="col-lg-12 d-flex justify-content-end  my-3  ">
-                <button type="button" class="btn btn-info text-light px-4  me-4" id="edit">Edit</button>
-            </div>
-            <div class="d-flex savebutton justify-content-end  gap-3 me-2 mb-5">
-                <button class="btn btn-info text-white d-none" type="submit" id="save">Save</button>
-                <button class="btn border-info text-info d-none" type="button" id="cancel">Cancel</button>
-            </div>
-        </form>
-    </div>  *@
+    @* Profile *@
+    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+    </div>
 
     @* modal *@
     <div class="modal-dialog modal-dialog-centered">
@@ -380,40 +279,74 @@
     $(document).ready(function () {
         // Convert table rows to accordions in mobile view
         if ($(window).width() < 768) {
-            $('#dataTable tr').each(function (index) {
-                var $accordionHeader = $('<div class="accordion-header">');
-                $accordionHeader.text('Accordion Header ' + (index + 1));
+            $('.data-table tbody tr').each(function (index) {
+                var $accordionItem = $('<div class="accordion-item">');
+                var $accordionHeader = $('<h2 class="accordion-header">');
+                var $accordionButton = $('<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse">');
+                var $accordionCollapse = $('<div class="accordion-collapse collapse">');
+                var $accordionBody = $('<div class="accordion-body">');
 
-                var $accordionContent = $('<div class="accordion-content">');
-                $accordionContent.html($(this).html());
+                // Extract data from table row
+                var createdDate = $(this).find('td:eq(0)').text();
+                var currentStatus = $(this).find('td:eq(1)').text();
+                var documentLink = $(this).find('td:eq(2)').html();
 
-                $('#accordionWrapper').append($accordionHeader).append($accordionContent);
+                // Set accordion header text
+                $accordionButton.text('Created Date: ' + createdDate);
+
+                // Set accordion body content
+                $accordionBody.append('<p><strong>Current Status:</strong> ' + currentStatus + '</p>');
+                $accordionBody.append('<p><strong>Document:</strong> ' + documentLink + '</p>');
+
+                // Append elements to accordion item
+                $accordionHeader.append($accordionButton);
+                $accordionCollapse.append($accordionBody);
+                $accordionItem.append($accordionHeader).append($accordionCollapse);
+
+                $('#accordionFlushExample').append($accordionItem);
             });
 
             // Toggle accordion content on header click
-            $('.accordion-header').click(function () {
-                $(this).next('.accordion-content').slideToggle();
+            $('.accordion-button').click(function () {
+                $(this).closest('.accordion-item').find('.accordion-collapse').collapse('toggle');
             });
         }
     });
 
     // Resize event listener to update accordion on window resize
     $(window).resize(function () {
-        $('#accordionWrapper').empty();
+        $('#accordionFlushExample').empty();
         if ($(window).width() < 768) {
-            $('#dataTable tr').each(function (index) {
-                var $accordionHeader = $('<div class="accordion-header">');
-                $accordionHeader.text('Accordion Header ' + (index + 1));
+            $('.data-table tbody tr').each(function (index) {
+                var $accordionItem = $('<div class="accordion-item">');
+                var $accordionHeader = $('<h2 class="accordion-header">');
+                var $accordionButton = $('<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse">');
+                var $accordionCollapse = $('<div class="accordion-collapse collapse">');
+                var $accordionBody = $('<div class="accordion-body">');
 
-                var $accordionContent = $('<div class="accordion-content">');
-                $accordionContent.html($(this).html());
+                // Extract data from table row
+                var createdDate = $(this).find('td:eq(0)').text();
+                var currentStatus = $(this).find('td:eq(1)').text();
+                var documentLink = $(this).find('td:eq(2)').html();
 
-                $('#accordionWrapper').append($accordionHeader).append($accordionContent);
+                // Set accordion header text
+                $accordionButton.text('Created Date: ' + createdDate);
+
+                // Set accordion body content
+                $accordionBody.append('<p><strong>Current Status:</strong> ' + currentStatus + '</p>');
+                $accordionBody.append('<p><strong>Document:</strong> ' + documentLink + '</p>');
+
+                // Append elements to accordion item
+                $accordionHeader.append($accordionButton);
+                $accordionCollapse.append($accordionBody);
+                $accordionItem.append($accordionHeader).append($accordionCollapse);
+
+                $('#accordionFlushExample').append($accordionItem);
             });
 
             // Toggle accordion content on header click
-            $('.accordion-header').click(function () {
-                $(this).next('.accordion-content').slideToggle();
+            $('.accordion-button').click(function () {
+                $(this).closest('.accordion-item').find('.accordion-collapse').collapse('toggle');
             });
         }
     });
@@ -480,30 +413,22 @@
             }
         });
 
-
-
-
         document.getElementById('medicalHistory').style.display = 'none';
         document.getElementById('viewdocs').style.display = 'block';
     }
 
     // edit
-    document.getElementById("edit").addEventListener("click", () => {
+    function ShowProfile(userid) {
 
+        $.ajax({
+            url: '/Patient/ShowProfile',
+            type: 'GET',
+            data: { userid: userid },
+            success: function (response) {
 
-        document.getElementById("fset").removeAttribute("disabled");
-        document.getElementById("edit").classList.add("d-none");
-        document.getElementById("cancel").classList.remove("d-none");
-        document.getElementById("save").classList.remove("d-none");
-
-
-    });
-
-    document.getElementById("cancel").addEventListener("click", () => {
-        document.getElementById("fset").setAttribute("disabled", "");
-        document.getElementById("edit").classList.remove("d-none");
-        document.getElementById("cancel").classList.add("d-none");
-        document.getElementById("save").classList.add("d-none");
-    });
+                $("#profile-tab-pane").html(response);
+            }
+        });
+    }
 
 </script>

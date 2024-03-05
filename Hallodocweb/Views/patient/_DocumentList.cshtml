@@ -96,7 +96,11 @@
     <div class="container bg-white p-4 ">
         <div class="d-flex justify-content-between mb-4">
             <h2>Documents</h2>
-            <button onclick="swapDivs()" id="backview">&lt; Back</button>
+            <a asp-controller="patient" asp-action="patientdashboard">
+                <button id="logout" class="px-3" onclick="swapDivs()" id="backview">
+                    <span class=" d-none d-md-block">&lt; Back</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
+                </button>
+            </a>
         </div>
         <div class="row">
             <p class="col-12">Patient Name</p>
@@ -113,9 +117,12 @@
     </div>
 
 <form class="input-group my-5 mt-3" method="post" enctype="multipart/form-data">
-    <input name="file" type="file" class="form-control" id="formFileLg" multiple>
-    <button type="submit" class="input-group-text bg-primary text-white" for="inputGroupFile02"><i class="bi bi-cloud-arrow-up m-1"></i>&nbsp;Upload</button>
-    <br />
+        <div class="input-group mb-3">
+            <input type="file" class="form-control form-control-lg" id="fromFilelg" multiple>
+            <label class="input-group-text bg-primary text-white" for="inputGroupFile02">
+                <i class="bi bi-cloud-arrow-up m-1"></i>&nbsp;Upload
+            </label>
+        </div>
 </form>
 <div class="row my-3">
     <div class="col-12 d-flex justify-content-between">

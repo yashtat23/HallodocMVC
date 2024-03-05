@@ -28,76 +28,21 @@
 <link rel="stylesheet" href="~/css/patientdashboard.css">
 <br />
 
-<nav class="navbr navbar navbar-expand w-100 shadow">
-
-    <div class="container-fluid">
-        <div class="d-flex align-items-center">
-            <button class="navbar-toggler d-block d-lg-none" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation" style="height: 50%;">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <img class="navbar-brand ms-3" id="logo" src="~/img/hallodoc.png" alt="logo">
-
-        </div>
-        <div>
-            <ul class="navbar-nav ms-auto d-flex flex-nowrap align-items-center gap-2">
-                <div class="d-none d-sm-flex  justify-content-center align-items-center ">
-                <li class="nav-item">
-                    <span>Welcome</span>
-                </li>
-                <li class="nav-item p-2 fw-bolder">
-                    <span class="d-flex gap-1">
-                        <span> Yash</span>
-                        <span> Variya</span>
-                    </span>
-                </li>
-        </div>
-        <li class="nav-item">
-            <a asp-controller="patient" asp-action="patientreg">
-                <button id="logout" class="px-3">
-                    <span class=" d-none d-md-block">Logout</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
-                </button>
-            </a>
-        </li>
-        <li class="nav-item">
-            <img onclick="toggleDarkMode()" class="light" src="~/img/dark.png" alt="">
-        </li>
-        </ul>
-    </div>
-    </div>
-</nav>
+<partial name="_Navbar" />
 
 <hr class="m-0 hr_line d-none d-lg-block">
-<nav class="navbr navbar navbar-expand-lg py-0 pt-2 bg-body" style="z-index: 10;">
-    <div class="container-fluid">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class=" bg-white ps-5 nav nav-underline" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
-                            type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
-                        Dashboard
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a>
-                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
-                                type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
-                            Profile
-                        </button>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+
 
 <div class="container my-5 bg-light">
 
     <div class="container bg-white p-4 ">
         <div class="d-flex justify-content-between mb-4">
             <h2>Documents</h2>
-            <button onclick="swapDivs()" id="backview">&lt; Back</button>
+            <a asp-controller="Admin" asp-action="AdminDashboard">
+            <button id="logout" class="px-3">
+                <span class="d-none d-md-block">&lt; Back</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
+            </button>
+            </a>
         </div>
         <div class="row">
             <p class="col-12">Patient Name</p>

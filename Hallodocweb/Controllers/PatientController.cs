@@ -74,13 +74,18 @@ namespace Hallodocweb.Controllers
         {
             if (ModelState.IsValid)
             {
-                //User user = _context.Users.FirstOrDefault(u => u.Aspnetuserid == item.Id);
+                string passwordhash = GenerateSHA256(loginvm.Password);
+                loginvm.Password = passwordhash;
                 var user = _Auth.Login(loginvm);
+
+                //var userId = user.Userid;
+                HttpContext.Session.SetInt32("UserId", user.Userid);
+
                 if (user != null)
                 {
-                    HttpContext.Session.SetString("Email", loginvm.Email);
+                    
                     _notyf.Success("Logged In Successfully !!");
-                    return RedirectToAction("patientdashboard", user);
+                    return RedirectToAction("patientdashboard","Patient");
                 }
                 else
                 {
@@ -220,7 +225,6 @@ namespace Hallodocweb.Controllers
             }
             else
             {
-                _notyf.Error("Please Enter a Valid email adrress");
                 return View();
             }
 
@@ -231,11 +235,11 @@ namespace Hallodocweb.Controllers
         //    return View();
         //}
 
-        public IActionResult patientsubinformation(PatientInfoModel patientInfo)
-        {
-            var y = _patientService.subinformation(patientInfo);
-            return View(y);
-        }
+        //public IActionResult patientsubinformation(PatientInfoModel patientInfo)
+        //{
+        //    var y = _patientService.subinformation(patientInfo);
+        //    return View(y);
+        //}
 
         public IActionResult patientsomeoneelse()
         {
@@ -247,14 +251,16 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
-        public IActionResult patientdashboard(User user, Requestwisefile requestwisefile)
+        public IActionResult patientdashboard()
         {
-            //var rid = HttpContext.Session.GetInt32("rid");
-            var infos = _patientService.GetMedicalHistory(user);
-            var viewmodel = new MedicalHistory { MedicalHistoryList = infos , User = user};
-            return View(viewmodel);
+            int? userid = HttpContext.Session.GetInt32("UserId");
+
+            var infos = _patientService.GetMedicalHistory((int)userid);
+
+            return View(infos);
         }
 
+        
         public IActionResult SubmitMeInfo()
         {
             return View();
@@ -276,19 +282,37 @@ namespace Hallodocweb.Controllers
             return RedirectToAction("_DocumentList","Patient", new { Rid = rid });
         }
 
-        //[HttpGet]
-        //public IActionResult GetDcoumentsById(int requestId)
+        //[httpget]
+        //public iactionresult getdcoumentsbyid(int requestid)
         //{
-        //    var list = _patientService.GetAllDocById(requestId);
-        //    return PartialView("_DocumentList", list.ToList());
+        //    var list = _patientservice.getalldocbyid(requestid);
+        //    return partialview("_documentlist", list.tolist());
         //}
 
         //sending email
-     
-        public IActionResult UpdateProfile(User user)
+
+        public IActionResult ShowProfile(int userid)
         {
-            user.Firstname = user.Firstname;
-            return View(user);
+            HttpContext.Session.SetInt32("EditUserId", userid);
+            var profile = _patientService.GetProfile(userid);
+            return PartialView("_Profile", profile);
+        }
+
+        public IActionResult SaveEditProfile(Profile profile)
+        {
+            int EditUserId = (int)HttpContext.Session.GetInt32("EditUserId");
+            profile.userId = EditUserId;
+            bool isEdited = _patientService.EditProfile(profile);
+            if (isEdited)
+            {
+                _notyf.Success("Profile Edited Successfully");
+                return RedirectToAction("PatientDashboard");
+            }
+            else
+            {
+                _notyf.Error("Profile Edited Failed");
+                return RedirectToAction("PatientDashboard");
+            }
         }
 
         public IActionResult _Profile()
@@ -296,12 +320,47 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
-        public IActionResult Editing(User model)
+
+        //me & someoneelse page
+        public IActionResult patientsubinformation()
         {
-            var rid = HttpContext.Session.GetInt32("rid");
-            var email = HttpContext.Session.GetString("Email");
-            _patientService.Editing(email, model);
-            return PartialView("_Profile", new { Rid = rid});
+            int userid = (int)_htttpcontext.HttpContext.Session.GetInt32("UserId");
+            PatientInfoModel Reqobj = _patientService.FetchData(userid);
+            return View(Reqobj);
+
         }
+
+        [HttpPost]
+        public IActionResult patientsubinformation(PatientInfoModel insertPatientRegister)
+        {
+            int reqTypeid = 1;
+            int userid = (int)_htttpcontext.HttpContext.Session.GetInt32("UserId");
+            try
+            {
+                _patientService.StoreData(insertPatientRegister, reqTypeid, userid);
+                return RedirectToAction("patientdashboard");
+            }
+            catch
+            {
+
+                return View();
+            }
+        }
+
+      
+        [HttpPost]
+        public IActionResult patientsomeoneelse(FamilyReqModel familyFriendRequestForm)
+        {
+            int userid = (int)_htttpcontext.HttpContext.Session.GetInt32("UserId");
+
+            try
+            {
+                _patientService.ReqforSomeoneElse(familyFriendRequestForm, userid);
+                return RedirectToAction("patientdashboard");
+            }
+            catch { return View(); }
+
+        }
+
     }
 }

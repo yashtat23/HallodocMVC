@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\Hallodocweb.bundle.scp.css"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg",
+      "PackagePath": "staticwebassets\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\7768657_3763028 - Copy.jpg",
       "PackagePath": "staticwebassets\\UploadedFiles\\7768657_3763028 - Copy.jpg"
     },
@@ -21,12 +25,24 @@
       "PackagePath": "staticwebassets\\UploadedFiles\\Close case_mobile.png"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Create Request_Admin_mobile.png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\Create Request_Admin_mobile.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Create request_Provider_mobile.png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\Create request_Provider_mobile.png"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Fig Contact your Provider.jpg",
       "PackagePath": "staticwebassets\\UploadedFiles\\Fig Contact your Provider.jpg"
     },
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Fig1. Platform login page.jpg",
       "PackagePath": "staticwebassets\\UploadedFiles\\Fig1. Platform login page.jpg"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Fig2. Forgot Password.jpg",
+      "PackagePath": "staticwebassets\\UploadedFiles\\Fig2. Forgot Password.jpg"
     },
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Fig5. Admin dashboard in pending state.jpg",

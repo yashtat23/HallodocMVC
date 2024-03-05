@@ -23,18 +23,10 @@ namespace BusinessLogic.Repository
 
         public User Login(LoginVm loginvm)
         {
-
-            //bool isExist = _db.Aspnetusers.Any(x => x.Email == loginModel.Email && x.Passwordhash == loginModel.Password);
-            //if (isExist)
-            //{
-            //    var user = _db.Users.FirstOrDefault(x => x.Aspnetuserid ==  )
-            //}
-            //return user;
             var obj = _context.Aspnetusers.ToList();
             User user = new User();
+            user = null;
 
-            //string hashPassword = GenerateSHA256(patient.Password);
-            //match the email and pw with database entry
             foreach (var item in obj)
             {
                 if (item.Email == loginvm.Email && item.Passwordhash == loginvm.Password)

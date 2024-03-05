@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "hnI5uS5wYHKqSePxe6Lse4KHzEXfsXMsY6fUYBCZ9VQ=",
+  "Hash": "OehR5MjVEUk2GQxU4GzSK7ruGlziZKCi55Rhil1C/eQ=",
   "Source": "Hallodocweb",
   "BasePath": "_content/Hallodocweb",
   "Mode": "Default",
@@ -1479,6 +1479,23 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
     },
     {
+      "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg",
+      "SourceId": "Hallodocweb",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\",
+      "BasePath": "_content/Hallodocweb",
+      "RelativePath": "UploadedFiles/7768657_3763028 - Copy - Copy.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg"
+    },
+    {
       "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\7768657_3763028 - Copy.jpg",
       "SourceId": "Hallodocweb",
       "SourceType": "Discovered",
@@ -1700,6 +1717,40 @@
       "OriginalItemSpec": "wwwroot\\UploadedFiles\\Close case_mobile.png"
     },
     {
+      "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Create Request_Admin_mobile.png",
+      "SourceId": "Hallodocweb",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\",
+      "BasePath": "_content/Hallodocweb",
+      "RelativePath": "UploadedFiles/Create Request_Admin_mobile.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\UploadedFiles\\Create Request_Admin_mobile.png"
+    },
+    {
+      "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Create request_Provider_mobile.png",
+      "SourceId": "Hallodocweb",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\",
+      "BasePath": "_content/Hallodocweb",
+      "RelativePath": "UploadedFiles/Create request_Provider_mobile.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\UploadedFiles\\Create request_Provider_mobile.png"
+    },
+    {
       "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\dashboard.html",
       "SourceId": "Hallodocweb",
       "SourceType": "Discovered",
@@ -1800,6 +1851,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\UploadedFiles\\Fig1. Platform login page.jpg"
+    },
+    {
+      "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Fig2. Forgot Password.jpg",
+      "SourceId": "Hallodocweb",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\",
+      "BasePath": "_content/Hallodocweb",
+      "RelativePath": "UploadedFiles/Fig2. Forgot Password.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\UploadedFiles\\Fig2. Forgot Password.jpg"
     },
     {
       "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Fig5. Admin dashboard in pending state.jpg",

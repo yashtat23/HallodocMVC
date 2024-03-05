@@ -2,7 +2,7 @@
     ViewData["Title"] = "patientsubinformation";
 }
 @using DataAccess.CustomModels;
-@model IList<PatientInfoModel>;
+@model PatientInfoModel;
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -11,13 +11,71 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <link rel="stylesheet" href="~/css/patientreq.css" />
 <link rel="stylesheet" href="~/css/dark-mode.css" />
-@await Html.PartialAsync("nav")
+<style>
+    #logo {
+        width: 180px;
+        height: 100px;
+    }
+
+    #logout {
+        color: rgb(0, 183, 255);
+        background-color: white;
+        border: 1px solid rgb(0, 183, 255);
+        border-radius: 5px;
+        width: auto;
+        height: 2.5rem;
+    }
+
+        #logout:hover {
+            background-color: rgb(0, 183, 255);
+            color: white;
+        }
+</style>
+
+<nav class="navbr navbar navbar-expand w-100 shadow">
+
+    <div class="container-fluid">
+        <div class="d-flex align-items-center">
+            <button class="navbar-toggler d-block d-lg-none" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation" style="height: 50%;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <img class="navbar-brand ms-3" id="logo" src="~/img/hallodoc.png" alt="logo">
+
+        </div>
+        <div>
+            <ul class="navbar-nav ms-auto d-flex flex-nowrap align-items-center gap-2">
+                <div class="d-none d-sm-flex  justify-content-center align-items-center ">
+                <li class="nav-item">
+                    <span>Welcome</span>
+                </li>
+                <li class="nav-item p-2 fw-bolder">
+                    <span class="d-flex gap-1">
+                        <span>@Model.firstname</span>
+                        <span>@Model.lastname</span>
+                    </span>
+                </li>
+        </div>
+        <li class="nav-item">
+            <button id="logout" class="px-3">
+                <span class=" d-none d-md-block">Logout</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
+            </button>
+
+        </li>
+        <li class="nav-item">
+            <img onclick="toggleDarkMode()" class="light" src="~/img/dark.png" alt="">
+        </li>
+        </ul>
+    </div>
+    </div>
+</nav>
 
 <div class="container">
     <div class="navbar navbar-light justify-content-between">
         <h3>Submit Information</h3>
         <a asp-controller="patient" asp-action="patientdashboard">
-            <button class="back btn btn-outline-info m-2" onclick="location.href='@Url.Action("patientsubreq", "Patient")'">
+            <button class="back btn btn-outline-info m-2">
                 <span class="h6 p-0 m-0 text-center" style="color: #10bce9;">&#60; Back</span>
             </button>
         </a>
@@ -28,21 +86,21 @@
     <form method="post">
         <h3>Patient Information</h3>
         <div class="form-floating col-12 ">
-            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+            <textarea asp-for="symptoms" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
                       style="height: 100px"></textarea>
             <label for="floatingTextarea2" class="first">Enter Brief Details of Symptoms(Optional)</label>
         </div>  
         <div class="row mt-3">
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
-                <input asp-for="@Model.FirstOrDefault().firstname" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input asp-for="firstname" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput" class="email">Your First Name</label>
             </div>
             <div class="form-floating col-lg-6 col-md-12 col-sm-12">
-                <input type="text"  class="form-control" id="floatingPassword" placeholder="Password">
+                <input asp-for="lastname" type="text"  class="form-control" id="floatingPassword" placeholder="Password">
                 <label for="floatingPassword" class="email">Your Last Name</label>
             </div>
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12 mt-2">
-                <input type="date" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input asp-for="Dateofbirth" type="date" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput" class="email">Date of Birth</label>
             </div>
         </div>
@@ -50,36 +108,36 @@
         <h4>Patient Contact Information</h4>
         <div class="row mt-2">
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input asp-for="email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput" class="email">Email</label>
             </div>
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
-                <input type="tel" class="form-control p-3 ps-5" class="phoneNumber" placeholder="(201) 555-0123">
+                <input asp-for="phonenumber" type="tel" class="form-control p-3 ps-5" class="phoneNumber" placeholder="(201) 555-0123">
             </div>
         </div>
 
         <h4>Patient Location</h4>
         <div class="row mt-2">
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
-                <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input asp-for="street" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput" class="email">Street</label>
             </div>
             <div class="form-floating col-lg-6 col-md-12 col-sm-12">
-                <input type="text" class="form-control" id="floatingPassword" placeholder="Password">
+                <input asp-for="city" type="text" class="form-control" id="floatingPassword" placeholder="Password">
                 <label for="floatingPassword" class="email">City</label>
             </div>
         </div>
         <div class="row mt-2">
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
-                <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input asp-for="state" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
                <label for="floatingInput" class="email">State</label>
             </div>
             <div class="form-floating col-lg-6 col-md-12 col-sm-12">
-                <input type="text" class="form-control" id="floatingPassword" placeholder="Password">
+                <input asp-for="zipcode" type="text" class="form-control" id="floatingPassword" placeholder="Password">
                 <label for="floatingPassword" class="email">Zip Code</label>
             </div>
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12 mt-2">
-                <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input asp-for="roomno" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput" class="email">Room # / Suite (optional)</label>
             </div>
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12 mt-2">
@@ -99,7 +157,7 @@
         <h4>(Optional)Upload Photo Or Document</h4>
         <div class="form mb-3 col-lg-12 col-md-12 col-sm-12 d-flex">
             <div class="input-group mb-3">
-                <input type="file" class="form-control form-control-lg id="fromFilelg" multiple>
+                <input asp-for="File" type="file" class="form-control form-control-lg id="fromFilelg" multiple>
                 <label class="input-group-text bg-primary text-white" for="inputGroupFile02">
                     <i class="bi bi-cloud-arrow-up m-1"></i>&nbsp;Upload
                 </label>

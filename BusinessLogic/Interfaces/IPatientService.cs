@@ -22,7 +22,9 @@ namespace BusinessLogic.Interfaces
 
         Task<bool> IsEmailExists(string email);
 
-        List<MedicalHistory> GetMedicalHistory(User user);
+        MedicalHistoryList GetMedicalHistory(int userid);
+
+        //List<MedicalHistory> GetMedicalHistory(User user);
         IQueryable<Requestwisefile>? GetAllDocById(Int64 requestId);
 
         void AddFile(IFormFile file);
@@ -30,6 +32,13 @@ namespace BusinessLogic.Interfaces
         List<PatientInfoModel> subinformation(PatientInfoModel patientInfoModel);
 
         void Editing(string email, User model);
+        Profile GetProfile(int userid);
+        bool EditProfile(Profile profile);
 
+        void StoreData(PatientInfoModel patientRequestModel, int reqTypeid, int userid);
+
+        PatientInfoModel FetchData(int userid);
+
+        void ReqforSomeoneElse(FamilyReqModel familyFriendRequestForm, int userid);
     }
 }
