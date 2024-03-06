@@ -40,7 +40,7 @@ public partial class Admin
 
     public BitArray? Isdeleted { get; set; }
 
-    public int? Roleid { get; set; }
+    public string? Roleid { get; set; }
 
     public virtual ICollection<Adminregion> Adminregions { get; set; } = new List<Adminregion>();
 

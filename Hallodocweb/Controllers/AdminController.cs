@@ -7,6 +7,10 @@ using AspNetCoreHero.ToastNotification.Abstractions;
 using BusinessLogic.Repository;
 using System.Text;
 using System.Security.Cryptography;
+using System.Net.Mail;
+using System.Net;
+using BusinessLogic.Services;
+using HalloDoc.mvc.Auth;
 
 namespace Hallodocweb.Controllers
 {
@@ -16,13 +20,15 @@ namespace Hallodocweb.Controllers
         private readonly IAdminService _adminService;
         private readonly INotyfService _notyf;
         private readonly IPatientService _petientService;
+        private readonly IJwtService _jwtService;
 
-        public AdminController(ILogger<AdminController> logger,IAdminService adminService, INotyfService notyf, IPatientService petientService)
+        public AdminController(ILogger<AdminController> logger,IAdminService adminService, INotyfService notyf, IPatientService petientService, IJwtService jwtService)
         {
             _logger = logger;
             _adminService = adminService;
             _notyf = notyf;
             _petientService = petientService;
+            _jwtService = jwtService;
         }
 
         public static string GenerateSHA256(string input)
@@ -50,6 +56,8 @@ namespace Hallodocweb.Controllers
                     adminLoginModel.password = GenerateSHA256(adminLoginModel.password);
                     if (aspnetuser.Passwordhash == adminLoginModel.password)
                     {
+                        var jwtToken = _jwtService.GetJwtToken(aspnetuser);
+                        Response.Cookies.Append("jwt", jwtToken);
                         _notyf.Success("Logged in Successfully");
                         return RedirectToAction("AdminDashboard", "Admin");
                     }
@@ -117,11 +125,20 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
+
+        [CustomAuthorize("Admin")]
         public IActionResult AdminDashboard()
         {
 
             return View();
         }
+
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("jwt");
+            return RedirectToAction("AdminLogin");
+        }
+
         public IActionResult ViewCase(int Requestclientid, int RequestTypeId)
         {
             var obj = _adminService.ViewCaseViewModel(Requestclientid, RequestTypeId);
@@ -144,6 +161,7 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
+       
         public IActionResult ViewNote(int ReqId)
         {
             HttpContext.Session.SetInt32("RNId", ReqId);
@@ -221,20 +239,88 @@ namespace Hallodocweb.Controllers
             return RedirectToAction("AdminDashboard", "Admin");
         }
 
-        public IActionResult ViewUploads(int Rid)
+        public IActionResult ViewUploads(int reqId)
         {
-            HttpContext.Session.SetInt32("rid", Rid);
-            var y = _petientService.GetAllDocById(Rid);
-            return View(y);
+            HttpContext.Session.SetInt32("rid", reqId);
+            var model = _adminService.GetAllDocById(reqId);
+            return View(model);
         }
 
         [HttpPost]
-        public IActionResult ViewUploads()
+        public IActionResult UploadFiles(ViewUploadModel model)
         {
-            int? rid = (int)HttpContext.Session.GetInt32("rid");
-            var file = HttpContext.Request.Form.Files.FirstOrDefault();
-            _petientService.AddFile(file);
-            return RedirectToAction("ViewUploads", "Admin", new { Rid = rid });
+            var rid = (int)HttpContext.Session.GetInt32("rid");
+            if (model.uploadedFiles == null)
+            {
+                _notyf.Error("First Upload Files");
+                return RedirectToAction("ViewUploads", "Admin", new { reqId = rid });
+            }
+            bool isUploaded = _adminService.UploadFiles(model.uploadedFiles, rid);
+            if (isUploaded)
+            {
+                _notyf.Success("Uploaded Successfully");
+                return RedirectToAction("ViewUploads", "Admin", new { reqId = rid });
+            }
+            else
+            {
+                _notyf.Error("Upload Failed");
+                return RedirectToAction("ViewUploads", "Admin", new { reqId = rid });
+            }
+        }
+
+        public IActionResult DeleteFileById(int id)
+        {
+            var rid = (int)HttpContext.Session.GetInt32("rid");
+            bool isDeleted = _adminService.DeleteFileById(id);
+            if (isDeleted)
+            {
+                return RedirectToAction("ViewUploads", "Admin", new { reqId = rid });
+            }
+            else
+            {
+                _notyf.Error("SomeThing Went Wrong");
+                return RedirectToAction("ViewUploads", "Admin", new { reqId = rid });
+            }
+        }
+
+        public IActionResult DeleteAllFiles(List<string> selectedFiles)
+        {
+            var rid = (int)HttpContext.Session.GetInt32("rid");
+            bool isDeleted = _adminService.DeleteAllFiles(selectedFiles, rid);
+            if (isDeleted)
+            {
+                _notyf.Success("Deleted Successfully");
+                return RedirectToAction("ViewUploads", "Admin", new { reqId = rid });
+            }
+            _notyf.Error("SomeThing Went Wrong");
+            return RedirectToAction("ViewUploads", "Admin", new { reqId = rid });
+
+        }
+
+        public IActionResult SendAllFiles(List<string> selectedFiles)
+        {
+            var rid = (int)HttpContext.Session.GetInt32("rid");
+
+            var message = string.Join(", ", selectedFiles);
+            SendEmail("yashvariya23@gmail.com", "Documents", message);
+            _notyf.Success("Send Mail Successfully");
+            return RedirectToAction("ViewUploads", "Admin", new { reqId = rid });
+        }
+
+        private Task SendEmail(string email, string subject, string message)
+        {
+            var mail = "tatva.dotnet.vatsalgadoya@outlook.com";
+            var password = "VatsalTatva@2024";
+
+            var client = new SmtpClient("smtp.office365.com", 587)
+            {
+                EnableSsl = true,
+                Credentials = new NetworkCredential(mail, password)
+            };
+
+
+
+            return client.SendMailAsync(new MailMessage(from: mail, to: email, subject, message));
         }
 
     }

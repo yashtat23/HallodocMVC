@@ -1,5 +1,6 @@
-﻿﻿@using DataAccess.DataModels;
-@model IQueryable<Requestwisefile>;
+﻿@using DataAccess.CustomModel;
+
+@model ViewUploadModel;
 
 <style>
     #downloadSelected {
@@ -25,29 +26,25 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
-<link rel="stylesheet" href="~/css/patientdashboard.css">
-<br />
-
-<partial name="_Navbar" />
-
-<hr class="m-0 hr_line d-none d-lg-block">
+<link rel="stylesheet" href="~/css/PatientDashboard.css">
 
 
-<div class="container my-5 bg-light">
+
+
+
+
+<div class="container my-5 bg-white ">
 
     <div class="container bg-white p-4 ">
         <div class="d-flex justify-content-between mb-4">
             <h2>Documents</h2>
-            <a asp-controller="Admin" asp-action="AdminDashboard">
-            <button id="logout" class="px-3">
-                <span class="d-none d-md-block">&lt; Back</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
-            </button>
-            </a>
+            <button class="mx-2" id="downloadSelected" onclick="location.href='@Url.Action("AdminDashboard", "Admin")'" >&lt; Back</button>
+
         </div>
         <div class="row">
             <p class="col-12">Patient Name</p>
             <p class="col-12">
-                <span class="fw-bolder fs-4">Yash VAriya </span>
+                <span class="fw-bolder fs-4">@Model.firstName @Model.lastName </span>
                 <span>(f34r34t5gvr44)</span>
             </p>
             <p class="col-12 py-3">check here for any files that you or the doctors of your subsequents requestors have attached for you to review</p>
@@ -58,8 +55,9 @@
         <!-- ----container    -->
     </div>
 
-    <form class="input-group my-5 mt-3" method="post" enctype="multipart/form-data">
-        <input name="file" type="file" class="form-control" id="formFileLg" multiple>
+    <form method="post" asp-action="UploadFiles" asp-controller="Admin" class="input-group my-5 mt-3" enctype="multipart/form-data">
+        @*<input name="file" type="file" class="form-control" id="formFileLg" multiple>*@
+        <input asp-for="uploadedFiles" type="file" class="form-control form-control-lg" id="formFileLg" multiple>
         <button type="submit" class="input-group-text bg-primary text-white" for="inputGroupFile02"><i class="bi bi-cloud-arrow-up m-1"></i>&nbsp;Upload</button>
         <br />
     </form>
@@ -67,7 +65,12 @@
         <div class="col-12 d-flex justify-content-between">
 
             <h3>Documents</h3>
-            <button class="px-3" id="downloadSelected" onclick="downloadSelectedFiles()">Download All</button>
+            <div class="d-flex gap-2">
+                <button class="px-3" id="downloadSelected" onclick="downloadSelectedFiles()">Download All</button>
+                <button class="px-3" id="downloadSelected" onclick="deleteAllFiles()">Delete All</button>
+                <button class="px-3" id="downloadSelected" onclick="sendMail()">Send Mail</button>
+
+            </div>
         </div>
     </div>
     <div class="table-responsive">
@@ -80,9 +83,7 @@
                     <th class="sorting" data-value="Description">
                         File
                     </th>
-                    <th>
-                        Uploader
-                    </th>
+
                     <th>
                         Upload Date<i class="bi bi-arrow-up-short"></i>
                     </th>
@@ -93,25 +94,29 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model != null && Model.Count() > 0)
+                @if (Model != null && Model.files.Count > 0)
                 {
-                    @foreach (Requestwisefile rwf in Model)
+                    @foreach (var item in Model.files)
                     {
                         <tr>
                             <td>
-                                <input type="checkbox" name="selectedFiles" value="@rwf.Filename">
+                                <input type="checkbox" name="selectedFiles" value="@item.Filename">
                             </td>
 
                             <td>
                                 <i class="bi bi-file-earmark-fill" style="color:red"></i>
-                                @rwf.Filename
+                                @item.Filename
                             </td>
-                            <td>@rwf.Requestid</td>
-                            <td>@rwf.Createddate.ToString("MMM dd, yyyy")</td>
+
+                            <td>@item.Createddate.ToString("MMM dd, yyyy")</td>
                             <td>
 
-                                <a href="~/UploadedFiles/@rwf.Filename" class="btn px-2 py-1 btn-outline-info shadow-none night-mode-btn" download>
+                                <a href="~/UploadedFiles/@item.Filename" class="btn px-2 py-1 btn-outline-info shadow-none night-mode-btn" download>
                                     <i class="bi bi-cloud-download"></i>
+                                </a>
+                                <a class="btn ms-2 px-2 py-1 btn-outline-info shadow-none night-mode-btn" asp-controller="Admin" asp-action="DeleteFileById" asp-route-id="@item.Requestwisefileid">
+                                    @*onclick="deleteFile(@item.Requestwisefileid)"*@
+                                    <i class="bi bi-trash"></i>
                                 </a>
 
                             </td>
@@ -129,7 +134,6 @@
         </table>
     </div>
 </div>
-<script src="~/js/dark-mode.js"></script>
 <script>
     function toggleCheckboxes() {
         var checkboxes = document.getElementsByName('selectedFiles');
@@ -167,4 +171,79 @@
         }
 
     }
+
+    function deleteAllFiles() {
+        var selectedFiles = [];
+        var checkboxes = document.getElementsByName('selectedFiles');
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                selectedFiles.push(checkboxes[i].value);
+            }
+        }
+
+        // If no files are selected, return
+        if (selectedFiles.length === 0) {
+            alert('Please select at least one file to Delete.');
+            return;
+        }
+
+        var confirmDelete = confirm("Are you sure you want to delete all selected files?");
+        if (!confirmDelete) {
+            return;
+        }
+        deleteSelectedFiles(selectedFiles);
+
+    }
+
+    function deleteSelectedFiles(selectedFiles) {
+        $.ajax({
+            url: '/Admin/DeleteAllFiles',
+            type: 'POST',
+            data: { selectedFiles: selectedFiles },
+            success: function (response) {
+
+                window.location.reload();
+
+            }
+        });
+    }
+
+    function sendMail() {
+        var selectedFiles = [];
+        var checkboxes = document.getElementsByName('selectedFiles');
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                selectedFiles.push(checkboxes[i].value);
+            }
+        }
+
+        // If no files are selected, return
+        if (selectedFiles.length === 0) {
+            alert('Please select at least one file to Send.');
+            return;
+        }
+
+        var confirmDelete = confirm("Are you sure you want to send all selected files?");
+        if (!confirmDelete) {
+            return;
+        }
+
+        sendSelectedFiles(selectedFiles);
+    }
+    function sendSelectedFiles(selectedFiles) {
+        $.ajax({
+            url: '/Admin/SendAllFiles',
+            type: 'POST',
+            data: { selectedFiles: selectedFiles },
+            success: function (response) {
+
+                window.location.reload();
+
+            }
+        });
+    }
+
+
 </script>

@@ -12,6 +12,7 @@ using System.Globalization;
 using DataAccess.Enum;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessLogic.Repository
 {
@@ -329,6 +330,117 @@ namespace BusinessLogic.Repository
                 {
                     return false;
                 }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public ViewUploadModel GetAllDocById(int requestId)
+        {
+
+            var list = _db.Requestwisefiles.Where(x => x.Requestid == requestId).ToList();
+            var reqClient = _db.Requestclients.Where(x => x.Requestid == requestId).FirstOrDefault();
+
+            ViewUploadModel result = new()
+            {
+                files = list,
+                firstName = reqClient.Firstname,
+                lastName = reqClient.Lastname,
+
+            };
+
+            return result;
+
+        }
+
+        public bool UploadFiles(List<IFormFile> files, int reqId)
+        {
+
+            try
+            {
+                if (files != null)
+                {
+                    foreach (IFormFile file in files)
+                    {
+                        if (file != null && file.Length > 0)
+                        {
+                            //get file name
+                            var fileName = Path.GetFileName(file.FileName);
+
+                            //define path
+                            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedFiles", fileName);
+
+                            // Copy the file to the desired location
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                file.CopyTo(stream)
+                       ;
+                            }
+
+                            Requestwisefile requestwisefile = new()
+                            {
+                                Filename = fileName,
+                                Requestid = reqId,
+                                Createddate = DateTime.Now
+                            };
+
+                            _db.Requestwisefiles.Add(requestwisefile);
+
+                        }
+                    }
+                    _db.SaveChanges();
+                    return true;
+                }
+                else { return false; }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool DeleteFileById(int reqFileId)
+        {
+            try
+            {
+                var reqWiseFile = _db.Requestwisefiles.Where(x => x.Requestwisefileid == reqFileId).FirstOrDefault();
+                if (reqWiseFile != null)
+                {
+                    _db.Requestwisefiles.Remove(reqWiseFile);
+                    _db.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool DeleteAllFiles(List<string> filenames, int reqId)
+        {
+            try
+            {
+                var list = _db.Requestwisefiles.Where(x => x.Requestid == reqId).ToList();
+
+                foreach (var filename in filenames)
+                {
+                    var existFile = list.Where(x => x.Filename == filename && x.Requestid == reqId).FirstOrDefault();
+                    if (existFile != null)
+                    {
+                        list.Remove(existFile);
+                        _db.Requestwisefiles.Remove(existFile);
+                    }
+                }
+                _db.SaveChanges();
+                return true;
             }
             catch (Exception ex)
             {

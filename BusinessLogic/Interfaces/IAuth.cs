@@ -12,7 +12,6 @@ namespace BusinessLogic.Interfaces
     public interface IAuth
     {
         public User Login(LoginVm loginVm);
-
         //sending email
         Task EmailSendar(string email, string subject, string message);
 

@@ -1,4 +1,8 @@
-﻿<div class="d-none d-md-block">
+﻿﻿@using DataAccess.CustomModel;
+@using DataAccess.Enums;
+@model List<AdminDashTableModel>;
+
+<div class="d-none d-md-block">
     <table class="table table-hover data-table">
         <thead class="table-secondary">
             <tr>
@@ -138,7 +142,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" asp-controller="Admin" asp-action="ViewUploads" asp-route-Rid="@item.reqId">
+                                            <a class="dropdown-item" asp-controller="Admin" asp-action="ViewUploads" asp-route-reqId="@item.reqId">
                                                 <i class="bi bi-file-earmark-text"></i>
                                                 View Uploads
                                             </a>

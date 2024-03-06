@@ -3,11 +3,15 @@ using AspNetCoreHero.ToastNotification.Extensions;
 using AspNetCoreHero.ToastNotification.Toastify;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Repository;
+using BusinessLogic.Services;
 using DataAccess.CustomModel;
 using DataAccess.DataContext;
 using FluentAssertions.Common;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 using static BusinessLogic.Interfaces.IAuth;
 
 
@@ -17,6 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IAuth, Auth>();
 builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("ApplicationDbContext")));
@@ -26,6 +31,8 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(60);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
 var app = builder.Build();
@@ -38,9 +45,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+//Jwt configuration starts here
+
+//Jwt configuration ends here
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseAuthentication();
 
+app.UseAuthorization();
 app.UseSession();
 
 app.UseRouting();
