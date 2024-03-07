@@ -13,6 +13,7 @@ using DataAccess.Enum;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections;
 using Microsoft.AspNetCore.Http;
+using System.Text.Json.Nodes;
 
 namespace BusinessLogic.Repository
 {
@@ -28,7 +29,7 @@ namespace BusinessLogic.Repository
 
         public Aspnetuser GetAspnetuser(string email)
         {
-            var aspNetUser = _db.Aspnetusers.FirstOrDefault(x => x.Email == email);
+            var aspNetUser = _db.Aspnetusers.Include(x=>x.Aspnetuserroles).FirstOrDefault(x => x.Email == email);
             return aspNetUser;
         }
 
@@ -261,7 +262,6 @@ namespace BusinessLogic.Repository
             var physician = _db.Physicians.Where(i=>i.Regionid == regionId).ToList();
             return physician;
         }
-
              
         public void AssignCasePostData(AssignCaseModel assignCaseModel, int requestId)
         {
@@ -446,6 +446,43 @@ namespace BusinessLogic.Repository
             {
                 return false;
             }
+        }
+
+        //public List<Healthprofessionaltype> GetProfession()
+        //{
+        //    var profession = _db.Healthprofessionaltypes.ToList();
+        //    return profession;
+        //}
+
+        //public List<Healthprofessional> GetBusiness()
+        //{
+        //    var business = _db.Healthprofessionals.ToList();
+        //    return business;
+        //}
+
+        public Order FetchOrder(int reqId)
+        {
+            var reqclientid = _db.Requests.Where(x => x.Requestid == reqId).FirstOrDefault();
+            var Healthprofessional = _db.Healthprofessionals.ToList();
+            var Healthprofessionaltype = _db.Healthprofessionaltypes.ToList();
+
+            Order order = new()
+            {
+                Profession = Healthprofessionaltype,
+                Business = Healthprofessional,             
+            };
+            return order;
+        }
+        public JsonArray FetchVendors(int selectedValue)
+        {
+            var result = new JsonArray();
+            IEnumerable<Healthprofessional> businesses = _db.Healthprofessionals.Where(prof => prof.Profession == selectedValue);
+
+            foreach (Healthprofessional business in businesses)
+            {
+                result.Add(new { businessId = business.Vendorid, businessName = business.Vendorname });
+            }
+            return result;
         }
 
     }

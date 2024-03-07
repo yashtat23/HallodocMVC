@@ -20,12 +20,15 @@ namespace BusinessLogic.Services
             this._configuration = configuration;
         }
 
+        String[] Role = { "Admin", "User", "Physician" };
         public string GetJwtToken(Aspnetuser aspnetuser)
         {
+            var role = aspnetuser.Aspnetuserroles.FirstOrDefault(x => x.Userid == aspnetuser.Id);
+            var roleid = role.Roleid;
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, aspnetuser.Email),
-                new Claim(ClaimTypes.Role,"Admin"),
+                new Claim(ClaimTypes.Role,Role[roleid-1]),
                  //aspnetuser.Aspnetuserroles.ToString()
                 new Claim("aspNetUserId",aspnetuser.Id)
             };

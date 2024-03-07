@@ -45,6 +45,24 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/Admin"))
+    {
+        context.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+        context.Response.Headers.Add("Pragma", "no-cache");
+        context.Response.Headers.Add("Expires", "0");
+    }
+
+    if (context.Request.Path.StartsWithSegments("/Patient"))
+    {
+        context.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+        context.Response.Headers.Add("Pragma", "no-cache");
+        context.Response.Headers.Add("Expires", "0");
+    }
+
+    await next.Invoke();
+});
 //Jwt configuration starts here
 
 //Jwt configuration ends here

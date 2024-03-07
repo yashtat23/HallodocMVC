@@ -11,6 +11,7 @@ using System.Net.Mail;
 using System.Net;
 using BusinessLogic.Services;
 using HalloDoc.mvc.Auth;
+using System.Text.Json.Nodes;
 
 namespace Hallodocweb.Controllers
 {
@@ -321,6 +322,19 @@ namespace Hallodocweb.Controllers
 
 
             return client.SendMailAsync(new MailMessage(from: mail, to: email, subject, message));
+        }
+
+        public IActionResult Order(int reqId) 
+        { 
+             var order = _adminService.FetchOrder(reqId);
+            return View(order);
+        }
+
+        [HttpGet]
+        public JsonArray FetchVendors(int selectedValue)
+        {
+            var result = _adminService.FetchVendors(selectedValue);
+            return result;
         }
 
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DataAccess.DataModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.DataContext;
+namespace DataAccess.Data;
 
 public partial class ApplicationDbContext : DbContext
 {
@@ -88,7 +88,7 @@ public partial class ApplicationDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("User ID = postgres;Password=2376;Server=localhost;Database=Hallodoc;Integrated Security=true;Pooling=true;");
+        => optionsBuilder.UseNpgsql("User ID = postgres;Password=2376;Server=localhost;Port=5432;Database=Hallodoc;Integrated Security=true;Pooling=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -141,7 +141,9 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("modifieddate");
             entity.Property(e => e.Regionid).HasColumnName("regionid");
-            entity.Property(e => e.Roleid).HasColumnName("roleid");
+            entity.Property(e => e.Roleid)
+                .HasColumnType("character varying")
+                .HasColumnName("roleid");
             entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.Zip)
                 .HasMaxLength(10)
@@ -164,10 +166,6 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.Region).WithMany(p => p.Admins)
                 .HasForeignKey(d => d.Regionid)
                 .HasConstraintName("fk_admin3");
-
-            //entity.HasOne(d => d.Role).WithMany(p => p.Admins)
-            //    .HasForeignKey(d => d.Roleid)
-            //    .HasConstraintName("fk_admin4");
         });
 
         modelBuilder.Entity<Adminregion>(entity =>
@@ -369,9 +367,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.ToTable("casetag");
 
-            entity.Property(e => e.Casetagid)
-                .UseIdentityAlwaysColumn()
-                .HasColumnName("casetagid");
+            entity.Property(e => e.Casetagid).HasColumnName("casetagid");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasColumnName("name");
