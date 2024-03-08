@@ -1,0 +1,109 @@
+﻿@using DataAccess.CustomModel;
+@model AssignCaseModel;
+
+@* Assign case model *@
+<div class="modal fade" id="Transfermodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#00B7FF">
+                <h5 class="modal-title text-light" id="exampleModalLabel">Transfer Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="Assign_Req">
+                    <div class="mb-3 text-secondary">
+                        <p>To assign this request, search and select another Physician</p>
+                    </div>
+
+                    <input type="text" asp-for="@Model.requestId" hidden />
+                    <div class="mb-3 ">
+
+                        <select class="form-select text-secondary" aria-label="Default select example" id="region" onchange="GetPhysicianData(this.value)">
+                            <option selected>Select Region</option>
+                            @foreach (var item in Model.region.ToList())
+                            {
+                                <option value="@item.Regionid">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3 text-secondary">
+                        <div class="form-floating mb-3">
+                            <select asp-for="@Model.physicanNo" class="form-select text-secondary" aria-label="Default select example" id="physician">
+                                <option selected></option>
+                            </select>
+                            <label for="floatingInput">Select Physican</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <textarea class="form-control" id="message-text" placeholder="Description" asp-for="@Model.additionalNotes"></textarea>
+                    </div>
+                    <button type="submit" class="btn text-light" style="background-color:#00B7FF" data-bs-dismiss="modal">Confirm</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn border border-info" style="color:#00B7FF">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    function GetPhysicianData(regionId) {
+        console.log(regionId);
+        $.ajax({
+            method: "GET",
+            url: "/Admin/GetPhysicianData",
+            async: false,
+            data: { regionId: regionId },
+
+            success: function (data) {
+                // physicion = document.getElementById('#secondSelection');
+                // region = document.getElementById('#firstSelection');
+                //region.value == '0' ? physicion.disabled : physicion.enabled;
+
+                $('#physician').empty();
+                $('#physician').html("<option selected disabled>" + "Select Physician" + "</option>");
+                $.each(data, function (index, item) {
+
+                    $('#physician').append($('<option>', {
+                        value: item.physicianid,
+                        text: item.firstname + " " + item.lastname
+
+                    }));
+                });
+            },
+            error: function () {
+                alert('Error loading partial view');
+            }
+        })
+
+    }
+
+    function AssignCasePost(requestid) {
+        event.preventDefault();
+        console.log(requestid);
+
+
+        $.ajax({
+            method: "POST",
+            url: "/Admin/AssignCasePost",
+            async: false,
+            data: $("#Assign_Req").serialize(),
+
+            success: function (result) {
+                //$('#Dash_Tab').html(result);
+                window.location.reload();
+            },
+            error: function () {
+                alert('Error loading partial view');
+            }
+        })
+
+    }
+
+</script>

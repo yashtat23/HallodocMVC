@@ -67,11 +67,13 @@
                 //region.value == '0' ? physicion.disabled : physicion.enabled;
 
                 $('#physician').empty();
-
+                $('#physician').html("<option selected disabled>" + "Select Physician" + "</option>");
                 $.each(data, function (index, item) {
+                    
                     $('#physician').append($('<option>', {
                         value: item.physicianid,
                         text: item.firstname + " " + item.lastname
+                       
                     }));
                 });
             },

@@ -164,6 +164,22 @@ namespace DataAccess.CustomModel
         public string faxnumber { get; set; }
         public string orderdetail { get; set; }
 
+        public int refill { get; set; }
+        public int vendorid {  get; set; }
+        
+    }
+
+    public class TransferRequets
+    {
+        public List<Region> region { get; set; }
+
+        public List<Physician> physician { get; set; }
+        public int requestId { get; set; }
+
+        public int physicanNo { get; set; }
+
+        public string additionalNotes { get; set; }
+
     }
 }
 

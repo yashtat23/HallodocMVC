@@ -12,6 +12,7 @@ using System.Net;
 using BusinessLogic.Services;
 using HalloDoc.mvc.Auth;
 using System.Text.Json.Nodes;
+using DataAccess.DataModels;
 
 namespace Hallodocweb.Controllers
 {
@@ -23,7 +24,7 @@ namespace Hallodocweb.Controllers
         private readonly IPatientService _petientService;
         private readonly IJwtService _jwtService;
 
-        public AdminController(ILogger<AdminController> logger,IAdminService adminService, INotyfService notyf, IPatientService petientService, IJwtService jwtService)
+        public AdminController(ILogger<AdminController> logger, IAdminService adminService, INotyfService notyf, IPatientService petientService, IJwtService jwtService)
         {
             _logger = logger;
             _adminService = adminService;
@@ -152,24 +153,24 @@ namespace Hallodocweb.Controllers
         public IActionResult UpdateNotes(ViewNotesViewModel model)
         {
             int? reqId = HttpContext.Session.GetInt32("RNId");
-            bool isUpdated =  _adminService.UpdateAdminNotes(model.AdditionalNotes,(int)reqId);
+            bool isUpdated = _adminService.UpdateAdminNotes(model.AdditionalNotes, (int)reqId);
             if (isUpdated)
             {
                 _notyf.Success("Saved Changes!!");
-                return RedirectToAction("ViewNote","Admin",new { ReqId = reqId });
+                return RedirectToAction("ViewNote", "Admin", new { ReqId = reqId });
 
             }
             return View();
         }
 
-       
+
         public IActionResult ViewNote(int ReqId)
         {
             HttpContext.Session.SetInt32("RNId", ReqId);
             ViewNotesViewModel data = _adminService.ViewNotes(ReqId);
             return View(data);
         }
-        
+
         public IActionResult Index()
         {
             return View();
@@ -208,7 +209,7 @@ namespace Hallodocweb.Controllers
             return Ok();
         }
 
-        public IActionResult assignCase(int requestId )
+        public IActionResult assignCase(int requestId)
         {
             AssignCaseModel assignCase = new AssignCaseModel
             {
@@ -324,9 +325,9 @@ namespace Hallodocweb.Controllers
             return client.SendMailAsync(new MailMessage(from: mail, to: email, subject, message));
         }
 
-        public IActionResult Order(int reqId) 
-        { 
-             var order = _adminService.FetchOrder(reqId);
+        public IActionResult Order(int reqId)
+        {
+            var order = _adminService.FetchOrder(reqId);
             return View(order);
         }
 
@@ -337,5 +338,35 @@ namespace Hallodocweb.Controllers
             return result;
         }
 
+        [HttpGet]
+        public Healthprofessional VendorDetails(int selectedValue)
+        {
+            var result = _adminService.VendorDetails(selectedValue);
+            return result;
+        }
+
+        [HttpPost]
+        public IActionResult Orderdetail(Order order)
+        {
+            _adminService.SendOrderDetails(order);
+            return RedirectToAction("AdminDashboard", "Admin");
+        }
+
+        //public IActionResult _TransferRequests()
+        //{
+        //    return View();
+        //}
+
+        [HttpGet]
+        public IActionResult Transferreq(int requestId)
+        {
+            AssignCaseModel assignCase = new AssignCaseModel
+            {
+                requestId = requestId,
+                region = _adminService.GetRegion(),
+            };
+            _notyf.Success("Assign Successfully!");
+            return PartialView("_AssignCase", assignCase);
+        }
     }
 }

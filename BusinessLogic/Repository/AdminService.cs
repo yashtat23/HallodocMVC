@@ -485,5 +485,29 @@ namespace BusinessLogic.Repository
             return result;
         }
 
+        public Healthprofessional VendorDetails(int selectedValue)
+        {
+            Healthprofessional business = _db.Healthprofessionals.First(prof => prof.Vendorid == selectedValue);
+
+            return business;
+        }
+
+        public async Task SendOrderDetails(Order order)
+        {
+            Orderdetail orderDetail = new Orderdetail()
+            {
+                Vendorid = order.vendorid,
+                Requestid = order.ReqId,
+                Faxnumber = order.faxnumber,
+                Email= order.email,
+                Businesscontact= order.BusineesContact,
+                Prescription = order.orderdetail,
+                Noofrefill = order.refill,
+                Createddate = DateTime.Now,
+                Createdby="admin",
+            };
+            await _db.Orderdetails.AddAsync(orderDetail);
+            await _db.SaveChangesAsync();
+        }
     }
 }

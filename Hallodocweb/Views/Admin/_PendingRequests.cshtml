@@ -154,10 +154,10 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">
+                                            <button class="dropdown-item" onclick="transfer(@item.reqId)">
                                                 <i class="bi bi-card-checklist"></i>
                                                 Transfer
-                                            </a>
+                                            </button>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" onclick="showCancelCase(@item.reqId)">
@@ -191,5 +191,22 @@
 </div>
 
 <script>
-  
+    function transfer(requestid) {
+        
+        console.log(requestid);
+        $.ajax({
+            url: "/Admin/Transferreq",
+            type: 'GET',
+
+            data: { requestid: requestid },
+
+            success: function (result) {
+                $('#modelContent').html(result);
+                $('#Transfermodel').modal('show');
+            },
+            error: function () {
+                alert('Error loading partial view ceddx');
+            }
+        });
+    }
 </script>

@@ -49,5 +49,8 @@ namespace BusinessLogic.Interfaces
         Order FetchOrder(int reqId);
 
         JsonArray FetchVendors(int selectedValue);
+
+        Healthprofessional VendorDetails(int selectedValue);
+        Task SendOrderDetails(Order order);
     }
 }
