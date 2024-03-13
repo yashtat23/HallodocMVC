@@ -1,0 +1,26 @@
+﻿@{
+    var requestId = ViewBag.ClearCaseId;
+}
+<!-- Modal -->
+<div class="modal fade " id="clearcase" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form class="modal-content" method="post" asp-action="SubmitClearCase" asp-controller="Admin" asp-route-reqId=@requestId>
+
+            <div class="modal-body ">
+                <div class="d-flex flex-column justify-content-evenly align-items-center gap-3">
+
+                    <img style="width:5rem" id="info-icon" src="~/img/error.png" alt="info">
+                    <h5>Confirmation for Clear Case</h5>
+                    <p>
+                        Are you sure want to clear this request? Once clear this request then you are not able to see this request.
+                    </p>
+
+                </div>
+            </div>
+            <div class="d-flex justify-content-center my-3 gap-2">
+                <button type="submit" class="btn btn-primary">Clear</button>
+                <button type="reset" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

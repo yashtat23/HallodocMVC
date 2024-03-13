@@ -366,7 +366,84 @@ namespace Hallodocweb.Controllers
                 region = _adminService.GetRegion(),
             };
             _notyf.Success("Assign Successfully!");
-            return PartialView("_AssignCase", assignCase);
+            return PartialView("_TransferRequests", assignCase);
         }
+
+        [HttpPost]
+        public IActionResult TransferReqPost(AssignCaseModel assignCaseModel)
+        {
+            _adminService.TransferReqPostData(assignCaseModel, assignCaseModel.requestId);
+            return View("AdminDashboard", "Admin");
+        }
+
+        public IActionResult clearCase(int reqId)
+        {
+            ViewBag.ClearCaseId = reqId;
+            return PartialView("_ClearCase", "Admin");
+        }
+
+        [HttpPost]
+        public IActionResult SubmitClearCase(int reqId)
+        {
+           
+            _adminService.Clearcase(reqId);
+            return View("AdminDashboard","Admin");
+        }
+
+        //public IActionResult SendAgreement(int requestId)
+        //{
+        //    var agreement = _adminService.Agreement(requestId);
+        //    return PartialView("_SendAgreement",agreement);
+        //}
+
+        //[HttpPost]
+        //public IActionResult SendAgreement(SendAgreement sendAgreement)
+        //{
+        //     _adminService.Resetreq(sendAgreement.email);   
+        //    return RedirectToAction("AdminDashboard",sendAgreement);
+        //}
+
+
+        [HttpGet]
+        public IActionResult SendAgreement(int requestid)
+        {
+            var model = _adminService.Agreement(requestid);
+            return PartialView("_SendAgreement", model);
+        }
+
+        [HttpPost]
+        public IActionResult SendAgreement(SendAgreement model)
+        {
+            try
+            {
+                string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+                string reviewPathLink = baseUrl + Url.Action("ReviewAgreement", "Home");
+
+                SE(model.email, "Review Agreement", $"Hello, Review the agreement properly: {reviewPathLink}");
+                return Json(new { isSend = true });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { isSend = false });
+            }
+        }
+
+        public Task SE(string email, string subject, string message)
+        {
+            var mail = "yashvariya23@gmail.com";
+            var password = "Itzvariya@23";
+
+            var client = new SmtpClient("smtp.office365.com", 587)
+            {
+                EnableSsl = true,
+                Credentials = new NetworkCredential(mail, password)
+            };
+
+
+
+            return client.SendMailAsync(new MailMessage(from: mail, to: email, subject, message));
+        }
+
     }
 }

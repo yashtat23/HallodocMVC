@@ -163,10 +163,10 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">
+                                            <button class="dropdown-item" onclick="clearCase(@item.reqId)">
                                                 <i class="bi bi-x-circle"></i>
                                                 Clear Case
-                                            </a>
+                                            </button>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="#">
@@ -187,20 +187,28 @@
     </table>
 </div>
 
+<div id="modelContent"></div>
+
 <!-- accordions -->
 <div class="accordion accordion-flush d-block d-md-none" id="accordionFlushExample">
 </div>
-
+    
 <script>
-    $(document).ready(function () {
-        $('#dtBasicExample').DataTable(
-            //info: true,
-            //ordering: true,
-            //paging: true,
-            //searching: true
-        );
-    });
-            // $(document).ready(function () {
-            //     $('#new_table').DataTable({ "searching": false, "lengthChange": false, "pageLength": 7 });
-            // });
+   
+    function clearCase(reqId) {
+        console.log(reqId);
+        $.ajax({
+            url: "/Admin/clearCase",
+            type: 'GET',
+            data: { reqId: reqId },
+
+            success: function (result) {
+                $('#modelContent').html(result);
+                $('#clearcase').modal('show');
+            },
+            error: function () {
+                alert('Error loading partial view ceddx');
+            }
+        });
+    }
 </script>

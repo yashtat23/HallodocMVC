@@ -14,6 +14,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json.Nodes;
+using System.Net.Mail;
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessLogic.Repository
 {
@@ -273,6 +276,7 @@ namespace BusinessLogic.Repository
                 Notes = assignCaseModel.additionalNotes,
                 Createddate = DateTime.Now,
                 Status = 2
+
             };
             reqData.Status = 2;
             reqData.Physicianid = assignCaseModel.physicanNo;
@@ -509,5 +513,120 @@ namespace BusinessLogic.Repository
             await _db.Orderdetails.AddAsync(orderDetail);
             await _db.SaveChangesAsync();
         }
+
+
+        public void TransferReqPostData(AssignCaseModel assignCaseModel, int requestId)
+        {
+            var reqData = _db.Requests.Where(i => i.Requestid == requestId).FirstOrDefault();
+
+            var reqstatusData = new Requeststatuslog()
+            {
+                Requestid = requestId,
+                Notes = assignCaseModel.additionalNotes,
+                Createddate = DateTime.Now,
+                Status = 2
+            };
+            reqData.Status = 2;
+            reqData.Physicianid = assignCaseModel.physicanNo;
+
+            _db.Add(reqstatusData);
+            _db.SaveChanges();
+
+        }
+
+        public bool Clearcase(int requestId)
+        {
+            try
+            {
+                var req = _db.Requests.Where(x => x.Requestid == requestId).FirstOrDefault();
+                
+                if (req !=  null)
+                {
+                    
+                    req.Status = (int)StatusEnum.Clear;
+                    
+                    
+                    _db.Requests.Update(req);
+                    _db.SaveChanges();
+                    return true;
+                }
+                else {
+                    return false; 
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public SendAgreement Agreement(int requestId)
+        {
+            var req = _db.Requests.FirstOrDefault(x => x.Requestid == requestId);
+
+            SendAgreement sendAgreement = new()
+            { 
+               phonenumber = req.Phonenumber,
+               email = req.Email,
+            };
+            return sendAgreement;
+        }
+
+        //public Task EmailSendar(string email, string subject, string message)
+        //{
+
+        //    string mail = "tatva.dotnet.yashvariya@outlook.com";
+        //    string password = "Itzvariya@23";
+
+        //    SmtpClient client = new("smtp.office365.com",587)
+        //    {
+        //        //Port = 587,
+        //        Credentials = new NetworkCredential(mail, password),
+        //        EnableSsl = true,
+        //        DeliveryMethod = SmtpDeliveryMethod.Network,
+        //        UseDefaultCredentials = false
+        //    };
+
+        //    MailMessage mailMessage = new()
+        //    {
+        //        From = new MailAddress(mail, "HalloDoc"),
+        //        Subject = "Hallodoc review agreement",
+        //        IsBodyHtml = true,
+        //        Body = "<h3>Admin has sent you the agreement papers to review. Click on the link below to read the agreement.</h3>",
+        //    };
+
+        //    mailMessage.To.Add(email);
+
+        //    client.Send(mailMessage);
+        //    return Task.CompletedTask;
+        //}
+
+        //public void Resetreq(string Email)
+        //{
+        //    var receiver = Email;
+        //    var subject = "Create Account";
+        //    var message = "Tap on link for Create Account Hello ";
+        //    EmailSendar(receiver, subject, message);
+        //}
+
+        //[HttpPost]
+        //public IActionResult SendAgreement(string email)
+        //{
+        //    try
+        //    {
+        //        string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+        //        string reviewPathLink = baseUrl + Url.Action("ReviewAgreement", "Home");
+
+        //        SendEmail(email, "Review Agreement", $"Hello, Review the agreement properly: {reviewPathLink}");
+        //        return Json(new { isSend = true });
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { isSend = false });
+        //    }
+        //}
+
+
     }
 }

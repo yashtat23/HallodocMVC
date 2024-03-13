@@ -169,17 +169,11 @@ namespace DataAccess.CustomModel
         
     }
 
-    public class TransferRequets
+    public class SendAgreement
     {
-        public List<Region> region { get; set; }
-
-        public List<Physician> physician { get; set; }
-        public int requestId { get; set; }
-
-        public int physicanNo { get; set; }
-
-        public string additionalNotes { get; set; }
+        public int? ReqId { get; set; }
+        public string phonenumber { get; set; }
+        public string email { get; set; }
 
     }
 }
-

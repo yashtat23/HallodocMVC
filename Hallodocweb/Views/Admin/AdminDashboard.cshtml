@@ -366,6 +366,23 @@
             });
         }
 
+        function sendagreement(requestid) {
+
+            $.ajax({
+                url: "/Admin/SendAgreement",
+                type: 'GET',
+
+                data: { requestid: requestid },
+
+                success: function (result) {
+                    $('#modelContent9').html(result);
+                    $('#sendagreementmodel').modal('show');
+                },
+                error: function () {
+                    alert('Error loading partial view yash');
+                }
+            });
+        }
 
     </script>
 

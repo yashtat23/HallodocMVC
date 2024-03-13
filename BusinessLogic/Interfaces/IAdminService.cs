@@ -52,5 +52,14 @@ namespace BusinessLogic.Interfaces
 
         Healthprofessional VendorDetails(int selectedValue);
         Task SendOrderDetails(Order order);
-    }
+
+        void TransferReqPostData(AssignCaseModel assignCaseModel, int requestId);
+
+        bool Clearcase(int requestId);
+
+        SendAgreement Agreement(int requestId);
+        //void Resetreq(string Email);
+        //Task EmailSendar(string email, string subject, string message);
+
+    }   
 }

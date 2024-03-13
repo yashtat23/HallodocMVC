@@ -62,22 +62,8 @@ namespace BusinessLogic.Repository
                 Body = message
             };
 
-            //"<h1>Hello , world!!</h1>" +
-            //    "<a href=\"https://localhost:7130/Patient/patientresetpasss" + "" + "\" >reset pass link</a>"
-
-
             mailMessage.To.Add(email);
-
             client.Send(mailMessage);
-
-            //var client = new SmtpClient("smtp.office365.com", 587)
-            //{
-            //    EnableSsl = true,
-            //    DeliveryMethod = SmtpDeliveryMethod.Network,
-            //    UseDefaultCredentials = false,
-            //    Credentials = new NetworkCredential(mail, password)
-            //};
-            //return client.SendMailAsync(new MailMessage(from: mail, to: email, subject:"hi", message));
             return Task.CompletedTask;
         }
 
@@ -85,7 +71,7 @@ namespace BusinessLogic.Repository
         {
             var receiver = forgotpassword.forgotemail;
             var subject = "Create Account";
-            var message = "Tap on link for Create Account: https://localhost:7130/Patient/patientresetpasss";
+            var message = "Tap on link for Create Account Hello this is dummy project: https://localhost:7130/Patient/patientresetpass";
             EmailSendar(receiver, subject, message);
         }
     }

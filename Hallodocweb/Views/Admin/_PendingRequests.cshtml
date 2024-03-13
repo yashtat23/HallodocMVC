@@ -166,10 +166,10 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">
+                                            <button class="dropdown-item" onclick="sendagreement(@item.reqId)">
                                                 <i class="bi bi-file-earmark-text"></i>
                                                 Send Agreement
-                                            </a>
+                                            </button>
                                         </li>
                                         
                                     </ul>
@@ -185,16 +185,16 @@
 
     </table>
 </div>
-<div id="modelContent"></div>
+<div id="modelContent9"></div>
 <!-- accordions -->
 <div class="accordion accordion-flush d-block d-md-none" id="accordionFlushExample">
 </div>
 
 <script>
-    function transfer(requestid) {
+     console.log(requestid);
+        function transfer(requestid) {
         
-        console.log(requestid);
-        $.ajax({
+       $.ajax({
             url: "/Admin/Transferreq",
             type: 'GET',
 
@@ -209,4 +209,8 @@
             }
         });
     }
+
+    
+
+
 </script>
