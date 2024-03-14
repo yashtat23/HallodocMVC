@@ -303,16 +303,16 @@ namespace Hallodocweb.Controllers
         {
             var rid = (int)HttpContext.Session.GetInt32("rid");
 
-            var message = string.Join(", ", selectedFiles);
-            SendEmail("yashvariya23@gmail.com", "Documents", message);
+            //var message = string.Join(", ", selectedFiles);
+            SendEmail("yashvariya23@gmail.com", "Documents", selectedFiles);
             _notyf.Success("Send Mail Successfully");
             return RedirectToAction("ViewUploads", "Admin", new { reqId = rid });
         }
 
-        private Task SendEmail(string email, string subject, string message)
+        private Task SendEmail(string email, string subject, List<string> filenames)
         {
-            var mail = "tatva.dotnet.vatsalgadoya@outlook.com";
-            var password = "VatsalTatva@2024";
+            var mail = "tatva.dotnet.yashvariya@outlook.com";
+            var password = "Itzvariya@23";
 
             var client = new SmtpClient("smtp.office365.com", 587)
             {
@@ -320,9 +320,20 @@ namespace Hallodocweb.Controllers
                 Credentials = new NetworkCredential(mail, password)
             };
 
+            MailMessage mailMessage = new MailMessage();
+            for (var i = 0; i < filenames.Count; i++)
+            {
+                string pathname = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedFiles", filenames[i]);
+                Attachment attachment = new Attachment(pathname);
+                mailMessage.Attachments.Add(attachment);
+            }
+            mailMessage.To.Add(email)
+       ;
+            mailMessage.From = new MailAddress(mail);
 
+            mailMessage.Subject = subject;
 
-            return client.SendMailAsync(new MailMessage(from: mail, to: email, subject, message));
+            return client.SendMailAsync(mailMessage);
         }
 
         public IActionResult Order(int reqId)
@@ -385,65 +396,32 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult SubmitClearCase(int reqId)
         {
-           
+
             _adminService.Clearcase(reqId);
-            return View("AdminDashboard","Admin");
+            return View("AdminDashboard", "Admin");
         }
 
-        //public IActionResult SendAgreement(int requestId)
-        //{
-        //    var agreement = _adminService.Agreement(requestId);
-        //    return PartialView("_SendAgreement",agreement);
-        //}
-
-        //[HttpPost]
-        //public IActionResult SendAgreement(SendAgreement sendAgreement)
-        //{
-        //     _adminService.Resetreq(sendAgreement.email);   
-        //    return RedirectToAction("AdminDashboard",sendAgreement);
-        //}
 
 
         [HttpGet]
-        public IActionResult SendAgreement(int requestid)
+        public IActionResult SendAgreement(int requestClientid, int reqType)
         {
-            var model = _adminService.Agreement(requestid);
+            var model = _adminService.Agreement(requestClientid);
+            model.reqType = reqType;
             return PartialView("_SendAgreement", model);
         }
 
+
         [HttpPost]
-        public IActionResult SendAgreement(SendAgreement model)
+        public IActionResult SendAgreementSubmit(SendAgreement model)
         {
-            try
-            {
-                string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
-                string reviewPathLink = baseUrl + Url.Action("ReviewAgreement", "Home");
+            var link = Url.Action("ReviewAgreement", "Home", new { ReqClientId = model.ReqClientId }, Request.Scheme);
 
-                SE(model.email, "Review Agreement", $"Hello, Review the agreement properly: {reviewPathLink}");
-                return Json(new { isSend = true });
-
-            }
-            catch (Exception ex)
-            {
-                return Json(new { isSend = false });
-            }
+            _adminService.SendAgreementEmail(model, link);
+            return RedirectToAction("AdminDashboard");
         }
 
-        public Task SE(string email, string subject, string message)
-        {
-            var mail = "yashvariya23@gmail.com";
-            var password = "Itzvariya@23";
 
-            var client = new SmtpClient("smtp.office365.com", 587)
-            {
-                EnableSsl = true,
-                Credentials = new NetworkCredential(mail, password)
-            };
-
-
-
-            return client.SendMailAsync(new MailMessage(from: mail, to: email, subject, message));
-        }
 
     }
 }

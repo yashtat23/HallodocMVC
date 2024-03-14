@@ -11,11 +11,11 @@ namespace DataAccess.Enum
         Unassigned = 1,
         Accepted = 2,
         Cancelled = 3,
-        MDEnRoute = 4,
-        MDOnSite = 5,
+        MDEnRoute = 4, //Active
+        MDOnSite = 5, //Active
         Conclude = 6,
         CancelledByPatient = 7,
-        Closed = 8,
+        Closed = 8, //Toclose
         Unpaid = 9,
         Clear = 10
     }

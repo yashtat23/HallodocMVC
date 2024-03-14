@@ -58,8 +58,12 @@ namespace BusinessLogic.Interfaces
         bool Clearcase(int requestId);
 
         SendAgreement Agreement(int requestId);
+        void SendAgreementEmail(SendAgreement model, string link);
         //void Resetreq(string Email);
         //Task EmailSendar(string email, string subject, string message);
 
+        bool ReviewAgree(ReviewAgreement Agreement);
+        CancelAngreement CancelAgreement(int requestClientId);
+        bool CancelAgreement(CancelAngreement cancel);
     }   
 }

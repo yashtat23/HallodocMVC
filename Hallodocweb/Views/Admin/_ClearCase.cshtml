@@ -1,10 +1,9 @@
 ﻿@{
-    var requestId = ViewBag.ClearCaseId;
 }
 <!-- Modal -->
 <div class="modal fade " id="clearcase" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <form class="modal-content" method="post" asp-action="SubmitClearCase" asp-controller="Admin" asp-route-reqId=@requestId>
+        <form class="modal-content" method="post" asp-action="SubmitClearCase" asp-controller="Admin">
 
             <div class="modal-body ">
                 <div class="d-flex flex-column justify-content-evenly align-items-center gap-3">

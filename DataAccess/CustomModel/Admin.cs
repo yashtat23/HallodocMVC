@@ -171,9 +171,22 @@ namespace DataAccess.CustomModel
 
     public class SendAgreement
     {
-        public int? ReqId { get; set; }
+        public int? ReqClientId { get; set; }
         public string phonenumber { get; set; }
         public string email { get; set; }
 
+        public int reqType { get; set; }
+    }
+
+    public class ReviewAgreement
+    {
+        public int? ReqClientId { get; set;}
+    }
+
+    public class CancelAngreement
+    {
+        public int? ReqClientId { get; set; }
+        public String Firstname { get; set; }
+        public string Reason { get; set; }
     }
 }

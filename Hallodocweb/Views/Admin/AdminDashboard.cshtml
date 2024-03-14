@@ -366,13 +366,26 @@
             });
         }
 
-        function sendagreement(requestid) {
-
+        function sendagreement(Requestclientid, reqType) {
+            var requestClientid = Requestclientid;
+            var role = null;
+            if (reqType == 1) {
+                role = 'Business';
+            }
+            if (reqType == 2) {
+                role = 'Patient';
+            }
+            if (reqType == 3) {
+                role = 'Family';
+            }
+            if (reqType == 4) {
+                role = 'Concierge';
+            }
             $.ajax({
                 url: "/Admin/SendAgreement",
                 type: 'GET',
-
-                data: { requestid: requestid },
+                
+                data: { requestClientid: requestClientid, reqType: reqType },
 
                 success: function (result) {
                     $('#modelContent9').html(result);
@@ -383,6 +396,7 @@
                 }
             });
         }
+
 
     </script>
 

@@ -61,6 +61,7 @@ app.Use(async (context, next) =>
         context.Response.Headers.Add("Expires", "0");
     }
 
+
     await next.Invoke();
 });
 //Jwt configuration starts here

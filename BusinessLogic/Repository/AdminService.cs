@@ -17,6 +17,7 @@ using System.Text.Json.Nodes;
 using System.Net.Mail;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace BusinessLogic.Repository
 {
@@ -32,7 +33,7 @@ namespace BusinessLogic.Repository
 
         public Aspnetuser GetAspnetuser(string email)
         {
-            var aspNetUser = _db.Aspnetusers.Include(x=>x.Aspnetuserroles).FirstOrDefault(x => x.Email == email);
+            var aspNetUser = _db.Aspnetusers.Include(x => x.Aspnetuserroles).FirstOrDefault(x => x.Email == email);
             return aspNetUser;
         }
 
@@ -62,7 +63,7 @@ namespace BusinessLogic.Repository
                             zipCode = rc.Zipcode,
                             requestTypeId = r.Requesttypeid,
                             status = r.Status,
-                            Requestclientid=rc.Requestclientid,
+                            Requestclientid = rc.Requestclientid,
                             reqId = r.Requestid
                         };
 
@@ -103,7 +104,7 @@ namespace BusinessLogic.Repository
             return result;
         }
 
-        public bool UpdateAdminNotes(string additionalNotes,int reqId)
+        public bool UpdateAdminNotes(string additionalNotes, int reqId)
         {
             var reqNotes = _db.Requestnotes.FirstOrDefault(x => x.Requestid == reqId);
             try
@@ -164,7 +165,7 @@ namespace BusinessLogic.Repository
             Requestclient obj = _db.Requestclients.FirstOrDefault(x => x.Requestclientid == Requestclientid);
             ViewCaseViewModel viewCaseViewModel = new()
             {
-                Requestclientid=obj.Requestclientid,
+                Requestclientid = obj.Requestclientid,
                 Firstname = obj.Firstname,
                 Lastname = obj.Lastname,
                 Email = obj.Email,
@@ -262,10 +263,10 @@ namespace BusinessLogic.Repository
         }
         public List<Physician> GetPhysician(int regionId)
         {
-            var physician = _db.Physicians.Where(i=>i.Regionid == regionId).ToList();
+            var physician = _db.Physicians.Where(i => i.Regionid == regionId).ToList();
             return physician;
         }
-             
+
         public void AssignCasePostData(AssignCaseModel assignCaseModel, int requestId)
         {
             var reqData = _db.Requests.Where(i => i.Requestid == requestId).FirstOrDefault();
@@ -473,7 +474,7 @@ namespace BusinessLogic.Repository
             Order order = new()
             {
                 Profession = Healthprofessionaltype,
-                Business = Healthprofessional,             
+                Business = Healthprofessional,
             };
             return order;
         }
@@ -503,12 +504,12 @@ namespace BusinessLogic.Repository
                 Vendorid = order.vendorid,
                 Requestid = order.ReqId,
                 Faxnumber = order.faxnumber,
-                Email= order.email,
-                Businesscontact= order.BusineesContact,
+                Email = order.email,
+                Businesscontact = order.BusineesContact,
                 Prescription = order.orderdetail,
                 Noofrefill = order.refill,
                 Createddate = DateTime.Now,
-                Createdby="admin",
+                Createdby = "admin",
             };
             await _db.Orderdetails.AddAsync(orderDetail);
             await _db.SaveChangesAsync();
@@ -539,19 +540,18 @@ namespace BusinessLogic.Repository
             try
             {
                 var req = _db.Requests.Where(x => x.Requestid == requestId).FirstOrDefault();
-                
-                if (req !=  null)
+
+                if (req != null)
                 {
-                    
+
                     req.Status = (int)StatusEnum.Clear;
-                    
-                    
                     _db.Requests.Update(req);
                     _db.SaveChanges();
                     return true;
                 }
-                else {
-                    return false; 
+                else
+                {
+                    return false;
                 }
             }
             catch (Exception ex)
@@ -560,73 +560,124 @@ namespace BusinessLogic.Repository
             }
         }
 
-        public SendAgreement Agreement(int requestId)
+        public SendAgreement Agreement(int reqClientId)
         {
-            var req = _db.Requests.FirstOrDefault(x => x.Requestid == requestId);
+            var obj = _db.Requestclients.FirstOrDefault(x => x.Requestclientid == reqClientId);
 
             SendAgreement sendAgreement = new()
-            { 
-               phonenumber = req.Phonenumber,
-               email = req.Email,
+            {
+                phonenumber = obj.Phonenumber,
+                ReqClientId = reqClientId,
+                email = obj.Email,
             };
             return sendAgreement;
         }
 
-        //public Task EmailSendar(string email, string subject, string message)
-        //{
+        public void SendAgreementEmail(SendAgreement model, string link)
+        {
+            Requestclient reqCli = _db.Requestclients.FirstOrDefault(requestCli => requestCli.Requestclientid == model.ReqClientId);
 
-        //    string mail = "tatva.dotnet.yashvariya@outlook.com";
-        //    string password = "Itzvariya@23";
+            string mail = "tatva.dotnet.yashvariya@outlook.com";
+            string password = "Itzvariya@23";
 
-        //    SmtpClient client = new("smtp.office365.com",587)
-        //    {
-        //        //Port = 587,
-        //        Credentials = new NetworkCredential(mail, password),
-        //        EnableSsl = true,
-        //        DeliveryMethod = SmtpDeliveryMethod.Network,
-        //        UseDefaultCredentials = false
-        //    };
+            SmtpClient client = new("smtp.office365.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential(mail, password),
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false
+            };
 
-        //    MailMessage mailMessage = new()
-        //    {
-        //        From = new MailAddress(mail, "HalloDoc"),
-        //        Subject = "Hallodoc review agreement",
-        //        IsBodyHtml = true,
-        //        Body = "<h3>Admin has sent you the agreement papers to review. Click on the link below to read the agreement.</h3>",
-        //    };
+            MailMessage mailMessage = new()
+            {
+                From = new MailAddress(mail, "HalloDoc"),
+                Subject = "Hallodoc review agreement",
+                IsBodyHtml = true,
+                Body = "<h3>Admin has sent you the agreement papers to review. Click on the link below to read the agreement.</h3><a href=\"" + link + "\">Review Agreement link</a>",
+            };
 
-        //    mailMessage.To.Add(email);
+            mailMessage.To.Add(model.email);
 
-        //    client.Send(mailMessage);
-        //    return Task.CompletedTask;
-        //}
+            client.Send(mailMessage);
+        }
 
-        //public void Resetreq(string Email)
-        //{
-        //    var receiver = Email;
-        //    var subject = "Create Account";
-        //    var message = "Tap on link for Create Account Hello ";
-        //    EmailSendar(receiver, subject, message);
-        //}
+        public bool ReviewAgree(ReviewAgreement Agreement)
+        {
+            try
+            {
+                var reqClient = _db.Requestclients.Where(x => x.Requestclientid == Agreement.ReqClientId).FirstOrDefault();
+                var req = _db.Requests.FirstOrDefault(x => x.Requestid == reqClient.Requestid);
+                if (req != null)
+                {
+                    req.Status = (int)StatusEnum.MDEnRoute;
 
-        //[HttpPost]
-        //public IActionResult SendAgreement(string email)
-        //{
-        //    try
-        //    {
-        //        string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
-        //        string reviewPathLink = baseUrl + Url.Action("ReviewAgreement", "Home");
+                    Requeststatuslog requeststatuslog = new Requeststatuslog();
+                    requeststatuslog.Requestid = req.Requestid;
+                    requeststatuslog.Status = req.Status;
+                    requeststatuslog.Createddate = DateTime.Now;
 
-        //        SendEmail(email, "Review Agreement", $"Hello, Review the agreement properly: {reviewPathLink}");
-        //        return Json(new { isSend = true });
+                    _db.Requests.Update(req);
+                    _db.Requeststatuslogs.Add(requeststatuslog);
+                    _db.SaveChanges();
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { isSend = false });
-        //    }
-        //}
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public CancelAngreement CancelAgreement(int requestClientId)
+        {
+            Requestclient reqClient = _db.Requestclients.Where(x => x.Requestclientid == requestClientId).FirstOrDefault();
+            Request request = _db.Requests.FirstOrDefault(x => x.Requestid == reqClient.Requestid);
+            CancelAngreement obj = new()
+            {
+                ReqClientId=requestClientId,
+                Firstname=request.Firstname+" "+request.Lastname,
+            };
+            return obj;
+        }
 
+        public bool CancelAgreement(CancelAngreement cancel)
+        {
+            try
+            {
+                Requestclient reqClient = _db.Requestclients.Where(x => x.Requestclientid == cancel.ReqClientId).FirstOrDefault();
+
+                if (reqClient != null)
+                {
+                    Request request = _db.Requests.FirstOrDefault(x => x.Requestid == reqClient.Requestid);
+                    request.Status = (int)StatusEnum.Closed;
+
+                    Requeststatuslog requeststatuslog = new Requeststatuslog();
+                    requeststatuslog.Requestid = request.Requestid;
+                    requeststatuslog.Status = request.Status;
+                    requeststatuslog.Notes = cancel.Reason;
+                    requeststatuslog.Createddate = DateTime.Now;
+
+                    _db.Requests.Update(request);
+                    _db.Requeststatuslogs.Add(requeststatuslog);
+                    _db.SaveChanges();
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
     }
 }
