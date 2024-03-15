@@ -1,0 +1,161 @@
+﻿@using DataAccess.CustomModel;
+@model CloseCase;
+
+@{
+    ViewData["Title"] = "CloseCase";
+}
+<!-- Option 1: Include in HTML -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+<div class="container p-sm-2 p-md-5 ">
+   
+       
+            <div class=" mt-2 d-flex justify-content-between align-items-center">
+                <h4 >Close Case</h4>
+        <button id="back-btn">&lt; Back</button>
+            </div>
+
+            <div class="container-fluid shadow border rounded mt-3 px-4 mb-5 pb-5 bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-secondary pt-3 ">Patient Name</div>
+                <span class="text-info fs-4">@Model.Firstname @Model.Lastname</span>  <span class=" text-secondary">
+                    
+                            (asasaa)
+                        </span>
+                    </div>
+                    <div>
+                        <button type="submit" id="CreateInvoice" class="btn btn-outline-secondary border-info text-info">Create Invoice Through QuickBooks</button>
+                    </div>
+                </div>
+                <h5 class="mb-4 pt-2" style="color:black!important;">Documents</h5>
+                <div class="table-responsive">
+                    <table class="table dataTable table-hover" id="data-table" aria-describedby="data-table_info">
+                        <thead>
+                            <tr>
+                                
+                                <th class="sorting" data-value="Description">
+                                    File
+                                </th>
+
+                                <th>
+                                    Upload Date<i class="bi bi-arrow-up-short"></i>
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                             @if (Model.file != null && Model.file.Count > 0)
+                            {
+                                @foreach (var item in Model.file)
+                                {
+                                    <tr>
+                                      
+
+                                        <td>
+                                            <i class="bi bi-file-earmark-fill" style="color:red"></i>
+                                            @item.Filename
+                                        </td>
+
+                                        <td>@* @item.createddate.tostring("mmm dd, yyyy") *@</td> 
+                                        <td>
+
+                                            <a href="~/uploadedfiles/@item.Filename" class="btn px-2 py-1 btn-outline-info shadow-none night-mode-btn" download>
+                                                <i class="bi bi-cloud-download"></i>
+                                            </a>
+                                           
+
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3" style="text-align: center;">no records found.</td>
+                                </tr>
+                            } 
+                        </tbody>
+                    </table>
+                </div>
+                <form method="post" asp-action="EditCloseCase" asp-controller="Admin">
+                <input asp-for="@Model.ReqId" hidden />
+                <div class="mt-3">
+                    <input type="hidden"  />
+                    <h5 class="mb-4 pt-2" style="color:black!important;">Patient Information</h5>
+                    <div class="row intext">
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                                <input asp-for="Firstname" type="text" class=" form-control" id="floatingInputFirst"
+                                   placeholder="First Name" value="@Model.Firstname" disabled aria-label="First Name" />
+                            <label class="ms-2 text-secondary" for="floatingInputFirst" >First Name</label>
+                            @*<span @ asp-validation-for="FirstName" @ class="text-danger"></span>*@
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                        <input asp-for="Lastname" type="text" class=" form-control" id="floatingInputLast" disabled placeholder="Last Name"
+                                value="@Model.Lastname"   aria-label="Last Name" />
+                            <label class="ms-2 text-secondary" for="floatingInputLast">Last Name</label>
+                            @*<span @ asp-validation-for="LastName" @ class="text-danger"></span>*@
+                        </div>
+                    </div>
+                    <div class="row intext">
+                        <div class="form-floating mb-3 col-12 col-sm-6">
+                                <input type="date" class="form-control " id="floatingInputdate" disabled placeholder="02-10-2002">
+                            <label for="floatingInputdate" class="ms-2 text-secondary ">Date of Birth</label>
+                        </div>
+
+                        <div class="form-floating mb-3 col-12 col-sm-5">
+                        <input type="tel" asp-for="phoneno" class="dclass form-control " value="@Model.phoneno" id="floatingInputdate" disabled placeholder="1234567890">
+                            <label for="floatingInputdate" class="ms-2 text-secondary ">Phone Number</label>
+                        </div>
+
+                        <div class="form-floating mb-3 col-12 col-sm-1 ">
+                            <button type="button" class="dclass btn btn-outline-dark border-info p-3 text-info w-100"
+                                    style="height: 100%;">
+                            <i class="bi bi-telephone"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mb-3 intext">
+                        <div class="form-floating mb-3 col-12 col-sm-6">
+                        <input type="email" asp-for="email" class="form-control emailInp dclass" value="@Model.email" disabled id="floatingInput">
+                            <label for="floatingInput" class="ms-2 text-secondary">Email</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-grid gap-2 d-flex justify-content-center  justify-content-md-end mt-4 pt-4 mb-3">
+                    <button type="button" id="editBtn" class="btn btn-info text-white EditBtn" onclick="enableFields()">Edit </button>
+                    <button type="button" id="cancelBtn" class="btn btn-outline-info EditBtn" onclick="disableFields()">Cancel</button>
+                    <button type="submit" id="submitBtn" class="btn btn-info text-white EditBtn">Save</button>
+                <a type="button" id="CloseCaseBtn" class="btn btn-outline-secondary border-info text-info" asp-controller="Admin" asp-action="ChangeCloseCase" asp-route-reqid="@Model.ReqId">Close Case</a>
+                </div>
+                </form>
+            </div>
+     
+</div>
+<script>
+    function disableFields() {
+        document.querySelectorAll('.dclass').forEach(function (element) {
+            element.disabled = true;
+        });
+        // Hide the submit and cancel buttons, show the edit button
+        document.getElementById('submitBtn').style.display = 'none';
+        document.getElementById('cancelBtn').style.display = 'none';
+        document.getElementById('editBtn').style.display = 'block';
+        document.getElementById('CloseCaseBtn').style.display = 'block';
+    }
+
+    function enableFields() {
+        document.querySelectorAll('.dclass').forEach(function (element) {
+            element.disabled = false;
+        });
+        // Show the submit and cancel buttons, hide the edit button
+        document.getElementById('submitBtn').style.display = 'block';
+        document.getElementById('cancelBtn').style.display = 'block';
+        document.getElementById('editBtn').style.display = 'none';
+        document.getElementById('CloseCaseBtn').style.display = 'none';
+    }
+    disableFields();
+</script>

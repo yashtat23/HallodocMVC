@@ -65,5 +65,11 @@ namespace BusinessLogic.Interfaces
         bool ReviewAgree(ReviewAgreement Agreement);
         CancelAngreement CancelAgreement(int requestClientId);
         bool CancelAgreement(CancelAngreement cancel);
+
+        CloseCase closeCase(int reqId);
+
+        bool EditCloseCase(CloseCase closeCase);
+
+        bool ChangeCloseCase(CloseCase closeCase);
     }   
 }

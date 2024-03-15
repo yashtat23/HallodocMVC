@@ -402,7 +402,6 @@ namespace Hallodocweb.Controllers
         }
 
 
-
         [HttpGet]
         public IActionResult SendAgreement(int requestClientid, int reqType)
         {
@@ -421,7 +420,29 @@ namespace Hallodocweb.Controllers
             return RedirectToAction("AdminDashboard");
         }
 
+        public IActionResult CloseCase(int reqId)
+        {
+            var model = _adminService.closeCase(reqId);
+            return View(model);
+        }
 
+        [HttpPost]
+        public IActionResult EditCloseCase(CloseCase closeCase)
+        {
+            var edit = _adminService.EditCloseCase(closeCase);
+            return View("AdminDashboard", edit);
+        }
+
+        public IActionResult ChangeCloseCase(CloseCase closeCase)
+        {
+            var change = _adminService.ChangeCloseCase(closeCase);
+            return View("AdminDashboard");
+        }
+
+        public IActionResult MyProfile()
+        {
+            return View();
+        }
 
     }
 }

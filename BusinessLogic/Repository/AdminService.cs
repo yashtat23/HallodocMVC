@@ -18,6 +18,7 @@ using System.Net.Mail;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using static Org.BouncyCastle.Math.EC.ECCurve;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BusinessLogic.Repository
 {
@@ -677,6 +678,58 @@ namespace BusinessLogic.Repository
             {
                 return false;
             }
+        }
+
+        public CloseCase closeCase(int reqId)
+        {
+
+            var requestclient = _db.Requestclients.FirstOrDefault(x => x.Requestid == reqId);
+            var requestwisefile = _db.Requestwisefiles.Where(x => x.Requestid == reqId).ToList();
+           
+            CloseCase obj = new()
+            {
+                ReqId = reqId,
+                Firstname = requestclient.Firstname,
+                Lastname = requestclient.Lastname,
+                email = requestclient.Email,
+                phoneno = requestclient.Phonenumber,
+                file = requestwisefile,
+               
+            };
+            return obj;
+        }
+
+        public bool EditCloseCase(CloseCase closeCase)
+        {
+            try
+            {
+                var requestclient = _db.Requestclients.FirstOrDefault(x => x.Requestid == closeCase.ReqId);
+                requestclient.Phonenumber = closeCase.phoneno;
+                requestclient.Email = closeCase.email;
+                _db.Requestclients.Update(requestclient);
+                _db.SaveChanges();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool ChangeCloseCase(CloseCase closeCase)
+        {
+            try
+            {
+                Request req = _db.Requests.FirstOrDefault(x => x.Requestid == closeCase.ReqId);
+
+               
+                req.Status = (int)StatusEnum.Unpaid;
+                _db.Requests.Update(req);
+                _db.SaveChanges();
+                return true;
+            }
+            catch { return false; }
         }
 
     }

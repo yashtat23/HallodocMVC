@@ -189,4 +189,19 @@ namespace DataAccess.CustomModel
         public String Firstname { get; set; }
         public string Reason { get; set; }
     }
+
+    public class CloseCase
+    {
+        public int? ReqId { get; set; }
+        public List<Requestwisefile> file { get; set; }
+
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
+        public string Dob { get; set; }
+
+        public string phoneno { get; set; }
+        public string email { get; set; }
+
+    } 
+
 }

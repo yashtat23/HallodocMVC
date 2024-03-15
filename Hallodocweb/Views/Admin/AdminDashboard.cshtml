@@ -93,7 +93,7 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
-                                data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
+                                data-bs-target="#profile-tab-pane"  type="button" role="tab" aria-controls="profile-tab-pane"
                                 aria-selected="false">
                             My Profile
                         </button>
@@ -135,10 +135,6 @@
         <!-- tab1 dashboard-->
         <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
              tabindex="0">
-
-
-            
-
         </div>
         <!-- tab2  pending -->
         <div class="tab-pane fade" id="provider-location-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
@@ -146,7 +142,7 @@
             provider-location......
         </div>
         <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-            Profile......
+            <partial name="MyProfile"/>
         </div>
         <div class="tab-pane fade" id="provider-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
             provider......
@@ -259,9 +255,6 @@
             }
         });
 
-
-
-
         $(document).ready(function () {
 
             $('#dtBasicExample').DataTable({
@@ -286,6 +279,7 @@
             });
             $('.dataTables_filter').hide();
         });
+
 
         $(document).ready(function () {
             $('#dtBasicExample').DataTable(
@@ -393,6 +387,17 @@
                 },
                 error: function () {
                     alert('Error loading partial view yash');
+                }
+            });
+        }
+
+        function MyProfile() {
+            $.ajax({
+                url: '/Admin/MyProfile',
+                type: 'GET',
+
+                success: function (response) {
+                    $("#home-tab-pane").html(response);
                 }
             });
         }
