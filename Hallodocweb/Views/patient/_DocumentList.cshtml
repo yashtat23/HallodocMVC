@@ -116,14 +116,14 @@
         <!-- ----container    -->
     </div>
 
-<form class="input-group my-5 mt-3" method="post" enctype="multipart/form-data">
+    <form class="input-group my-5 mt-3" method="post" enctype="multipart/form-data">
         <div class="input-group mb-3">
-            <input type="file" class="form-control form-control-lg" id="fromFilelg" multiple>
-            <label class="input-group-text bg-primary text-white" for="inputGroupFile02">
+            <input asp-for="FirstOrDefault().Filename" type="file" class="form-control form-control-lg" id="fromFilelg" multiple>
+            <button type="submit" class="input-group-text bg-primary text-white" for="inputGroupFile02">
                 <i class="bi bi-cloud-arrow-up m-1"></i>&nbsp;Upload
-            </label>
+            </button>
         </div>
-</form>
+    </form>
 <div class="row my-3">
     <div class="col-12 d-flex justify-content-between">
 
@@ -190,6 +190,8 @@
     </table>
 </div>
 </div>
+
+
 <script src="~/js/dark-mode.js"></script>
 <script>
     function toggleCheckboxes() {

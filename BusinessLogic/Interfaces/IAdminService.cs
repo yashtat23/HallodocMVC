@@ -71,5 +71,9 @@ namespace BusinessLogic.Interfaces
         bool EditCloseCase(CloseCase closeCase);
 
         bool ChangeCloseCase(CloseCase closeCase);
+
+        EncounterFormModel EncounterForm(int reqId);
+
+
     }   
 }

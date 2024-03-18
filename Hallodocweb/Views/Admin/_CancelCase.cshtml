@@ -29,6 +29,7 @@
                 </div>
                 <div class="mb-3">
                     <textarea asp-for="notes" class="form-control" id="message-text" placeholder="Provide Additional Notes"></textarea>
+                    <small id="notesc" style="color:red" class="d-none">Phone no is required</small>
                 </div>
 
             </div>
@@ -39,3 +40,14 @@
         </form>
     </div>
 </div>
+
+<script>
+    $('#notesc').on('input', function () {
+        var phn = $('#notesc').val();
+        if (phn == "") {
+            $('#notesc').addClass("d-block").removeClass("d-none");
+        } else {
+            $('#notesc').addClass("d-none").removeClass("d-block");
+        }
+    })
+</script>

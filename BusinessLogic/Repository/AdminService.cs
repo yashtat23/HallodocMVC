@@ -68,8 +68,7 @@ namespace BusinessLogic.Repository
                             reqId = r.Requestid
                         };
 
-            var result = query.ToList();
-
+            
             if (tabNo == 1)
             {
 
@@ -101,6 +100,8 @@ namespace BusinessLogic.Repository
 
                 query = query.Where(x => x.status == (int)StatusEnum.Unpaid);
             }
+
+            var result = query.ToList();
 
             return result;
         }
@@ -730,6 +731,49 @@ namespace BusinessLogic.Repository
                 return true;
             }
             catch { return false; }
+        }
+
+        public EncounterFormModel EncounterForm(int reqId)
+        {
+            var reqClient = _db.Requestclients.FirstOrDefault(x => x.Requestid == reqId);
+            var encForm = _db.Encounterforms.FirstOrDefault(x => x.Requestid == reqId);
+            EncounterFormModel ef = new EncounterFormModel();
+            ef.reqid = reqId;
+            ef.FirstName = reqClient.Firstname;
+            ef.LastName = reqClient.Lastname;
+            ef.Location = reqClient.Street + reqClient.City + reqClient.State + reqClient.Zipcode;
+            //ef.BirthDate = new DateTime((int)(reqClient.Intyear), Convert.ToInt16(reqClient.Strmonth), (int)(reqClient.Intdate)).ToString("yyyy-MM-dd");
+            ef.PhoneNumber = reqClient.Phonenumber;
+            ef.Email = reqClient.Email;
+            if (encForm != null)
+            {
+                ef.HistoryIllness = encForm.Illnesshistory;
+                ef.MedicalHistory = encForm.Medicalhistory;
+                //ef.Date = new DateTime((int)(encForm.Intyear), Convert.ToInt16(encForm.Strmonth), (int)(encForm.Intdate)).ToString("yyyy-MM-dd");
+                ef.Medications = encForm.Medications;
+                ef.Allergies = encForm.Allergies;
+                ef.Temp = encForm.Temperature;
+                ef.Hr = encForm.Heartrate;
+                ef.Rr = encForm.Respirationrate;
+                ef.BpS = encForm.Bloodpressuresystolic;
+                ef.BpD = encForm.Bloodpressurediastolic;
+                ef.O2 = encForm.Oxygenlevel;
+                ef.Pain = encForm.Pain;
+                ef.Heent = encForm.Heent;
+                ef.Cv = encForm.Cardiovascular;
+                ef.Chest = encForm.Chest;
+                ef.Abd = encForm.Abdomen;
+                ef.Extr = encForm.Extremities;
+                ef.Skin = encForm.Skin;
+                ef.Neuro = encForm.Neuro;
+                ef.Other = encForm.Other;
+                ef.Diagnosis = encForm.Diagnosis;
+                ef.TreatmentPlan = encForm.Treatmentplan;
+                ef.MedicationDispensed = encForm.Medicationsdispensed;
+                ef.Procedures = encForm.Procedures;
+                ef.FollowUp = encForm.Followup;
+            }
+            return ef;
         }
 
     }

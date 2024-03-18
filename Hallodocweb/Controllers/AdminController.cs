@@ -124,6 +124,10 @@ namespace Hallodocweb.Controllers
             {
                 return PartialView("_UnpaidRequests", list);
             }
+            else if(tabNo == 0)
+            {
+                return Json(list);
+            }
             return View();
         }
 
@@ -443,6 +447,45 @@ namespace Hallodocweb.Controllers
         {
             return View();
         }
+
+        public IActionResult EncounterForm(int reqId)
+        {
+            var form = _adminService.EncounterForm(reqId);
+            return View(form);
+        }
+
+        [HttpPost]
+        //public IActionResult ExportReq(List<RequestListAdminDash> reqList)
+        public string ExportReq(List<AdminDashTableModel> reqList)
+        {
+            StringBuilder stringbuild = new StringBuilder();
+
+            string header = "\"No\"," + "\"Name\"," + "\"DateOfBirth\"," + "\"Requestor\"," +
+                "\"RequestDate\"," + "\"Phone\"," + "\"Notes\"," + "\"Address\"," 
+                 + "\"Physician\"," + "\"DateOfService\"," + "\"Region\"," +
+                "\"Status\"," + "\"RequestTypeId\"," + "\"OtherPhone\"," + "\"Email\"," + "\"RequestId\"," + Environment.NewLine + Environment.NewLine;
+
+            stringbuild.Append(header);
+            int count = 1;
+
+            foreach (var item in reqList)
+            {
+                string content = $"\"{count}\"," + $"\"{item.firstName}\"," + $"\"{item.intDate}\"," + $"\"{item.requestorFname}\"," +
+                    $"\"{item.intDate}\"," + $"\"{item.mobileNo}\"," + $"\"{item.notes}\"," + $"\"{item.street}\"," +
+                    $"\"{item.lastName}\"," + $"\"{item.intDate}\"," + $"\"{item.street}\"," +
+                    $"\"{item.status}\"," + $"\"{item.requestTypeId}\"," + $"\"{item.mobileNo}\"," + $"\"{item.firstName}\"," + $"\"{item.reqId}\"," + Environment.NewLine;
+
+                count++;
+                stringbuild.Append(content);
+            }
+
+            string finaldata = stringbuild.ToString();
+
+            return finaldata;
+            //return Json(new { message = finaldata });
+        }
+
+      
 
     }
 }

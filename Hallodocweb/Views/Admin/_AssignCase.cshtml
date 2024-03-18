@@ -25,6 +25,7 @@
                                 <option value="@item.Regionid">@item.Name</option>
                             }
                         </select>
+                        <small id="region" style="color:red" class="d-none">Region no is required</small>
                     </div>
 
                     <div class="mb-3 text-secondary">
@@ -38,6 +39,7 @@
 
                     <div class="mb-3">
                         <textarea class="form-control" id="message-text" placeholder="Description" asp-for="@Model.additionalNotes"></textarea>
+                        <small id="desc" style="color:red" class="d-none">Description no is required</small>
                     </div>
                     <button type="submit" class="btn text-light" style="background-color:#00B7FF" data-bs-dismiss="modal">Confirm</button>
                 </form>
@@ -51,6 +53,23 @@
 </div>
 
 <script>
+    $('#region').on('input', function () {
+        var phn = $('#region').val();
+        if (phn == "") {
+            $('#region').addClass("d-block").removeClass("d-none");
+        } else {
+            $('#region').addClass("d-none").removeClass("d-block");
+        }
+    })
+
+    $('#desc').on('input', function () {
+        var desc = $('#desc').val();
+        if (desc == "") {
+            $('#desc').addClass("d-block").removeClass("d-none");
+        } else {
+            $('#desc').addClass("d-none").removeClass("d-block");
+        }
+    })
    
 
     function GetPhysicianData(regionId) {

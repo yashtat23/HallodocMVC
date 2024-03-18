@@ -17,10 +17,10 @@
             <button class="action-btn my-3 d-flex gap-2">
                 <i class="bi bi-journal-text"></i> <span class="d-none d-md-block">Create Requests</span>
             </button>
-            <button class="action-btn my-3 d-flex gap-2">
+            <button class="action-btn my-3 d-flex gap-2" id="exportbtn">
                 <i class="bi bi-reply"></i> <span class="d-none d-md-block">Export</span>
             </button>
-            <button class="action-btn my-3 d-flex gap-2">
+            <button class="action-btn my-3 d-flex gap-2" onclick="ExportAll()">
                 <i class="bi bi-reply-all"></i> <span class="d-none d-md-block">Export All</span>
             </button>
             <button class="action-btn my-3 d-flex gap-2">
@@ -158,8 +158,6 @@
                             <td style="background:@bgColor"> - </td>
 
                         }
-
-
                         @*7*@
                         <td style="background:@bgColor">-</td>
                         @*8*@
@@ -252,6 +250,7 @@
 <!-- accordions -->
 <div class="accordion accordion-flush d-md-none d-block" id="accordionFlushExample">
 </div>
+
 <script>
 
     function allElements() {
@@ -579,6 +578,15 @@
         })
     }
 
+    $("#exportbtn").click(function () {
+        //alert("exportbtn was clicked.");
+        var request = @Html.Raw(Json.Serialize(Model));
+        console.log(request);
+        Export(request);
+    });
+
+    
    
+  //---------------------------------------------- Export btn Ajax
 
 </script>
