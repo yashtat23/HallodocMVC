@@ -4,7 +4,7 @@
 @*Block Case Model*@
 <div class="modal fade" id="blockModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <form method="post" asp-controller="Admin" asp-action="SubmitBlockCase" class="modal-content">
+        <form method="post" asp-controller="Admin" asp-action="SubmitBlockCase" class="modal-content" onsubmit="return blockvalidation()">
             <div class="modal-header" style="background-color:#00B7FF">
                 <h5 class="modal-title text-light" id="exampleModalLabel">Confirm Block</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -15,14 +15,37 @@
                     <h5>Patient Name: @Model.firstName @Model.lastName</h5>
                 </div>
                 <div class="mb-3">
-                    <textarea class="form-control" id="message-text" asp-for="reason" placeholder="Reason for Block Patient"></textarea>
+                    <textarea class="form-control" id="blocknote" asp-for="reason" placeholder="Reason for Block Patient"></textarea>
+                    <small id="blocknotereq" style="color:red" class="d-none">Reason Is Required </small>
                 </div>
 
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn text-light" style="background-color:#00B7FF">Confirm</button>
+                <button type="submit" id="submitbtn" class="btn text-light" style="background-color:#00B7FF">Confirm</button>
                 <button type="button" class="btn border border-info" style="color:#00B7FF" data-bs-dismiss="modal">Cancel</button>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+    $('#blocknote').on('input', function () {
+        var phn = $('#blocknote').val();
+        if (phn == "") {
+            $('#blocknotereq').addClass("d-block").removeClass("d-none");
+        } else {
+            $('#blocknotereq').addClass("d-none").removeClass("d-block");
+        }
+    })
+
+    function blockvalidation() {
+        let reason = $("#blocknote").val();
+        if (reason == "") {
+            $("#blocknotereq").addClass('d-block').removeClass('d-none');
+            return false;
+        } else {
+            $("#blocknotereq").addClass('d-none').removeClass('d-block');
+        }
+        return true;
+    }
+</script>

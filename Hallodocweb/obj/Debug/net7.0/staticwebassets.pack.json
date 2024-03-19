@@ -69,6 +69,10 @@
       "PackagePath": "staticwebassets\\UploadedFiles\\HalloDoc - DB.xlsx"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\LesfImage.png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\LesfImage.png"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\NorthWind.sql",
       "PackagePath": "staticwebassets\\UploadedFiles\\NorthWind.sql"
     },

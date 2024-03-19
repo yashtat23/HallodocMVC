@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Globalization;
 
 namespace BusinessLogic.Repository
 {
@@ -47,7 +48,6 @@ namespace BusinessLogic.Repository
                 _db.Aspnetusers.Add(aspnetuser1);
 
 
-
                 u.Aspnetuserid = aspnetuser1.Id;
                 u.Firstname = patientInfoModel.firstname;
                 u.Lastname = patientInfoModel.lastname;
@@ -58,9 +58,10 @@ namespace BusinessLogic.Repository
                 u.State = patientInfoModel.state;
                 u.Zipcode = patientInfoModel.zipcode;
                 u.Createdby = patientInfoModel.firstname + patientInfoModel.lastname;
-                u.Intyear = int.Parse(patientInfoModel.Dateofbirth.ToString("yyyy"));
-                u.Intdate = int.Parse(patientInfoModel.Dateofbirth.ToString("dd"));
+                u.Intyear = patientInfoModel.Dateofbirth.Year;
+                u.Intdate = patientInfoModel.Dateofbirth.Day;
                 u.Strmonth = patientInfoModel.Dateofbirth.ToString("MMM");
+                
                 u.Createddate = DateTime.Now;
                 u.Modifieddate = DateTime.Now;
                 u.Status = 1;
@@ -102,16 +103,24 @@ namespace BusinessLogic.Repository
             info.City = patientInfoModel.city;
             info.State = patientInfoModel.state;
             info.Zipcode = patientInfoModel.zipcode;
-            info.Intyear = int.Parse(patientInfoModel.Dateofbirth.ToString("yyyy"));
-            info.Intdate = int.Parse(patientInfoModel.Dateofbirth.ToString("dd"));
+            info.Intyear = patientInfoModel.Dateofbirth.Year;
+            info.Intdate = patientInfoModel.Dateofbirth.Day;
             info.Strmonth = patientInfoModel.Dateofbirth.ToString("MMM");
             info.Regionid = 1;
+            
 
             _db.Requestclients.Add(info)
 ;
             _db.SaveChanges();
 
+            var regionData = _db.Regions.Where(x => x.Regionid == u.Regionid).FirstOrDefault();
 
+            var count = (from req in _db.Requests where req.Userid == u.Userid && req.Createddate.Date == DateTime.Now.Date select req).Count();
+
+            request.Confirmationnumber = $"{regionData.Abbreviation.Substring(0, 2)}{request.Createddate.Day.ToString().PadLeft(2, '0')}{request.Createddate.Month.ToString().PadLeft(2, '0')}{(request.Createddate.Year % 100).ToString().PadLeft(2, '0')}{u.Lastname.ToUpper().Substring(0, 2)}{u.Firstname.ToUpper().Substring(0, 2)}{count.ToString().PadLeft(4, '0')}";
+
+            _db.Requests.Update(request);
+            _db.SaveChanges();
 
             if (patientInfoModel.File != null)
             {
@@ -340,7 +349,8 @@ namespace BusinessLogic.Repository
                                       reqId = groupedFiles.Select(x => x.Request.Requestid).FirstOrDefault(),
                                       createdDate = groupedFiles.Select(x => x.Request.Createddate).FirstOrDefault(),
                                       currentStatus = groupedFiles.Select(x => x.Request.Status).FirstOrDefault(),
-                                      document = groupedFiles.Select(x => x.Filename.ToString()).ToList()
+                                      document = groupedFiles.Select(x => x.Filename.ToString()).ToList(),
+                                      ConfirmationNumber = groupedFiles.Select(x => x.Request.Confirmationnumber).FirstOrDefault(),
                                   }).ToList();
 
             MedicalHistoryList medicalHistoryList = new()
@@ -434,7 +444,8 @@ namespace BusinessLogic.Repository
                 City = user.City,
                 Street = user.Street,
                 ZipCode = user.Zipcode,
-
+                DateOfBirth = new DateTime(Convert.ToInt32(user.Intyear), DateTime.ParseExact(user.Strmonth, "MMM", CultureInfo.InvariantCulture).Month, Convert.ToInt32(user.Intdate)),
+                isMobileCheck = user.Ismobile[0] ? 1 : 0,
 
             };
             return profile;
@@ -456,6 +467,11 @@ namespace BusinessLogic.Repository
                     existingUser.City = profile.City;
                     existingUser.State = profile.State;
                     existingUser.Zipcode = profile.ZipCode;
+                    existingUser.Intdate = profile.DateOfBirth.Day;
+                    existingUser.Strmonth = profile.DateOfBirth.ToString("MMM");
+                    existingUser.Intyear = profile.DateOfBirth.Year;
+
+                    existingUser.Ismobile[0] = profile.isMobileCheck == 1 ? true : false;
                     _db.Users.Update(existingUser);
                     _db.SaveChanges();
 

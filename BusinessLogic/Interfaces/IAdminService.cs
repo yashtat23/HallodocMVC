@@ -74,6 +74,8 @@ namespace BusinessLogic.Interfaces
 
         EncounterFormModel EncounterForm(int reqId);
 
+        bool SubmitEncounterForm(EncounterFormModel model);
 
+        Task SubmitRequest(CreateRequestViewModel model);
     }   
 }

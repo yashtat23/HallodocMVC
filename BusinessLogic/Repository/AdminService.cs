@@ -19,6 +19,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BusinessLogic.Repository
 {
@@ -165,6 +166,7 @@ namespace BusinessLogic.Repository
         public ViewCaseViewModel ViewCaseViewModel(int Requestclientid, int RequestTypeId)
         {
             Requestclient obj = _db.Requestclients.FirstOrDefault(x => x.Requestclientid == Requestclientid);
+            Request req = _db.Requests.FirstOrDefault(x => x.Requestid == obj.Requestid);
             ViewCaseViewModel viewCaseViewModel = new()
             {
                 Requestclientid = obj.Requestclientid,
@@ -178,7 +180,8 @@ namespace BusinessLogic.Repository
                 Zipcode = obj.Zipcode,
                 Room = obj.Address,
                 Notes = obj.Notes,
-                RequestTypeId = RequestTypeId
+                RequestTypeId = RequestTypeId,
+                ConfirmationNumber = req.Confirmationnumber,
             };
             return viewCaseViewModel;
         }
@@ -522,17 +525,18 @@ namespace BusinessLogic.Repository
         {
             var reqData = _db.Requests.Where(i => i.Requestid == requestId).FirstOrDefault();
 
-            var reqstatusData = new Requeststatuslog()
+            reqData.Status = (int)StatusEnum.Accepted;
+            reqData.Physicianid = assignCaseModel.physicanNo;
+
+            Requeststatuslog requeststatuslog = new Requeststatuslog()
             {
                 Requestid = requestId,
                 Notes = assignCaseModel.additionalNotes,
                 Createddate = DateTime.Now,
-                Status = 2
+                Status = (int)StatusEnum.Accepted,
             };
-            reqData.Status = 2;
-            reqData.Physicianid = assignCaseModel.physicanNo;
-
-            _db.Add(reqstatusData);
+            _db.Requests.Update(reqData);
+            _db.Requeststatuslogs.Add(requeststatuslog);
             _db.SaveChanges();
 
         }
@@ -775,6 +779,244 @@ namespace BusinessLogic.Repository
             }
             return ef;
         }
+
+        public bool SubmitEncounterForm(EncounterFormModel model)
+        {
+            try
+            {
+                //concludeEncounter _obj = new concludeEncounter();
+
+                var ef = _db.Encounterforms.FirstOrDefault(r => r.Requestid == model.reqid);
+
+                if (ef == null)
+                {
+                    Encounterform _encounter = new Encounterform()
+                    {
+                        Requestid = model.reqid,
+                        Firstname = model.FirstName,
+                        Lastname = model.LastName,
+                        Location = model.Location,
+                        Phonenumber = model.PhoneNumber,
+                        Email = model.Email,
+                        Illnesshistory = model.HistoryIllness,
+                        Medicalhistory = model.MedicalHistory,
+                        //date = model.Date,
+                        Medications = model.Medications,
+                        Allergies = model.Allergies,
+                        Temperature = model.Temp,
+                        Heartrate = model.Hr,
+                        Respirationrate = model.Rr,
+                        Bloodpressuresystolic = model.BpS,
+                        Bloodpressurediastolic = model.BpD,
+                        Oxygenlevel = model.O2,
+                        Pain = model.Pain,
+                        Heent = model.Heent,
+                        Cardiovascular = model.Cv,
+                        Chest = model.Chest,
+                        Abdomen = model.Abd,
+                        Extremities = model.Extr,
+                        Skin = model.Skin,
+                        Neuro = model.Neuro,
+                        Other = model.Other,
+                        Diagnosis = model.Diagnosis,
+                        Treatmentplan = model.TreatmentPlan,
+                        Medicationsdispensed = model.MedicationDispensed,
+                        Procedures = model.Procedures,
+                        Followup = model.FollowUp,
+                        Isfinalized = false
+                    };
+
+                    _db.Encounterforms.Add(_encounter);
+
+                    //_obj.indicate = true;
+                }
+                else
+                {
+                    var efdetail = _db.Encounterforms.FirstOrDefault(x => x.Requestid == model.reqid);
+
+                    efdetail.Requestid = model.reqid;
+                    efdetail.Illnesshistory = model.HistoryIllness;
+                    efdetail.Medicalhistory = model.MedicalHistory;
+                    //efdetail.Date = model.Date;
+                    efdetail.Medications = model.Medications;
+                    efdetail.Allergies = model.Allergies;
+                    efdetail.Temperature = model.Temp;
+                    efdetail.Heartrate = model.Hr;
+                    efdetail.Respirationrate = model.Rr;
+                    efdetail.Bloodpressuresystolic = model.BpS;
+                    efdetail.Bloodpressurediastolic = model.BpD;
+                    efdetail.Oxygenlevel = model.O2;
+                    efdetail.Pain = model.Pain;
+                    efdetail.Heent = model.Heent;
+                    efdetail.Cardiovascular = model.Cv;
+                    efdetail.Chest = model.Chest;
+                    efdetail.Abdomen = model.Abd;
+                    efdetail.Extremities = model.Extr;
+                    efdetail.Skin = model.Skin;
+                    efdetail.Neuro = model.Neuro;
+                    efdetail.Other = model.Other;
+                    efdetail.Diagnosis = model.Diagnosis;
+                    efdetail.Treatmentplan = model.TreatmentPlan;
+                    efdetail.Medicationsdispensed = model.MedicationDispensed;
+                    efdetail.Procedures = model.Procedures;
+                    efdetail.Followup = model.FollowUp;
+                    efdetail.Modifieddate = DateTime.Now;
+                    ef.Isfinalized = false;
+                    _db.Encounterforms.Update(efdetail);
+                    // _obj.indicate = true;
+                };
+
+
+                _db.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+        public async Task SubmitRequest(CreateRequestViewModel model)
+        {
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    Aspnetuser aspnetuser = await _db.Aspnetusers.Where(x => x.Email == model.Email).FirstOrDefaultAsync();
+                    User user = new User();
+                    if (aspnetuser == null)
+                    {
+                        Aspnetuser aspnetuser1 = new Aspnetuser()
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Username = model.FirstName + " " + model.LastName,
+                            Email = model.Email,
+                            Phonenumber = model.PhoneNumber,
+                            Createddate = DateTime.Now
+
+                        };
+
+                        await _db.Aspnetusers.AddAsync(aspnetuser1);
+
+                        user.Aspnetuserid = aspnetuser1.Id;
+                        user.Userid = 9;
+                        user.Firstname = model.FirstName;
+                        user.Lastname = model.LastName;
+                        user.Email = model.Email;
+                        user.Mobile = model.PhoneNumber;
+                        user.Zipcode = model.ZipCode;
+                        user.State = model.State;
+                        user.City = model.City;
+                        user.Street = model.Street;
+                        user.Intdate = model.DOB.Day;
+                        user.Intyear = model.DOB.Year;
+                        user.Strmonth = model.DOB.ToString("MMM");
+                        user.Createddate = DateTime.Now;
+                        user.Createdby = aspnetuser.Username;
+
+                        await _db.Users.AddAsync(user);
+                    }
+                    else
+                    {
+                        user = _db.Users.Where(a => a.Email == model.Email).FirstOrDefault();
+                    }
+
+                    var regiondata = _db.Regions.Where(x => x.Regionid == user.Regionid).FirstOrDefault();
+                    var requestcount = _db.Requests.Where(a => a.Createddate.Date == DateTime.Now.Date && a.Createddate.Month == DateTime.Now.Month && a.Createddate.Year == DateTime.Now.Year && a.Userid == user.Userid).ToList();
+                    Request request = new Request()
+                    {
+                        Userid = 6,
+                        Requesttypeid = 1,
+                        Firstname = model.FirstName,
+                        Lastname = model.LastName,
+                        Email = model.Email,
+                        Phonenumber = model.PhoneNumber,
+                        Status = (int)StatusEnum.Unassigned,
+                        Createddate = DateTime.Now,
+                        Isurgentemailsent = new BitArray(1),
+                        Confirmationnumber = regiondata.Abbreviation + DateTime.Now.Day.ToString().PadLeft(2, '0') + DateTime.Now.Month.ToString().PadLeft(2, '0')
+                                             + DateTime.Now.Year.ToString().Substring(2) + model.LastName.Substring(0, 2) + model.FirstName.Substring(0, 2) +
+                                             (requestcount.Count() + 1).ToString().PadLeft(4, '0'),
+                    };
+                    await _db.Requests.AddAsync(request);
+
+                    Requestclient requestclient = new Requestclient()
+                    {
+
+                        Firstname = model.FirstName,
+                        Lastname = model.LastName,
+                        Email = model.Email,
+                        Phonenumber = model.PhoneNumber,
+                        Intdate = model.DOB.Day,
+                        Intyear = model.DOB.Year,
+                        Strmonth = model.DOB.ToString("MMM"),
+                        State = model.State,
+                        Street = model.Street,
+                        City = model.City,
+                        Zipcode = model.ZipCode,
+                        Regionid = regiondata.Regionid,
+                    };
+                    await _db.SaveChangesAsync();
+
+                    Requestnote requestNote = new Requestnote()
+                    {
+                        Requestid = request.Requestid,
+                        Adminnotes = model.Notes,
+                        Createdby = "Admin",
+                        Createddate = DateTime.Now,
+                    };
+
+                    await _db.Requestnotes.AddAsync(requestNote);
+                    request.Requestclients.Add(requestclient);
+                    await _db.Requestclients.AddAsync(requestclient);
+                    await _db.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+
+
+            }
+        }
+
+        //public bool AdminProfile(int Adminid)
+        //{
+        //    try
+        //    {
+        //        return 
+        //    }
+        //    Admin? obj = _db.Admins.FirstOrDefault(x => x.Adminid == Adminid);
+
+        //    var region = _db.Regions.FirstOrDefault(x => x.Regionid == obj.Regionid).Name;
+        //    var regionList = _db.Regions.ToList();
+
+        //    AdminProfile profile = new()
+        //    {
+        //        UserName = obj.Firstname + obj.Lastname,
+        //        AdminId = Adminid.ToString(),
+        //        //AdminPassword=obj.,
+        //        Status = obj.Status,
+        //        Role = obj.Roleid.ToString() ?? "",
+        //        FirstName = obj.Firstname,
+        //        LastName = obj.Lastname,
+        //        AdminPhone = obj.Mobile,
+        //        Email = obj.Email,
+        //        ConfirmEmail = obj.Email,
+        //        Address1 = obj.Address1,
+        //        Address2 = obj.Address2,
+        //        City = region,
+        //        State = region,
+        //        Zip = obj.Zip,
+        //        BillingPhone = obj.Altphone,
+        //        RegionList = regionList,
+        //    };
+
+        //    return profile;
+        //}
 
     }
 }

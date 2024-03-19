@@ -190,7 +190,10 @@ namespace DataAccess.CustomModels
         public DateTime createdDate { get; set; }
         public int currentStatus { get; set; }
         public List<string> document { get; set; }
-
+        public int? IntDate { get; set; }
+        public string StrMonth { get; set; }
+        public int? IntYear { get; set; }
+        public string ConfirmationNumber { get; set; }
 
     }
     public class MedicalHistoryList
@@ -205,7 +208,7 @@ namespace DataAccess.CustomModels
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-        public DateTime? DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
         public string? PhoneNo { get; set; }
 
@@ -219,6 +222,10 @@ namespace DataAccess.CustomModels
 
         public string? Email { get; set; }
         public int? userId { get; set; }
+        public int? IntDate { get; set; }
+        public int? IntYear { get; set; }
+        public string StrMonth { get; set; }
+        public int isMobileCheck { get; set; }
     }
 
     public class subinformation

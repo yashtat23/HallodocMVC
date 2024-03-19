@@ -38,7 +38,7 @@ public partial class Request
 
     public DateTime? Lastwellnessdate { get; set; }
 
-    public BitArray? Ismobile { get; set; }
+    public BitArray? Ismobile { get; set; } = new BitArray(1) { [0] = true };
 
     public short? Calltype { get; set; }
 

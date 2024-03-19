@@ -455,6 +455,21 @@ namespace Hallodocweb.Controllers
         }
 
         [HttpPost]
+        public IActionResult EncounterForm(EncounterFormModel model)
+        {
+            bool isSaved = _adminService.SubmitEncounterForm(model);
+            if (isSaved)
+            {
+                _notyf.Success("Saved!!");
+            }
+            else
+            {
+                _notyf.Error("Failed");
+            }
+            return RedirectToAction("EncounterForm", new { ReqId = model.reqid });
+        }
+
+        [HttpPost]
         //public IActionResult ExportReq(List<RequestListAdminDash> reqList)
         public string ExportReq(List<AdminDashTableModel> reqList)
         {
@@ -485,7 +500,18 @@ namespace Hallodocweb.Controllers
             //return Json(new { message = finaldata });
         }
 
-      
+        [HttpGet]
+        public IActionResult CreateReq()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateReq(CreateRequestViewModel model)
+        {
+            await _adminService.SubmitRequest(model);
+            return RedirectToAction("AdminDashboard","Admin");
+        }
 
     }
 }

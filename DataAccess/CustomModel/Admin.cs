@@ -130,7 +130,10 @@ namespace DataAccess.CustomModel
         public List<Physician> physician { get; set; }
         public int requestId { get; set; }
 
-        public int physicanNo {  get; set; }
+        public int? physicanNo {  get; set; }
+
+        [Required(ErrorMessage="Region is required")]
+        public int regionNo { get; set; }
 
         public string additionalNotes { get; set; }
 
@@ -241,6 +244,66 @@ namespace DataAccess.CustomModel
         public string? FollowUp { get; set; }
 
         public bool? indicate { get; set; }
+    }
+
+    public class CreateRequestViewModel
+    {
+        public string? Notes { get; set; }
+
+        [Required(ErrorMessage = "First name is required")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Last name is required")]
+        public string LastName { get; set; }
+
+
+        [Required(ErrorMessage = "Phone Number is required")]
+        public string PhoneNumber { get; set; }
+
+        [Required(ErrorMessage = "Email is required")]
+        public string Email { get; set; }
+        [Required(ErrorMessage = "DOB is required")]
+        public DateTime DOB { get; set; }
+
+
+
+        [Required(ErrorMessage = "Street is required")]
+        public string Street { get; set; }
+
+        [Required(ErrorMessage = " City name is required")]
+        public string City { get; set; }
+
+        [Required(ErrorMessage = "State is required")]
+        public string State { get; set; }
+
+        [Required(ErrorMessage = "ZipCode is required")]
+        [RegularExpression(@"^[0-9]{6}|[0-9]{5}(?:[-\s][0-9]{4})?$", ErrorMessage = "ZipCode Format is Invalid")]
+        public string ZipCode { get; set; }
+
+        public int? Room { get; set; }
+
+
+    }
+
+    public class AdminProfile
+    {
+        public string AdminId { get; set; }
+        public string UserName { get; set; }
+        public string AdminPassword { get; set; }
+        public short? Status { get; set; }
+        public string Role { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string AdminPhone { get; set; }
+        public string Email { get; set; }
+        public string ConfirmEmail { get; set; }
+        public List<Region> RegionList { get; set; }
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
+        public string BillingPhone { get; set; }
     }
 
 }

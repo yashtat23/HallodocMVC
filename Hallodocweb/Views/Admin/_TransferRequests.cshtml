@@ -10,7 +10,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form method="post" id="Assign_Req" asp-controller="Admin" asp-action="TransferReqPost" >
+                <form method="post" id="Assign_Req" asp-controller="Admin" asp-action="TransferReqPost" onsubmit="return transfervalidation()">
                     <div class="mb-3 text-secondary">
                         <p>To assign this request, search and select another Physician</p>
                     </div>
@@ -37,9 +37,10 @@
                     </div>
 
                     <div class="mb-3">
-                        <textarea class="form-control" id="message-text" placeholder="Description" asp-for="@Model.additionalNotes"></textarea>
+                        <textarea class="form-control" id="transferdescription" placeholder="Description" asp-for="@Model.additionalNotes"></textarea>
+                        <small id="transferdescriptionreq" style="color:red" class="d-none">Description Is Required </small>
                     </div>
-                    <button type="submit" class="btn text-light" style="background-color:#00B7FF" data-bs-dismiss="modal">Confirm</button>
+                    <button type="submit" id="submitbtn" class="btn text-light" style="background-color:#00B7FF" data-bs-dismiss="modal">Confirm</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -51,7 +52,25 @@
 </div>
 
 <script>
+    $('#transferdescription').on('input', function () {
+        var phn = $('#transferdescription').val();
+        if (phn == "") {
+            $('#transferdescriptionreq').addClass("d-block").removeClass("d-none");
+        } else {
+            $('#transferdescriptionreq').addClass("d-none").removeClass("d-block");
+        }
+    })
 
+    function transfervalidation() {
+        let reason = $("#transferdescription").val();
+        if (reason == "") {
+            $("#transferdescriptionreq").addClass('d-block').removeClass('d-none');
+            return false;
+        } else {
+            $("#transferdescriptionreq").addClass('d-none').removeClass('d-block');
+        }
+        return true;
+    }
 
     function GetPhysicianData(regionId) {
         console.log(regionId);

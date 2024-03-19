@@ -10,7 +10,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form method="post" onsubmit="AssignCasePost(@Model.requestId)" id="Assign_Req" >
+                <form method="post" onsubmit="AssignCasePost(@Model.requestId)" id="Assign_Req" onsubmit="return checkValidation()">
+                    @* tirth patel *@
                     <div class="mb-3 text-secondary">
                         <p>To assign this request, search and select another Physician</p>
                     </div>
@@ -18,14 +19,14 @@
                     <input type="text" asp-for="@Model.requestId" hidden/>
                     <div class="mb-3 ">
 
-                        <select class="form-select text-secondary" aria-label="Default select example" id="region" onchange="GetPhysicianData(this.value)">
+                        <select class="form-select text-secondary"  aria-label="Default select example" id="region" onchange="GetPhysicianData(this.value)">
                             <option selected>Select Region</option>
                             @foreach(var item in Model.region.ToList())
                             {
                                 <option value="@item.Regionid">@item.Name</option>
                             }
                         </select>
-                        <small id="region" style="color:red" class="d-none">Region no is required</small>
+                        <small id="regionreq" style="color:red" class="d-none">Region no is required</small>
                     </div>
 
                     <div class="mb-3 text-secondary">
@@ -38,10 +39,10 @@
                     </div>
 
                     <div class="mb-3">
-                        <textarea class="form-control" id="message-text" placeholder="Description" asp-for="@Model.additionalNotes"></textarea>
-                        <small id="desc" style="color:red" class="d-none">Description no is required</small>
-                    </div>
-                    <button type="submit" class="btn text-light" style="background-color:#00B7FF" data-bs-dismiss="modal">Confirm</button>
+                        <textarea class="form-control" placeholder="Description" id="description" asp-for="@Model.additionalNotes"></textarea>
+                        <small id="descriptionreq" style="color:red" class="d-none">Description no is required</small>
+                    </div> 
+                    <button type="submit" id="submitbtn" class="btn text-light" style="background-color:#00B7FF">Confirm</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -56,20 +57,33 @@
     $('#region').on('input', function () {
         var phn = $('#region').val();
         if (phn == "") {
-            $('#region').addClass("d-block").removeClass("d-none");
+            $('#regionreq').addClass("d-block").removeClass("d-none");
         } else {
-            $('#region').addClass("d-none").removeClass("d-block");
+            $('#regionreq').addClass("d-none").removeClass("d-block");
         }
     })
 
-    $('#desc').on('input', function () {
-        var desc = $('#desc').val();
+    $('#description').on('input', function () {
+        var desc = $('#description').val();
         if (desc == "") {
-            $('#desc').addClass("d-block").removeClass("d-none");
+            $('#descriptionreq').addClass("d-block").removeClass("d-none");
         } else {
-            $('#desc').addClass("d-none").removeClass("d-block");
+            $('#descriptionreq').addClass("d-none").removeClass("d-block");
         }
     })
+
+    function checkValidation() {
+        let reason = $("#description").val();
+        if (reason == "") {
+            $("#descriptionreq").addClass('d-block').removeClass('d-none');
+            return false;
+        } else {
+            $("#descriptionreq").addClass('d-none').removeClass('d-block');
+        }
+
+
+        return true;
+    }
    
 
     function GetPhysicianData(regionId) {

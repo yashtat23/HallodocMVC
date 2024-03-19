@@ -4,7 +4,7 @@
 @*cancel case model *@
 <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <form method="post" asp-action="SubmitCancelCase" asp-controller="Admin" class="modal-content">
+        <form method="post" asp-action="SubmitCancelCase" asp-controller="Admin" class="modal-content" onsubmit="return cancelvalidation()">
             <div class="modal-header" style="background-color:#00B7FF">
                 <h5 class="modal-title text-light" id="exampleModalLabel">Confirm Cancellation</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -16,7 +16,7 @@
                 </div>
                 <div class="mb-3 ">
 
-                    <select class="form-select" aria-label="Default select example" asp-for="casetag">
+                    <select class="form-select" aria-label="Default select example" asp-for="casetag" id="reason">
                         <option selected>Reasons for Cancellation</option>
 
                         @foreach (var item in Model.casetaglist)
@@ -26,15 +26,16 @@
 
 
                     </select>
+                    <small id="reasonreq" style="color:red" class="d-none">Reason Is Required</small>
                 </div>
                 <div class="mb-3">
-                    <textarea asp-for="notes" class="form-control" id="message-text" placeholder="Provide Additional Notes"></textarea>
-                    <small id="notesc" style="color:red" class="d-none">Phone no is required</small>
+                    <textarea asp-for="notes" class="form-control" id="note" placeholder="Provide Additional Notes"></textarea>
+                    <small id="notereq" style="color:red" class="d-none">Note Is Required </small>
                 </div>
 
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn text-light" style="background-color:#00B7FF">Confirm</button>
+                <button type="submit" id="submitCase" class="btn text-light" style="background-color:#00B7FF">Confirm</button>
                 <button type="button" class="btn border border-info" style="color:#00B7FF" data-bs-dismiss="modal">Cancel</button>
             </div>
         </form>
@@ -42,12 +43,32 @@
 </div>
 
 <script>
-    $('#notesc').on('input', function () {
-        var phn = $('#notesc').val();
+    $('#reason').on('change', function () {
+        let reason = $("#reason").val();
+        if (reason != null) {
+            $("#reasonreq").addClass('d-none').removeClass('d-block');
+
+        }
+    });
+
+    $('#note').on('input', function () {
+        var phn = $('#note').val();
         if (phn == "") {
-            $('#notesc').addClass("d-block").removeClass("d-none");
+            $('#notereq').addClass("d-block").removeClass("d-none");
         } else {
-            $('#notesc').addClass("d-none").removeClass("d-block");
+            $('#notereq').addClass("d-none").removeClass("d-block");
         }
     })
+
+    function cancelvalidation() {
+        let reason = $("#note").val();
+        if (reason == "") {
+            $("#notereq").addClass('d-block').removeClass('d-none');
+            return false;
+        } else {
+            $("#notereq").addClass('d-none').removeClass('d-block');
+        }
+        
+        return true;
+    }
 </script>
