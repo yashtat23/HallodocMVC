@@ -77,5 +77,7 @@ namespace BusinessLogic.Interfaces
         bool SubmitEncounterForm(EncounterFormModel model);
 
         Task SubmitRequest(CreateRequestViewModel model);
+
+        AdminProfile ProfileInfo(int adminId);
     }   
 }

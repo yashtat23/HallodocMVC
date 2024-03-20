@@ -95,7 +95,7 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
-                                data-bs-target="#profile-tab-pane"  type="button" role="tab" aria-controls="profile-tab-pane"
+                                data-bs-target="#profile-tab-pane" onclick="MyProfile()" type="button" role="tab" aria-controls="profile-tab-pane"
                                 aria-selected="false">
                             My Profile
                         </button>
@@ -144,7 +144,7 @@
             provider-location......
         </div>
         <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-            <partial name="MyProfile"/>
+            @* <partial name="MyProfile"/> *@
         </div>
         <div class="tab-pane fade" id="provider-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
             provider......
@@ -158,7 +158,7 @@
         <div class="tab-pane fade" id="record-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
             record......
         </div>
-    </div   
+    </div>
     <script src="~/js/dark-mode.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
@@ -258,6 +258,7 @@
             }
         });
 
+        // pagination
         $(document).ready(function () {
 
             $('#dtBasicExample').DataTable({
@@ -284,14 +285,14 @@
         });
 
 
-        $(document).ready(function () {
-            $('#dtBasicExample').DataTable(
-                //info: true,
-                //ordering: true,
-                //paging: true,
-                //searching: true
-            );
-        });
+        // $(document).ready(function () {
+        //     $('#dtBasicExample').DataTable(
+        //         //info: true,
+        //         //ordering: true,
+        //         //paging: true,
+        //         //searching: true
+        //     );
+        // });
 
 
         function showNewRequests(status) {
@@ -396,11 +397,11 @@
 
         function MyProfile() {
             $.ajax({
-                url: '/Admin/MyProfile',
+                url: '/Admin/AdminProfile',
                 type: 'GET',
 
                 success: function (response) {
-                    $("#home-tab-pane").html(response);
+                    $("#profile-tab-pane").html(response);
                 }
             });
         }
@@ -454,6 +455,43 @@
                 }
             });
         }
+
+        function RequestSupport() {
+
+            $.ajax({
+                method: "GET",
+                url: "/Admin/RequestSupport",
+                // async: false,
+                // data: { requestid: requestid },
+
+                success: function (result) {
+                    $('#modelContent').html(result);
+                    $('#RequestSupportmodel').modal('show');
+                },
+                error: function () {
+                    alert('Error loading partial view');
+                }
+            })
+        }
+
+        function SendLink() {
+
+            $.ajax({
+                method: "GET",
+                url: "/Admin/SendLink",
+                // async: false,
+                // data: { requestid: requestid },
+
+                success: function (result) {
+                    $('#modelContent').html(result);
+                    $('#SendLinkModal').modal('show');
+                },
+                error: function () {
+                    alert('Error loading partial view');
+                }
+            })
+        }
+
     </script>
 
    

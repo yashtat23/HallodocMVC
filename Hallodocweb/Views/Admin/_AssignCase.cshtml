@@ -10,7 +10,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form method="post" onsubmit="AssignCasePost(@Model.requestId)" id="Assign_Req" onsubmit="return checkValidation()">
+                <form method="post" asp-controller="Admin" asp-action="AssignCasePost" onsubmit="return Assignvalidation()" id="Assign_Req">
                     @* tirth patel *@
                     <div class="mb-3 text-secondary">
                         <p>To assign this request, search and select another Physician</p>
@@ -31,9 +31,10 @@
 
                     <div class="mb-3 text-secondary">
                         <div class="form-floating mb-3">
-                            <select asp-for="@Model.physicanNo" class="form-select text-secondary" aria-label="Default select example" id="physician">
+                            <select asp-for="@Model.physicanNo" id="selectphysiscian" class="form-select text-secondary" aria-label="Default select example" id="physician">
                                 <option selected></option>                             
                             </select>
+                            <small id="selectphysiscianreq" style="color:red" class="d-none">Region no is required</small>
                             <label for="floatingInput">Select Physican</label>
                         </div>
                     </div>
@@ -42,7 +43,7 @@
                         <textarea class="form-control" placeholder="Description" id="description" asp-for="@Model.additionalNotes"></textarea>
                         <small id="descriptionreq" style="color:red" class="d-none">Description no is required</small>
                     </div> 
-                    <button type="submit" id="submitbtn" class="btn text-light" style="background-color:#00B7FF">Confirm</button>
+                    <button type="submit"  id="confirmbtn" class="btn text-light" style="background-color:#00B7FF">Confirm</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -54,9 +55,9 @@
 </div>
 
 <script>
-    $('#region').on('input', function () {
+    $('#region').on('change', function () {
         var phn = $('#region').val();
-        if (phn == "") {
+        if (phn == null) {
             $('#regionreq').addClass("d-block").removeClass("d-none");
         } else {
             $('#regionreq').addClass("d-none").removeClass("d-block");
@@ -72,18 +73,63 @@
         }
     })
 
-    function checkValidation() {
-        let reason = $("#description").val();
-        if (reason == "") {
-            $("#descriptionreq").addClass('d-block').removeClass('d-none');
-            return false;
+    $('#selectphysiscian').on('change', function () {
+        var phy = $('#selectphysiscian').val();
+        if (phy == null) {
+            $('#selectphysiscianreq').addClass("d-block").removeClass("d-none");
         } else {
-            $("#descriptionreq").addClass('d-none').removeClass('d-block');
+            $('#selectphysiscianreq').addClass("d-none").removeClass("d-block");
+        }
+    })
+
+    function Assignvalidation() {
+        var desc = $('#description').val();
+        if (desc == "") {
+            $('#descriptionreq').addClass("d-block").removeClass("d-none");
+        } else {
+            $('#descriptionreq').addClass("d-none").removeClass("d-block");
+        }
+
+        var phn = $('#region').val();
+        if (phn == null) {
+            $('#regionreq').addClass("d-block").removeClass("d-none");
+        } else {
+            $('#regionreq').addClass("d-none").removeClass("d-block");
+        }
+
+          var phy = $('#selectphysiscian').val();
+            if (phy == null) {
+                $('#selectphysiscianreq').addClass("d-block").removeClass("d-none");
+            } else {
+                $('#selectphysiscianreq').addClass("d-none").removeClass("d-block");
+            }
+
+        if ((phn != null && desc != null) && phy != '') {
+            return true;
+        }
+        else {
+            return false;
         }
 
 
-        return true;
     }
+
+    // $('#confirmbtn').click(function () {
+        
+    // }
+
+    // function checkValidation() {
+    //     let reason = $("#description").val();
+    //     if (reason == "") {
+    //         $("#descriptionreq").addClass('d-block').removeClass('d-none');
+    //         return false;
+    //     } else {
+    //         $("#descriptionreq").addClass('d-none').removeClass('d-block');
+    //     }
+
+
+    //     return true;
+    // }
    
 
     function GetPhysicianData(regionId) {
@@ -117,26 +163,26 @@
 
     }
 
-    function AssignCasePost(requestid) {
-        event.preventDefault();
-        console.log(requestid);
+    // function AssignCasePost(requestid) {
+    //     event.preventDefault();
+    //     console.log(requestid);
         
 
-            $.ajax({
-                method: "POST",
-                url: "/Admin/AssignCasePost",
-                async: false,
-                data: $("#Assign_Req").serialize(),
+    //         $.ajax({
+    //             method: "POST",
+    //             url: "/Admin/AssignCasePost",
+    //             async: false,
+    //             data: $("#Assign_Req").serialize(),
 
-                success: function (result) {
-                    //$('#Dash_Tab').html(result);
-                    window.location.reload();
-                },
-                error: function () {
-                    alert('Error loading partial view');
-                }
-            })
+    //             success: function (result) {
+    //                 //$('#Dash_Tab').html(result);
+    //                 window.location.reload();
+    //             },
+    //             error: function () {
+    //                 alert('Error loading partial view');
+    //             }
+    //         })
         
-    }
+    // }
 
 </script>

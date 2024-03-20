@@ -135,7 +135,6 @@ namespace Hallodocweb.Controllers
         [CustomAuthorize("Admin")]
         public IActionResult AdminDashboard()
         {
-
             return View();
         }
 
@@ -210,7 +209,7 @@ namespace Hallodocweb.Controllers
         public IActionResult AssignCasePost(AssignCaseModel assignCaseModel)
         {
             _adminService.AssignCasePostData(assignCaseModel, assignCaseModel.requestId);
-            return Ok();
+            return RedirectToAction("AdminDashboard");
         }
 
         public IActionResult assignCase(int requestId)
@@ -443,9 +442,10 @@ namespace Hallodocweb.Controllers
             return View("AdminDashboard");
         }
 
-        public IActionResult MyProfile()
+        public IActionResult AdminProfile(int admin)
         {
-            return View();
+            return PartialView("MyProfile");
+
         }
 
         public IActionResult EncounterForm(int reqId)
@@ -511,6 +511,60 @@ namespace Hallodocweb.Controllers
         {
             await _adminService.SubmitRequest(model);
             return RedirectToAction("AdminDashboard","Admin");
+        }
+
+        public IActionResult RequestSupport()
+        {
+            return PartialView("_RequestSupport", "Admin");
+        }
+
+        //public IActionResult SendLink()
+        //{
+        //    return PartialView("_SendLink");
+        //}
+
+
+        [HttpGet]
+        public IActionResult SendLink()
+        {
+            return PartialView("_SendLink");
+        }
+
+        public Task SendEmailFinal(string email, string subject, string message)
+        {
+            var mail = "tatva.dotnet.yashvariya@outlook.com";
+            var password = "Itzvariya@23";
+
+            var client = new SmtpClient("smtp.office365.com", 587)
+            {
+                EnableSsl = true,
+                Credentials = new NetworkCredential(mail, password)
+            };
+
+
+
+            return client.SendMailAsync(new MailMessage(from: mail, to: email, subject, message));
+        }
+
+        [HttpPost]
+        public IActionResult SendLink(SendLinkModel model)
+        {
+            bool isSend = false;
+            try
+            {
+                string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+                string reviewPathLink = baseUrl + Url.Action("patientsubreq", "Patient");
+
+                SendEmailFinal(model.email, "Create Patient Request", $"Hello, please create patient request from this link: {reviewPathLink}");
+                _notyf.Success("Link Sent");
+                isSend = true;
+            }
+            catch (Exception ex)
+            {
+                _notyf.Error("Failed to sent");
+            }
+            return Json(new { isSend = isSend });
+
         }
 
     }

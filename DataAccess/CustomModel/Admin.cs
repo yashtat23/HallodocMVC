@@ -306,4 +306,17 @@ namespace DataAccess.CustomModel
         public string BillingPhone { get; set; }
     }
 
+    public class SendLinkModel
+    {
+        [Required(ErrorMessage = "FirstName is required")]
+        public string? fName { get; set; }
+        [Required(ErrorMessage = "LastName is required")]
+        public string? lName { get; set; }
+        [Required(ErrorMessage = "Phone No. is required")]
+        public string? phoneNo { get; set; }
+        [Required(ErrorMessage = "Email is required")]
+        public string? email { get; set; }
+
+    }
+
 }

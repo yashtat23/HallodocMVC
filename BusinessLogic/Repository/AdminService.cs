@@ -660,7 +660,7 @@ namespace BusinessLogic.Repository
                 if (reqClient != null)
                 {
                     Request request = _db.Requests.FirstOrDefault(x => x.Requestid == reqClient.Requestid);
-                    request.Status = (int)StatusEnum.Closed;
+                    request.Status = (int)StatusEnum.CancelledByPatient;
 
                     Requeststatuslog requeststatuslog = new Requeststatuslog();
                     requeststatuslog.Requestid = request.Requestid;
@@ -927,7 +927,7 @@ namespace BusinessLogic.Repository
                     var requestcount = _db.Requests.Where(a => a.Createddate.Date == DateTime.Now.Date && a.Createddate.Month == DateTime.Now.Month && a.Createddate.Year == DateTime.Now.Year && a.Userid == user.Userid).ToList();
                     Request request = new Request()
                     {
-                        Userid = 6,
+                        Userid = user.Userid,
                         Requesttypeid = 1,
                         Firstname = model.FirstName,
                         Lastname = model.LastName,
@@ -941,6 +941,7 @@ namespace BusinessLogic.Repository
                                              (requestcount.Count() + 1).ToString().PadLeft(4, '0'),
                     };
                     await _db.Requests.AddAsync(request);
+                    await _db.SaveChangesAsync();
 
                     Requestclient requestclient = new Requestclient()
                     {
@@ -958,7 +959,6 @@ namespace BusinessLogic.Repository
                         Zipcode = model.ZipCode,
                         Regionid = regiondata.Regionid,
                     };
-                    await _db.SaveChangesAsync();
 
                     Requestnote requestNote = new Requestnote()
                     {
@@ -983,40 +983,36 @@ namespace BusinessLogic.Repository
             }
         }
 
-        //public bool AdminProfile(int Adminid)
-        //{
-        //    try
-        //    {
-        //        return 
-        //    }
-        //    Admin? obj = _db.Admins.FirstOrDefault(x => x.Adminid == Adminid);
+        public AdminProfile ProfileInfo(int adminId)
+        {
+            Admin? obj = _db.Admins.FirstOrDefault(x => x.Adminid == adminId);
 
-        //    var region = _db.Regions.FirstOrDefault(x => x.Regionid == obj.Regionid).Name;
-        //    var regionList = _db.Regions.ToList();
+            var region = _db.Regions.FirstOrDefault(x => x.Regionid == obj.Regionid).Name;
+            var regionList = _db.Regions.ToList();
 
-        //    AdminProfile profile = new()
-        //    {
-        //        UserName = obj.Firstname + obj.Lastname,
-        //        AdminId = Adminid.ToString(),
-        //        //AdminPassword=obj.,
-        //        Status = obj.Status,
-        //        Role = obj.Roleid.ToString() ?? "",
-        //        FirstName = obj.Firstname,
-        //        LastName = obj.Lastname,
-        //        AdminPhone = obj.Mobile,
-        //        Email = obj.Email,
-        //        ConfirmEmail = obj.Email,
-        //        Address1 = obj.Address1,
-        //        Address2 = obj.Address2,
-        //        City = region,
-        //        State = region,
-        //        Zip = obj.Zip,
-        //        BillingPhone = obj.Altphone,
-        //        RegionList = regionList,
-        //    };
+            AdminProfile profile = new()
+            {
+                UserName = obj.Firstname + obj.Lastname,
+                AdminId = adminId.ToString(),
+                //AdminPassword=obj.,
+                Status = obj.Status,
+                Role = obj.Roleid.ToString() ?? "",
+                FirstName = obj.Firstname,
+                LastName = obj.Lastname,
+                AdminPhone = obj.Mobile,
+                Email = obj.Email,
+                ConfirmEmail = obj.Email,
+                Address1 = obj.Address1,
+                Address2 = obj.Address2,
+                City = region,
+                State = region,
+                Zip = obj.Zip,
+                BillingPhone = obj.Altphone,
+                RegionList = regionList,
+            };
 
-        //    return profile;
-        //}
+            return profile;
+        }
 
     }
 }

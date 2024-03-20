@@ -8,7 +8,7 @@
             <span style="color: darkblue;">(New)</span>
         </span>
         <span class="d-flex gap-1 gap-md-2">
-            <button class="action-btn my-3 d-flex gap-2">
+            <button class="action-btn my-3 d-flex gap-2" onclick="SendLink()">
                 <i class="bi bi-send"></i> <span class="d-none d-md-block">
                     Send
                     Link
@@ -23,10 +23,10 @@
             <button class="action-btn my-3 d-flex gap-2" onclick="ExportAll()">
                 <i class="bi bi-reply-all"></i> <span class="d-none d-md-block">Export All</span>
             </button>
-            <button class="action-btn my-3 d-flex gap-2">
+            <button class="action-btn my-3 d-flex gap-2" onclick="RequestSupport()">
                 <i class="bi bi-person"></i> <span class="d-none d-md-block">
                     Request
-                    DTY Support
+                    Support
                 </span>
             </button>
         </span>
@@ -247,6 +247,7 @@
     </table>
 </div>
 <div id="modelContent"></div>
+@* <div id="modelContentreq"></div> *@
 <!-- accordions -->
 @* <div class="accordion accordion-flush d-md-none d-block" id="accordionFlushExample">
 
@@ -762,8 +763,8 @@
         Export(request);
     });
 
+    
 
-
-                      //---------------------------------------------- Export btn Ajax
+                      
 
 </script>

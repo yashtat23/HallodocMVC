@@ -1,0 +1,25 @@
+﻿<div class="modal fade" id="RequestSupportmodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form method="post" class="modal-content" onsubmit="return blockvalidation()">
+            <div class="modal-header" style="background-color:#00B7FF">
+                <h5 class="modal-title text-light" id="exampleModalLabel">Request Support</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="mb-3">
+                    To all unscheduled Physicians: We are short an converage and needs additional support On Call to respond to Requests.
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control" id="blocknote" placeholder="Message"></textarea>
+                    <small id="blocknotereq" style="color:red" class="d-none">Reason Is Required </small>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="submitbtn" class="btn text-light" style="background-color:#00B7FF">Confirm</button>
+                <button type="button" class="btn border border-info" style="color:#00B7FF" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -68,7 +68,7 @@ namespace Hallodocweb.Controllers
                 Reason = Description
             };
             _adminService.CancelAgreement(model);
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("AdminDashboard","Admin");
         }
 
 
