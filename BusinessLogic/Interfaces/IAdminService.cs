@@ -76,8 +76,10 @@ namespace BusinessLogic.Interfaces
 
         bool SubmitEncounterForm(EncounterFormModel model);
 
-        Task SubmitRequest(CreateRequestViewModel model);
+        bool CreateRequest(CreateRequestModel model, string sessionEmail);
 
-        AdminProfile ProfileInfo(int adminId);
+        //AdminProfile ProfileInfo(int adminId);
+        MyProfileModel MyProfile(string sessionEmail);
+        bool VerifyState(string state);
     }   
 }

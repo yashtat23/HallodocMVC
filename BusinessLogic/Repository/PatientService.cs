@@ -444,8 +444,8 @@ namespace BusinessLogic.Repository
                 City = user.City,
                 Street = user.Street,
                 ZipCode = user.Zipcode,
-                DateOfBirth = new DateTime(Convert.ToInt32(user.Intyear), DateTime.ParseExact(user.Strmonth, "MMM", CultureInfo.InvariantCulture).Month, Convert.ToInt32(user.Intdate)),
-                isMobileCheck = user.Ismobile[0] ? 1 : 0,
+                //DateOfBirth = new DateTime(Convert.ToInt32(user.Intyear), DateTime.ParseExact(user.Strmonth, "MMM", CultureInfo.InvariantCulture).Month, Convert.ToInt32(user.Intdate)),
+                //isMobileCheck = user.Ismobile[0] ? 1 : 0,
 
             };
             return profile;
@@ -471,7 +471,7 @@ namespace BusinessLogic.Repository
                     existingUser.Strmonth = profile.DateOfBirth.ToString("MMM");
                     existingUser.Intyear = profile.DateOfBirth.Year;
 
-                    existingUser.Ismobile[0] = profile.isMobileCheck == 1 ? true : false;
+                    //existingUser.Ismobile[0] = profile.isMobileCheck == 1 ? true : false;
                     _db.Users.Update(existingUser);
                     _db.SaveChanges();
 

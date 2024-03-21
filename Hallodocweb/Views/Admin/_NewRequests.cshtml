@@ -67,7 +67,7 @@
 
 
 <div class="d-none d-md-block">
-    <table class="table table-hover data-table d-md-table d-none" id="dtBasicExample" class="data-table">
+    <table class="table table-hover data-table d-md-table d-none" id="data-table-new">
         <thead class="table-secondary">
             <tr>
                 <th scope="col">Name</th>
@@ -132,11 +132,11 @@
                             </div>
                         </td>
                         @*2*@
-                        <td style="background:@bgColor">Jun 16, 2023(0)</td>
+                        <td style="background:@bgColor">Mar 23, 2023(0)</td>
                         @*3*@
                         <td style="background:@bgColor"> @item.requestorFname @item.requestorLname</td>
                         @*4*@
-                        <td style="background:@bgColor">Nov 20, 2023 335h 1m 01m</td>
+                        <td style="background:@bgColor">Dec 21, 2023 969h 0m 01m</td>
                         @*5*@
                         <td style="background:@bgColor">
                             <div class="table_phone">
@@ -403,10 +403,10 @@
                             </div>
                             <div class="row mx-3">
                                 <div class="col-6 ps-0 pr-3 pb-2">
-                                    <a class="btn w-100  text-white rounded-pill p-1 btn-sm" style="background:#c40eff;">Assign Case</a>
+                                <a class="btn w-100  text-white rounded-pill p-1 btn-sm" onclick="AssignCase(@item.reqId)" style="background:#c40eff;">Assign Case</a>
                                 </div>
                                 <div class="col-6 p-0 pb-2 pb-2">
-                                    <a class="btn w-100 bg-danger text-white rounded-pill p-1 btn-sm">Cancel Case</a>
+                                <a class="btn w-100 bg-danger text-white rounded-pill p-1 btn-sm" onclick="showCancelCase(@item.reqId)">Cancel Case</a>
                                 </div>
                                 <div class="col-6 p-0 pr-3 pb-2">
                                     <a class="btn w-100 bg-success text-white rounded-pill p-1 btn-sm">View Notes</a>
@@ -712,7 +712,7 @@
     // pagination
     $(document).ready(function () {
 
-        $('.data-table').DataTable({
+        $('#data-table-new').DataTable({
             "initComplete": function (settings, json) {
 
                 $('#my-search-input').val(settings.oPreviousSearch.sSearch);

@@ -102,6 +102,7 @@ namespace DataAccess.CustomModel
 
     public class ViewNotesViewModel
     {
+        public List<Requeststatuslog>? TransferNotesList { get; set; }
         public string? TransferNotes { get; set; }
         public string? PhysicianNotes { get; set; }
 
@@ -246,43 +247,98 @@ namespace DataAccess.CustomModel
         public bool? indicate { get; set; }
     }
 
-    public class CreateRequestViewModel
+    public class CreateRequestModel
     {
-        public string? Notes { get; set; }
 
-        [Required(ErrorMessage = "First name is required")]
-        public string FirstName { get; set; }
+        public int? requesttypeid { get; set; }
 
-        [Required(ErrorMessage = "Last name is required")]
-        public string LastName { get; set; }
+        public int? userid { get; set; }
 
+        [Required(ErrorMessage = "Please Enter Your Street Name")]
+        public string? street { get; set; }
 
-        [Required(ErrorMessage = "Phone Number is required")]
-        public string PhoneNumber { get; set; }
+        [Required(ErrorMessage = "Please Enter Your City Name")]
+        public string? city { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
-        public string Email { get; set; }
-        [Required(ErrorMessage = "DOB is required")]
-        public DateTime DOB { get; set; }
+        [Required(ErrorMessage = "Please Enter Your State Name")]
+        public string? state { get; set; }
 
+        [Required(ErrorMessage = "Please Enter Your Zipcode")]
+        public string? zipcode { get; set; }
 
+        [Required(ErrorMessage = "Please Enter Your Name")]
+        public string? firstname { get; set; }
 
-        [Required(ErrorMessage = "Street is required")]
-        public string Street { get; set; }
+        [Required(ErrorMessage = "Please Enter Your Last Name")]
+        public string? lastname { get; set; }
 
-        [Required(ErrorMessage = " City name is required")]
-        public string City { get; set; }
+        [Required(ErrorMessage = "Please Enter Your Date Of Birth")]
+        public string? dateofbirth { get; set; }
 
-        [Required(ErrorMessage = "State is required")]
-        public string State { get; set; }
+        [Required(ErrorMessage = "Please Enter Your Email")]
+        public string? email { get; set; }
 
-        [Required(ErrorMessage = "ZipCode is required")]
-        [RegularExpression(@"^[0-9]{6}|[0-9]{5}(?:[-\s][0-9]{4})?$", ErrorMessage = "ZipCode Format is Invalid")]
-        public string ZipCode { get; set; }
+        [Required(ErrorMessage = "Please Enter Your Phone Number")]
+        public string? phone { get; set; }
 
-        public int? Room { get; set; }
+        [Required(ErrorMessage = "Please Enter Your Room")]
+        public string? room { get; set; }
 
+        public string? admin_notes { get; set; }
 
+        public bool? indicate { get; set; }
+    }
+
+    public class MyProfileModel
+    {
+        public int? admin_id { get; set; }
+        public int? aspnetuserid { get; set; }
+
+        [Required(ErrorMessage = "Please Enter Your First Name")]
+        [RegularExpression(@"^[A-Za-z]+$", ErrorMessage = "First Name must contain only letters")]
+        public string? fname { get; set; }
+
+        [Required(ErrorMessage = "Please Enter Your Last Name")]
+        [RegularExpression(@"^[A-Za-z]+$", ErrorMessage = "Last Name must contain only letters")]
+        public string? lname { get; set; }
+
+        [Required(ErrorMessage = "Please Enter Your Email")]
+        public string? email { get; set; }
+
+        [Compare("email", ErrorMessage = "Email Missmatch")]
+        public string? confirm_email { get; set; }
+
+        [Required(ErrorMessage = "Please Enter Your Mobile number")]
+        public string? mobile_no { get; set; }
+
+        [Required(ErrorMessage = "Please Enter address-1")]
+        public string? addr1 { get; set; }
+
+        [Required(ErrorMessage = "Please Enter address-2")]
+        public string? addr2 { get; set; }
+
+        [Required(ErrorMessage = "Please Enter Your City")]
+        public string? city { get; set; }
+        public int regionId { get; set; }
+
+        [Required(ErrorMessage = "Please Enter Your Zipcode")]
+        public string zip { get; set; }
+        public string? altphone { get; set; }
+        public int? createdBy { get; set; }
+        public DateTime createdDate { get; set; }
+        public int status { get; set; }
+        public int? roleid { get; set; }
+        public string username { get; set; }
+
+        [Required(ErrorMessage = "Please Enter Password")]
+        public string password { get; set; }
+
+        [Required(ErrorMessage = "Please Enter State")]
+        public string state { get; set; }
+        public List<Aspnetrole> roles { get; set; }
+        public int? flag { get; set; }
+
+        public bool indicate { get; set; }
     }
 
     public class AdminProfile

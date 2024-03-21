@@ -13,6 +13,8 @@ using BusinessLogic.Services;
 using HalloDoc.mvc.Auth;
 using System.Text.Json.Nodes;
 using DataAccess.DataModels;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Hallodocweb.Controllers
 {
@@ -442,9 +444,18 @@ namespace Hallodocweb.Controllers
             return View("AdminDashboard");
         }
 
-        public IActionResult AdminProfile(int admin)
+        public IActionResult AdminProfile()
         {
-            return PartialView("MyProfile");
+            var request = HttpContext.Request;
+            var token = request.Cookies["jwt"];
+            if (token == null || !_jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
+            {
+                return Json("ok");
+            }
+            var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+
+            var model = _adminService.MyProfile(emailClaim.Value);
+            return PartialView("MyProfile",model);
 
         }
 
@@ -507,10 +518,27 @@ namespace Hallodocweb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateReq(CreateRequestViewModel model)
+        public IActionResult CreateReq(CreateRequestModel model)
         {
-            await _adminService.SubmitRequest(model);
-            return RedirectToAction("AdminDashboard","Admin");
+            var request = HttpContext.Request;
+            var token = request.Cookies["jwt"];
+            if (token == null || !_jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
+            {
+                _notyf.Error("Token Expired");
+                return View(model);
+            }
+            var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+            var isSaved = _adminService.CreateRequest(model, emailClaim.Value);
+            if (isSaved)
+            {
+                _notyf.Success("Request Created");
+                return RedirectToAction("AdminDashboard","Admin");
+            }
+            else
+            {
+                _notyf.Error("Failed to Create");
+                return View(model);
+            }
         }
 
         public IActionResult RequestSupport()
