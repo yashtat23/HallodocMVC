@@ -296,3 +296,13 @@
     border: 1px solid #0b7ebf;
     border-radius: 25px;
 }
+
+.page-active {
+    border-radius: 50%;
+    background: #17a2b8;
+    color: white;
+}
+
+    .page-active:hover {
+        color: white;
+    }

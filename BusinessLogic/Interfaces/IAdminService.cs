@@ -15,7 +15,9 @@ namespace BusinessLogic.Interfaces
         //bool AdminLogin(AdminLogin adminLogin);
         Aspnetuser GetAspnetuser(string email);
 
-        List<AdminDashTableModel> GetRequestsByStatus(int status);
+       DashboardModel GetRequestsByStatus(int status,int CurrentPage);
+
+        DashboardModel GetRequestByRegion(int regionId, int tabNo);
 
         StatusCountModel GetStatusCount();
 

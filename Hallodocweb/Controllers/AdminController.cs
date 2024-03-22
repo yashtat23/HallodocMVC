@@ -99,9 +99,9 @@ namespace Hallodocweb.Controllers
             return PartialView("_AllRequests", statusCountModel);
         }
 
-        public IActionResult GetRequestsByStatus(int tabNo)
+        public IActionResult GetRequestsByStatus(int tabNo,int CurrentPage)
         {
-            var list = _adminService.GetRequestsByStatus(tabNo);
+            var list = _adminService.GetRequestsByStatus(tabNo, CurrentPage);
             if (tabNo == 1)
             {
                 return PartialView("_NewRequests", list);
@@ -133,6 +133,11 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
+        public IActionResult FilterRegion(int regionId, int tabNo)
+        {
+            var list = _adminService.GetRequestByRegion(regionId, tabNo);
+            return PartialView("_NewRequest", list);
+        }
 
         [CustomAuthorize("Admin")]
         public IActionResult AdminDashboard()

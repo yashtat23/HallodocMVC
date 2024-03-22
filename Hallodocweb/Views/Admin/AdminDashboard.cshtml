@@ -228,15 +228,15 @@
                     var requestor = $(this).find('td:eq(2)').text();
 
                     var accordionItem = `
-                                                    <div class="accordion-item">
+                                                            <div class="accordion-item">
 
-                                                        <div class="accordion-content">
-                                                            <p><strong>Name:</strong> ${name}</p>
-                                                            <p><strong>Address:</strong> ${address}</p>
-                                                            <p><strong>Requestor:</strong> ${requestor}</p>
-                                                        </div>
-                                                    </div>
-                                                `;
+                                                                <div class="accordion-content">
+                                                                    <p><strong>Name:</strong> ${name}</p>
+                                                                    <p><strong>Address:</strong> ${address}</p>
+                                                                    <p><strong>Requestor:</strong> ${requestor}</p>
+                                                                </div>
+                                                            </div>
+                                                        `;
 
                     $('#accordionFlushExample').append(accordionItem);
                 });
@@ -254,15 +254,15 @@
 
 
                     var accordionItem = `
-                                                    <div class="accordion-item">
+                                                            <div class="accordion-item">
 
-                                                        <div class="accordion-content">
-                                                            <p><strong>Name:</strong> ${name}</p>
-                                                            <p><strong>Address:</strong> ${address}</p>
-                                                            <p><strong>Requestor:</strong> ${requestor}</p>
-                                                        </div>
-                                                    </div>
-                                                `;
+                                                                <div class="accordion-content">
+                                                                    <p><strong>Name:</strong> ${name}</p>
+                                                                    <p><strong>Address:</strong> ${address}</p>
+                                                                    <p><strong>Requestor:</strong> ${requestor}</p>
+                                                                </div>
+                                                            </div>
+                                                        `;
 
                     $('#accordionFlushExample').append(accordionItem);
                 });
@@ -270,30 +270,30 @@
         });
 
         // pagination
-        $(document).ready(function () {
+        // $(document).ready(function () {
 
-            $('#dtBasicExample').DataTable({
-                "initComplete": function (settings, json) {
+        //     $('#dtBasicExample').DataTable({
+        //         "initComplete": function (settings, json) {
 
-                    $('#my-search-input').val(settings.oPreviousSearch.sSearch);
+        //             $('#my-search-input').val(settings.oPreviousSearch.sSearch);
 
-                    $('#my-search-input').on('keyup', function () {
-                        var searchValue = $(this).val();
-                        settings.oPreviousSearch.sSearch = searchValue;
-                        settings.oApi._fnReDraw(settings);
-                    });
-                },
-                "lengthMenu": [[5, 10, -1], [5, 10, "All"]],
-                "pageLength": 5,
-                language: {
-                    oPaginate: {
-                        sNext: '<i class="bi bi-caret-right-fill text-info"></i>',
-                        sPrevious: '<i class="bi bi-caret-left-fill text-info"></i>'
-                    }
-                }
-            });
-            $('.dataTables_filter').hide();
-        });
+        //             $('#my-search-input').on('keyup', function () {
+        //                 var searchValue = $(this).val();
+        //                 settings.oPreviousSearch.sSearch = searchValue;
+        //                 settings.oApi._fnReDraw(settings);
+        //             });
+        //         },
+        //         "lengthMenu": [[5, 10, -1], [5, 10, "All"]],
+        //         "pageLength": 5,
+        //         language: {
+        //             oPaginate: {
+        //                 sNext: '<i class="bi bi-caret-right-fill text-info"></i>',
+        //                 sPrevious: '<i class="bi bi-caret-left-fill text-info"></i>'
+        //             }
+        //         }
+        //     });
+        //     $('.dataTables_filter').hide();
+        // });
 
 
         // $(document).ready(function () {
@@ -305,15 +305,16 @@
         //     );
         // });
 
-
         function showNewRequests(status) {
             $.ajax({
                 url: '/Admin/GetRequestsByStatus',
                 type: 'GET',
-                data: { tabNo: status },
+                data: { tabNo: status, CurrentPage: 1 },
                 success: function (response) {
                     if (status == 1) {
                         $("#tab1").html(response);
+                        status = 1;
+
                     }
                     if (status == 2) {
                         $("#tab2").html(response);
@@ -344,6 +345,7 @@
                     $("#home-tab-pane").html(response);
                     openTab(event, 'tab1');
                     $('#newTable').addClass("active");
+
                 }
             });
         }
@@ -355,7 +357,7 @@
                 data: { reqId: reqId },
                 success: function (response) {
 
-                    $("#modelContent").html(response);
+                    $("#modelContentcancelcase").html(response);
 
                     $('#cancelModal').modal('show');
 
@@ -506,6 +508,49 @@
             })
         }
 
+
+        function changepage(CurrentPage, tabNo) {
+            debugger
+            console.log("pagination");
+
+            $.ajax({
+                url: '/Admin/GetRequestsByStatus',
+                type: "GET",
+                data: { tabNo: tabNo, CurrentPage: CurrentPage },
+               
+                success: function (response) {
+                    console.log(response);
+                    if (tabNo == 1) {
+                        $("#tab1").html(response);
+                       
+
+                    }
+                    if (tabNo == 2) {
+                        $("#tab2").html(response);
+                    }
+                    if (tabNo == 3) {
+                        $("#tab3").html(response);
+                    }
+                    if (tabNo == 4) {
+                        $("#tab4").html(response);
+                    }
+                    if (tabNo == 5) {
+                        $("#tab5").html(response);
+                    }
+                    if (tabNo == 6) {
+                        $("#tab6").html(response);
+                    }
+
+
+                },
+                error: function (error) {
+                    console.log(error)
+                 
+                }
+            });
+        }
+
+       
     </script>
 
 

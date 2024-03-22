@@ -73,7 +73,17 @@ namespace DataAccess.CustomModel
 
         public int Requestclientid { get; set; }
 
-      
+        public int? regionId { get; set; }
+
+    }
+
+    public class DashboardModel
+    {
+        public List<AdminDashTableModel>? adminDashboardList { get; set; }
+        public int? TotalPage { get; set; }
+        public int? CurrentPage { get; set; }
+        public List<Region>? regionList { get; set; }
+
     }
 
     //public List<Requestclient> Requestclients { get; set; }

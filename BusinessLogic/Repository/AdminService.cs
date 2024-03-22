@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BusinessLogic.Repository
 {
@@ -44,7 +45,7 @@ namespace BusinessLogic.Repository
         //    return _db.Aspnetusers.Any(x=>x.Email == adminLogin.Email && x.Passwordhash==adminLogin.Password);
         //}
 
-        public List<AdminDashTableModel> GetRequestsByStatus(int tabNo)
+        public DashboardModel GetRequestsByStatus(int tabNo, int CurrentPage)
         {
             var query = from r in _db.Requests
                         join rc in _db.Requestclients on r.Requestid equals rc.Requestid
@@ -66,7 +67,8 @@ namespace BusinessLogic.Repository
                             requestTypeId = r.Requesttypeid,
                             status = r.Status,
                             Requestclientid = rc.Requestclientid,
-                            reqId = r.Requestid
+                            reqId = r.Requestid,
+                            regionId = rc.Regionid
                         };
 
             
@@ -102,9 +104,31 @@ namespace BusinessLogic.Repository
                 query = query.Where(x => x.status == (int)StatusEnum.Unpaid);
             }
 
-            var result = query.ToList();
+            var region = query.ToList();
 
-            return result;
+            DashboardModel dashboard = new DashboardModel();
+            dashboard.adminDashboardList = region;
+            dashboard.regionList = _db.Regions.ToList();
+
+
+
+            var result = query.ToList();
+            int count = result.Count();
+            int TotalPage = (int)Math.Ceiling(count / (double)5);
+            result = result.Skip((CurrentPage - 1) * 5).Take(5).ToList();
+
+            dashboard.adminDashboardList = result;
+            dashboard.TotalPage = TotalPage;    
+            dashboard.CurrentPage = CurrentPage;    
+            return dashboard;
+        }
+
+        public DashboardModel GetRequestByRegion(int regionId, int tabNo)
+        {
+            DashboardModel model = new DashboardModel();
+            model = GetRequestsByStatus(tabNo, 1);
+            model.adminDashboardList = model.adminDashboardList.Where(x => x.regionId == regionId).ToList();
+            return model;
         }
 
         public bool UpdateAdminNotes(string additionalNotes, int reqId)

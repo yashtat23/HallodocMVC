@@ -1,4 +1,7 @@
-﻿<div class="container-fluid p-4 pb-0">
+﻿@using DataAccess.CustomModel;
+@model DashboardModel;
+
+<div class="container-fluid p-4 pb-0">
     <div class="d-flex justify-content-between">
         <span class="fw-bold">
             <span class="fs-4">Patients</span>
@@ -78,7 +81,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.adminDashboardList)
             {
                 if (item.status == 9)
                 {
@@ -224,7 +227,7 @@
 <!-- accordions -->
 <div class="accordion accordion-flush d-md-none d-block" id="accordionFlushExample">
     <h2>Accordion Example</h2>
-    @foreach (var item in Model)
+    @foreach (var item in Model.adminDashboardList)
     {
         <div id="accordion">
             <div class="card">
@@ -313,6 +316,46 @@
         </div>
     }
 </div>
+
+@if (Model.TotalPage > 1)
+{
+    <div class="page-container">
+        <ul class="pagination justify-content-center d-flex page-list">
+            <li class="page-item @(Model.CurrentPage <= 1 ? "d-none" : "")">
+                <a class="page-link border-0 m-2" onclick="changepage(@Model.CurrentPage - 1)"><i class="bi bi-chevron-double-left text-info page"></i></a>
+            </li>
+            @for (int CurrentPage = 1; CurrentPage <= Model.TotalPage; CurrentPage++)
+            {
+                <li class="m-2 btn @(CurrentPage == Model.CurrentPage ? "page-active" : "")" onclick="changepage(@CurrentPage,6)"><a class="text-decoration-none text-black curent-page-index" data-page="@CurrentPage">@CurrentPage</a></li>
+            }
+            <li class="page-item  @(Model.CurrentPage == Model.TotalPage ? "d-none" : "")">
+                <a class="page-link border-0 m-2" onclick="changepage(@Model.CurrentPage + 1)"><i class="bi bi-chevron-double-right text-info page"></i></a>
+            </li>
+        </ul>
+
+    </div>
+}
+else if (Model.TotalPage == 1)
+{
+}
+else
+{
+    <div class="text-center text-danger fw-bold h5">No record found</div>
+}
+
+<style>
+
+    .page-active {
+        border-radius: 50%;
+        background: #0dcaf0;
+        color: white;
+    }
+
+        .page-active:hover {
+            color: white;
+        }
+</style>
+
     <link rel="stylesheet" href=
 "https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
 
@@ -345,33 +388,6 @@
         var request = @Html.Raw(Json.Serialize(Model));
         console.log(request);
         Export(request);
-    });
-
-    $(document).ready(function () {
-
-        $('#data-table-unapid').DataTable({
-            "initComplete": function (settings, json) {
-
-                $('#my-search-input').val(settings.oPreviousSearch.sSearch);
-
-                $('#my-search-input').on('keyup', function () {
-                    var searchValue = $(this).val();
-                    settings.oPreviousSearch.sSearch = searchValue;
-                    settings.oApi._fnReDraw(settings);
-                });
-            },
-            "lengthMenu": [[5, 10, -1], [5, 10, "All"]],
-            "pageLength": 5,
-            language: {
-                oPaginate: {
-                    sNext: '<i class="bi bi-caret-right-fill text-info"></i>',
-                    sPrevious: '<i class="bi bi-caret-left-fill text-info"></i>'
-
-                }
-            }
-        });
-        // $('.dataTables_length').hide();
-        $('.dataTables_filter').hide();
     });
 
 </script>
