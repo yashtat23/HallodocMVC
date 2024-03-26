@@ -83,5 +83,14 @@ namespace BusinessLogic.Interfaces
         //AdminProfile ProfileInfo(int adminId);
         MyProfileModel MyProfile(string sessionEmail);
         bool VerifyState(string state);
+
+        ProviderList Provider();
+        Provider StopProviderNotif(int Physicianid);
+
+        Provider providerContact(int PhysicianId);
+
+        void providerContactEmail(int phyIdMain, string msg);
+
+        //void SendRegistrationproviderContactEmail(string provider, string msg, string sessionEmail, int phyIdMain);
     }   
 }

@@ -17,6 +17,10 @@ using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Cryptography;
 using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using HalloDoc.mvc.Auth;
+using NuGet.Protocol;
 //using System.Web.Mvc;
 
 namespace Hallodocweb.Controllers
@@ -29,8 +33,9 @@ namespace Hallodocweb.Controllers
         private readonly IPatientService _patientService;
         private readonly INotyfService _notyf;
         private readonly IHttpContextAccessor _htttpcontext;
+        private readonly IJwtService _jwtService;
 
-        public PatientController(ILogger<PatientController> logger, IAuth auth, ApplicationDbContext context, IPatientService patientService, INotyfService notyf, IHttpContextAccessor httpContext)
+        public PatientController(ILogger<PatientController> logger, IAuth auth, ApplicationDbContext context, IPatientService patientService, INotyfService notyf, IHttpContextAccessor httpContext, IJwtService jwtService)
         {
             _logger = logger;
             _Auth = auth;
@@ -38,6 +43,7 @@ namespace Hallodocweb.Controllers
             _patientService = patientService;
             _notyf = notyf;
             _htttpcontext = httpContext;
+            _jwtService = jwtService;
         }
 
         public static string GenerateSHA256(string input)
@@ -72,6 +78,7 @@ namespace Hallodocweb.Controllers
 
         public IActionResult patientreg(LoginVm loginvm)
         {
+
             if (ModelState.IsValid)
             {
                 string passwordhash = GenerateSHA256(loginvm.Password);
@@ -83,7 +90,8 @@ namespace Hallodocweb.Controllers
 
                 if (user != null)
                 {
-                    
+                    //var jwtToken = _jwtService.GetJwtToken();
+                 //Response.Cookies.Append("jwt", );
                     _notyf.Success("Logged In Successfully !!");
                     return RedirectToAction("patientdashboard","Patient");
                 }

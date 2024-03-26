@@ -32,24 +32,27 @@
                 <div class="login">
                     <img class="hallodoc-img" src="~/img/hallodoc.png" alt="logo">
                     <h2>Login To Your Account</h2>
-                    <form method="post">
+                    <form method="post " onsubmit="return Loginvalidation()">
                         <div class="input-div form-floating mb-3 w-100">
-                            <input asp-for="email" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                            <input asp-for="email" type="text" class="form-control" id="emaillogin" placeholder="name@example.com">
 
                             <label for="floatingInput">Email</label>
+                            <small id="emailloginreq" style="color:red" class="d-none">Description no is required</small>
+                          
 
                         </div>
                         <div class="input-div form-floating mb-3 w-100">
-                            <input asp-for="password" type="password" class="form-control" id="floatingInput" placeholder="name@example.com">
+                            <input asp-for="password" type="password" class="form-control" id="passwordlogin" placeholder="name@example.com">
 
                             <label for="floatingInput">Password</label>
+                            <small id="passwordloginreq" style="color:red" class="d-none">Description no is required</small>
 
                         </div>
                         
                         <div class="input-div form-floating mb-3 w-100">
-                            <a class="d-flex justify-content-center">
-                                <button class="w-100 text-decoration-none" type="submit">Log In</button>
-                            </a>
+
+                            <button class="w-100 text-decoration-none d-flex justify-content-center" type="submit">Log In</button>
+                            
 
                         </div>
                    
@@ -70,3 +73,49 @@
 
 </body>
 </html>
+
+<script>
+    $('#emaillogin').on('input', function () {
+        var email = $('#emaillogin').val();
+        if (email == "") {
+            $('#emailloginreq').addClass("d-block").removeClass("d-none");
+        } else {
+            $('#emailloginreq').addClass("d-none").removeClass("d-block");
+        }
+    })
+
+    $('#passwordlogin').on('input', function () {
+        var passsword = $('#passwordlogin').val();
+        if (passsword == "") {
+            $('#passwordloginreq').addClass("d-block").removeClass("d-none");
+        } else {
+            $('#passwordloginreq').addClass("d-none").removeClass("d-block");
+        }
+    })
+
+    function Loginvalidation() {
+        var email = $('#emaillogin').val();
+        if (email == "") {
+            $('#emailloginreq').addClass("d-block").removeClass("d-none");
+        } else {
+            $('#emailloginreq').addClass("d-none").removeClass("d-block");
+        }
+
+        var passsword = $('#passwordlogin').val();
+        if (passsword == "") {
+            $('#passwordloginreq').addClass("d-block").removeClass("d-none");
+        } else {
+            $('#passwordloginreq').addClass("d-none").removeClass("d-block");
+        }
+
+        if ((email != null && passsword != null)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+
+    }
+
+</script>

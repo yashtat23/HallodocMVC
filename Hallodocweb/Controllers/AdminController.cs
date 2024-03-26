@@ -600,5 +600,34 @@ namespace Hallodocweb.Controllers
 
         }
 
+        public IActionResult Provider()
+        {
+            var provider = _adminService.Provider();
+            return PartialView("_Provider",provider);
+        }
+
+        public void StopNotification(int PhysicianId)
+        {
+            _adminService.StopProviderNotif(PhysicianId);
+        }
+
+        public IActionResult ContactProvider(int physicianId)
+        {
+            var contact = _adminService.providerContact(physicianId);
+            return PartialView("_ContactProvider",contact);
+        }
+
+        [HttpPost]
+        public IActionResult providerContactModalEmail(int phyIdMain, string msg)
+        {
+            _adminService.providerContactEmail(phyIdMain, msg);
+            return RedirectToAction("AdminDashboard");
+        }
+
+        [HttpGet]
+        public IActionResult EditProvider()
+        {    
+            return PartialView("_EditProvider");
+        }
     }
 }

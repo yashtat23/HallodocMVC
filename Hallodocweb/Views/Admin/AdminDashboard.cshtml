@@ -101,11 +101,28 @@
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="provider-tab" data-bs-toggle="tab"
-                                data-bs-target="#provider-tab-pane" type="button" role="tab"
-                                aria-controls="provider-tab-pane" aria-selected="false">
-                            Providers
-                        </button>
+                        @*      <button class="nav-link" id="provider-tab" data-bs-toggle="tab"
+                        data-bs-target="#provider-tab-pane" type="button" role="tab"
+                        aria-controls="provider-tab-pane" onclick="Provider()" aria-selected="false">
+                        Providers
+
+                        </button> *@
+                        <div class="dropdown">
+                            <button class="nav-link" type="button" id="provider-tab" data-bs-toggle="dropdown" data-bs-target="#provider-tab-pane" aria-expanded="false" >
+                                Providers
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li>
+                                    <button class="nav-link mx-3" id="provider-tab" data-bs-toggle="tab"
+                                            data-bs-target="#provider-tab-pane" type="button" role="tab"
+                                            aria-controls="provider-tab-pane" onclick="Provider()" aria-selected="false">
+                                        Providers
+                                    </button>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Scheduling</a></li>
+                                <li><a class="dropdown-item" href="#">Invoicing</a></li>
+                            </ul>
+                        </div>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="partner-tab" data-bs-toggle="tab"
@@ -147,7 +164,7 @@
             @* <partial name="MyProfile"/> *@
         </div>
         <div class="tab-pane fade" id="provider-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-            provider......
+           
         </div>
         <div class="tab-pane fade" id="partner-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
             partner......
@@ -228,15 +245,15 @@
                     var requestor = $(this).find('td:eq(2)').text();
 
                     var accordionItem = `
-                                                            <div class="accordion-item">
+                                                                            <div class="accordion-item">
 
-                                                                <div class="accordion-content">
-                                                                    <p><strong>Name:</strong> ${name}</p>
-                                                                    <p><strong>Address:</strong> ${address}</p>
-                                                                    <p><strong>Requestor:</strong> ${requestor}</p>
-                                                                </div>
-                                                            </div>
-                                                        `;
+                                                                                <div class="accordion-content">
+                                                                                    <p><strong>Name:</strong> ${name}</p>
+                                                                                    <p><strong>Address:</strong> ${address}</p>
+                                                                                    <p><strong>Requestor:</strong> ${requestor}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        `;
 
                     $('#accordionFlushExample').append(accordionItem);
                 });
@@ -254,15 +271,15 @@
 
 
                     var accordionItem = `
-                                                            <div class="accordion-item">
+                                                                            <div class="accordion-item">
 
-                                                                <div class="accordion-content">
-                                                                    <p><strong>Name:</strong> ${name}</p>
-                                                                    <p><strong>Address:</strong> ${address}</p>
-                                                                    <p><strong>Requestor:</strong> ${requestor}</p>
-                                                                </div>
-                                                            </div>
-                                                        `;
+                                                                                <div class="accordion-content">
+                                                                                    <p><strong>Name:</strong> ${name}</p>
+                                                                                    <p><strong>Address:</strong> ${address}</p>
+                                                                                    <p><strong>Requestor:</strong> ${requestor}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        `;
 
                     $('#accordionFlushExample').append(accordionItem);
                 });
@@ -424,8 +441,6 @@
 
         function Export(reqList)  //---------------------------------------------- Export btn Ajax
         {
-
-
             $.ajax({
                 method: "POST",
                 url: "/Admin/ExportReq",
@@ -458,7 +473,6 @@
             });
 
         }
-
 
         function ExportAll() {
             $.ajax({
@@ -493,7 +507,7 @@
         function SendLink() {
 
             $.ajax({
-                method: "GET",
+                method: "GET", 
                 url: "/Admin/SendLink",
                 // async: false,
                 // data: { requestid: requestid },
@@ -517,12 +531,12 @@
                 url: '/Admin/GetRequestsByStatus',
                 type: "GET",
                 data: { tabNo: tabNo, CurrentPage: CurrentPage },
-               
+
                 success: function (response) {
                     console.log(response);
                     if (tabNo == 1) {
                         $("#tab1").html(response);
-                       
+
 
                     }
                     if (tabNo == 2) {
@@ -545,12 +559,23 @@
                 },
                 error: function (error) {
                     console.log(error)
-                 
+
                 }
             });
         }
 
-       
+        function Provider() {
+            $.ajax({
+                url: '/Admin/Provider',
+                type: 'GET',
+
+                success: function (response) {
+                    $("#provider-tab-pane").html(response);
+                }
+            });
+        }
+
+
     </script>
 
 

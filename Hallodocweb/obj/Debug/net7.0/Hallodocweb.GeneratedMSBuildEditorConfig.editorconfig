@@ -84,6 +84,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0NvbmNsdWRlUmVxdWVzdHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_ContactProvider.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0NvbnRhY3RQcm92aWRlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_EditProvider.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0VkaXRQcm92aWRlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_Navbar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX05hdmJhci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -94,6 +102,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_PendingRequests.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1BlbmRpbmdSZXF1ZXN0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_Provider.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1Byb3ZpZGVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_RequestSupport.cshtml]

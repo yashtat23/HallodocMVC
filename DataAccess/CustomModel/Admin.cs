@@ -1,6 +1,7 @@
 ﻿using DataAccess.DataModels;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -141,9 +142,9 @@ namespace DataAccess.CustomModel
         public List<Physician> physician { get; set; }
         public int requestId { get; set; }
 
-        public int? physicanNo {  get; set; }
+        public int? physicanNo { get; set; }
 
-        [Required(ErrorMessage="Region is required")]
+        [Required(ErrorMessage = "Region is required")]
         public int regionNo { get; set; }
 
         public string additionalNotes { get; set; }
@@ -171,7 +172,7 @@ namespace DataAccess.CustomModel
     public class Order
     {
         public int? ReqId { get; set; }
-        public List<Healthprofessionaltype> Profession {  get; set; }
+        public List<Healthprofessionaltype> Profession { get; set; }
         public List<Healthprofessional> Business { get; set; }
         public string BusineesContact { get; set; }
         public string email { get; set; }
@@ -179,8 +180,8 @@ namespace DataAccess.CustomModel
         public string orderdetail { get; set; }
 
         public int refill { get; set; }
-        public int vendorid {  get; set; }
-        
+        public int vendorid { get; set; }
+
     }
 
     public class SendAgreement
@@ -194,7 +195,7 @@ namespace DataAccess.CustomModel
 
     public class ReviewAgreement
     {
-        public int? ReqClientId { get; set;}
+        public int? ReqClientId { get; set; }
     }
 
     public class CancelAngreement
@@ -382,6 +383,20 @@ namespace DataAccess.CustomModel
         public string? phoneNo { get; set; }
         [Required(ErrorMessage = "Email is required")]
         public string? email { get; set; }
+
+    }
+    public class ProviderList
+    {
+        public List<Provider> List { get; set; }
+    }
+    public class Provider
+    {
+        public int physicianid { get; set; }
+        public BitArray notification { get; set; }
+        public string providername {get;set;}
+        public string role { get; set;}
+        [Required(ErrorMessage ="Message is required")]
+        public string message { get; set;}
 
     }
 
