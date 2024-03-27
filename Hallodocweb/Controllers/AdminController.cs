@@ -624,10 +624,99 @@ namespace Hallodocweb.Controllers
             return RedirectToAction("AdminDashboard");
         }
 
+            [HttpGet]
+            public IActionResult EditProvider(int PhysicianId)
+            {
+                var edit = _adminService.EditPhysician(PhysicianId);
+                return PartialView("_EditProvider", edit);
+            }
+
+        [HttpPost]
+        public IActionResult EditProviderPost(EditPhysicianAccount edit)
+        {
+            var update = _adminService.EditSavePhysician(edit);
+            _notyf.Success("Save Changes!!");
+            return RedirectToAction("AdminDashboard");
+        }
+
+        public IActionResult ProviderLocation()
+        {
+            return PartialView("_ProviderLocation");
+        }
+        public IActionResult GetLocation()
+        {
+            List<Physicianlocation> getLocation = _adminService.GetPhysicianlocations();
+            return Ok(getLocation);
+        }
+
+
         [HttpGet]
-        public IActionResult EditProvider()
-        {    
-            return PartialView("_EditProvider");
+        public IActionResult ShowMyProfile()
+        {
+            var request = HttpContext.Request;
+            var token = request.Cookies["jwt"];
+            if (token == null || !_jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
+            {
+                return Json("token expired");
+            }
+            var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+
+            var model = _adminService.MyProfile(emailClaim.Value);
+            return PartialView("_MyProfile", model);
+        }
+        public string GetTokenEmail()
+        {
+            var token = HttpContext.Request.Cookies["jwt"];
+            if (token == null || !_jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
+            {
+                return "";
+            }
+            var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+            return emailClaim.Value;
+        }
+        [HttpPost]
+        public IActionResult ResetPassword(string resetPassword)
+        {
+            var tokenEmail = GetTokenEmail();
+            if (tokenEmail != "")
+            {
+                resetPassword = GenerateSHA256(resetPassword);
+                bool isReset = _adminService.ResetPassword(tokenEmail, resetPassword);
+                return Json(new { isReset = isReset });
+            }
+            return Json(new { isReset = false });
+        }
+
+        [HttpPost]
+        public IActionResult SubmitAdminInfo(MyProfileModel model)
+        {
+            var tokenEmail = GetTokenEmail();
+            if (tokenEmail != "")
+            {
+                bool isSubmit = _adminService.SubmitAdminInfo(model, tokenEmail);
+                return Json(new { isSubmit = isSubmit });
+            }
+            return Json(new { isSubmit = false });
+        }
+
+        [HttpPost]
+        public IActionResult SubmitBillingInfo(MyProfileModel model)
+        {
+            var tokenEmail = GetTokenEmail();
+            if (tokenEmail != "")
+            {
+                var isRegionExists = _adminService.VerifyState(model.state);
+                if (isRegionExists)
+                {
+                    bool isSubmit = _adminService.SubmitBillingInfo(model, tokenEmail);
+                    return Json(new { isSubmit = isSubmit, isRegionExists = isRegionExists });
+                }
+                else
+                {
+                    return Json(new { isRegionExists = isRegionExists });
+                }
+            }
+            return Json(new { isSubmit = false });
         }
     }
 }

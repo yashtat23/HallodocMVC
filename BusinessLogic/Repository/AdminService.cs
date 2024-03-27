@@ -1048,32 +1048,32 @@ namespace BusinessLogic.Repository
         //    return profile;
         //}
 
-        public MyProfileModel MyProfile(string sessionEmail)
-        {
-            var myProfileMain = _db.Admins.Where(x => x.Email == sessionEmail).Select(x => new MyProfileModel()
-            {
-                fname = x.Firstname,
-                lname = x.Lastname,
-                email = x.Email,
-                confirm_email = x.Email,
-                mobile_no = x.Mobile,
-                addr1 = x.Address1,
-                addr2 = x.Address2,
-                city = x.City,
-                zip = x.Zip,
-                state = _db.Regions.Where(r => r.Regionid == x.Regionid).Select(r => r.Name).First(),
-                roles = _db.Aspnetroles.ToList(),
-            }).ToList().FirstOrDefault();
+        //public MyProfileModel MyProfile(string sessionEmail)
+        //{
+        //    var myProfileMain = _db.Admins.Where(x => x.Email == sessionEmail).Select(x => new MyProfileModel()
+        //    {
+        //        fname = x.Firstname,
+        //        lname = x.Lastname,
+        //        email = x.Email,
+        //        confirm_email = x.Email,
+        //        mobile_no = x.Mobile,
+        //        addr1 = x.Address1,
+        //        addr2 = x.Address2,
+        //        city = x.City,
+        //        zip = x.Zip,
+        //        state = _db.Regions.Where(r => r.Regionid == x.Regionid).Select(r => r.Name).First(),
+        //        roles = _db.Aspnetroles.ToList(),
+        //    }).ToList().FirstOrDefault();
 
-            var aspnetuser = _db.Aspnetusers.Where(r => r.Email == sessionEmail).First();
+        //    var aspnetuser = _db.Aspnetusers.Where(r => r.Email == sessionEmail).First();
 
 
 
-            myProfileMain.username = aspnetuser.Username;
-            myProfileMain.password = aspnetuser.Passwordhash;
+        //    myProfileMain.username = aspnetuser.Username;
+        //    myProfileMain.password = aspnetuser.Passwordhash;
 
-            return myProfileMain;
-        }
+        //    return myProfileMain;
+        //}
 
         public bool VerifyState(string state)
         {
@@ -1147,6 +1147,24 @@ namespace BusinessLogic.Repository
 
             return provider;
         }
+        public void providerContactEmail(int phyIdMain, string msg)
+        {
+            Provider _provider = new Provider();
+
+            _provider.physicianid = phyIdMain;
+
+            var provider = _db.Physicians.FirstOrDefault(x => x.Physicianid == phyIdMain);
+
+            try
+            {
+                SendRegistrationproviderContactEmail(provider.Email, msg, phyIdMain);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+        }
         public void SendRegistrationproviderContactEmail(string provider, string msg, int phyIdMain)
         {
             string senderEmail = "tatva.dotnet.yashvariya@outlook.com";
@@ -1191,23 +1209,257 @@ namespace BusinessLogic.Repository
             _db.SaveChanges();
         }
 
-        public void providerContactEmail(int phyIdMain, string msg)
+        
+
+        public EditPhysicianAccount EditPhysician(int PhysicianId)
         {
-            Provider _provider = new Provider();
+            var physician = _db.Physicians.FirstOrDefault(x => x.Physicianid == PhysicianId);
+            var aspnetuser = _db.Aspnetusers.FirstOrDefault(x => x.Id == physician.Aspnetuserid);
+            var region = _db.Regions.FirstOrDefault(x => x.Regionid == physician.Regionid).Name;
+            EditPhysicianAccount obj = new()
+            {
+                PhysicianId = PhysicianId,
+                UserName = aspnetuser.Username,
+                Password = aspnetuser.Passwordhash,
+                FirstName = physician.Firstname,
+                LastName = physician.Lastname,
+                Email = physician.Email,
+                PhoneNumber = physician.Mobile,
+                MedicalLicenseNumber = physician.Medicallicense,
+                NPINumber = physician.Npinumber,
+                SyncEmail = physician.Syncemailaddress,
+                Address1 = physician.Address1,
+                Address2 = physician.Address2,
+                City = physician.City,
+                State = region,
+                Zip = physician.Zip,
+                Phone = physician.Altphone,
+                BusinessName = physician.Businessname,
+                BusinessWebsite = physician.Businesswebsite,
+                RegionList = _db.Regions.ToList(),
+                
+            };
 
-            _provider.physicianid = phyIdMain;
+            return obj;
+        }
 
-            var provider = _db.Physicians.FirstOrDefault(x=>x.Physicianid==phyIdMain);
-
+        public bool EditSavePhysician(EditPhysicianAccount editPhysicianAccount)
+        {
             try
             {
-                SendRegistrationproviderContactEmail(provider.Email, msg, phyIdMain);
+                
+                var physician = _db.Physicians.FirstOrDefault(x => x.Physicianid == editPhysicianAccount.PhysicianId);
+                //var aspnetuser = _db.Aspnetusers.FirstOrDefault(x => x.Id == physician.Aspnetuserid);
+                //var region = _db.Regions.Where(x => x.Regionid == physician.Regionid).Select(x=>x.Name).First();
+                switch (editPhysicianAccount.FormId)
+                {
+                    case 1:
+                        break;
+                    case 2:
+                        physician.Firstname = editPhysicianAccount.FirstName;
+                        physician.Lastname = editPhysicianAccount.LastName;
+                        physician.Email = editPhysicianAccount.Email;
+                        physician.Mobile = editPhysicianAccount.Phone;
+                        physician.Medicallicense = editPhysicianAccount.MedicalLicenseNumber;
+                        physician.Npinumber = editPhysicianAccount.NPINumber;
+                        physician.Syncemailaddress = editPhysicianAccount.SyncEmail;
+                        _db.Physicians.Update(physician);
+                        _db.SaveChanges();
+                        break;
+                    case 3:
+                        physician.Address1 = editPhysicianAccount.Address1;
+                        physician.Address2 = editPhysicianAccount.Address2;
+                        physician.City = editPhysicianAccount.City;
+                        physician.Zip = editPhysicianAccount.Zip;
+                        physician.Altphone = editPhysicianAccount.Phone;
+                        _db.Physicians.Update(physician);
+                        _db.SaveChanges();
+                        break;
+                    case 4:
+                        physician.Businessname = editPhysicianAccount.BusinessName;
+                        physician.Businesswebsite = editPhysicianAccount.BusinessWebsite;
+                        _db.Physicians.Update(physician);
+                        _db.SaveChanges();
+                        break;
+                    case 5:
+                        break;
+                }
+
+                return true;
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
+                return false;
+            }
+            
+
+        }
+
+        public List<Physicianlocation> GetPhysicianlocations()
+        {
+            var phyLocation = _db.Physicianlocations.ToList();
+            return phyLocation;
+        }
+
+        public MyProfileModel MyProfile(string sessionEmail)
+        {
+            var myProfileMain = _db.Admins.Where(x => x.Email == sessionEmail).Select(x => new MyProfileModel()
+            {
+                fname = x.Firstname,
+                lname = x.Lastname,
+                email = x.Email,
+                confirm_email = x.Email,
+                mobile_no = x.Mobile,
+                addr1 = x.Address1,
+                addr2 = x.Address2,
+                city = x.City,
+                zip = x.Zip,
+                state = _db.Regions.Where(r => r.Regionid == x.Regionid).Select(r => r.Name).First(),
+                roles = _db.Aspnetroles.ToList(),
+            }).ToList().FirstOrDefault();
+
+            var aspnetuser = _db.Aspnetusers.Where(r => r.Email == sessionEmail).First();
+
+
+
+            myProfileMain.username = aspnetuser.Username;
+            //myProfileMain.password = aspnetuser.Passwordhash;
+
+            return myProfileMain;
+        }
+
+        public bool ResetPassword(string tokenEmail, string resetPassword)
+        {
+            try
+            {
+                var aspUser = _db.Aspnetusers.Where(r => r.Email == tokenEmail).Select(r => r).First();
+
+                if (aspUser.Passwordhash != resetPassword)
+                {
+                    aspUser.Passwordhash = resetPassword;
+                    _db.Aspnetusers.Update(aspUser);
+
+                    _db.SaveChanges();
+
+                    return true;
+                }
+                return false;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
 
+        }
+
+        public bool SubmitAdminInfo(MyProfileModel model, string tokenEmail)
+        {
+            try
+            {
+
+                var aspUser = _db.Aspnetusers.Where(r => r.Email == tokenEmail).Select(r => r).First();
+
+                var adminInfo = _db.Admins.Where(r => r.Email == tokenEmail).Select(r => r).First();
+
+                if (adminInfo.Firstname != model.fname || adminInfo.Lastname != model.lname || adminInfo.Email != model.email || adminInfo.Mobile != model.mobile_no)
+                {
+                    if (adminInfo.Firstname != model.fname)
+                    {
+
+                        adminInfo.Firstname = model.fname;
+
+                    }
+
+                    if (adminInfo.Lastname != model.lname)
+                    {
+                        adminInfo.Lastname = model.lname;
+                    }
+
+                    if (adminInfo.Email != model.email)
+                    {
+                        adminInfo.Email = model.email;
+                        aspUser.Email = model.email;
+
+                        int index = model.email.IndexOf('@');
+                        var username = model.email.Substring(0, index);
+                        aspUser.Username = username;
+                    }
+
+                    if (adminInfo.Mobile != model.mobile_no)
+                    {
+                        adminInfo.Mobile = model.mobile_no;
+                        aspUser.Phonenumber = model.mobile_no;
+                    }
+
+
+                    aspUser.Modifieddate = DateTime.Now;
+
+                    _db.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool SubmitBillingInfo(MyProfileModel model, string tokenEmail)
+        {
+            try
+            {
+                var adminInfo = _db.Admins.Where(r => r.Email == tokenEmail).Select(r => r).First();
+
+                var regionid = _db.Regions.Where(x => x.Name.ToLower() == model.state.ToLower()).Select(x => x.Regionid).First();
+
+                if (adminInfo.Address1 != model.addr1 || adminInfo.Address2 != model.addr2 || adminInfo.City != model.city || adminInfo.Zip != model.zip || adminInfo.Regionid != regionid)
+                {
+
+                    if (adminInfo.Address1 != model.addr1)
+                    {
+                        adminInfo.Address1 = model.addr1;
+                    }
+
+                    if (adminInfo.Address2 != model.addr2)
+                    {
+                        adminInfo.Address2 = model.addr2;
+                    }
+
+                    if (adminInfo.City != model.city)
+                    {
+                        adminInfo.City = model.city;
+                    }
+
+                    if (adminInfo.Zip != model.zip)
+                    {
+                        adminInfo.Zip = model.zip;
+                    }
+
+                    if (adminInfo.Regionid != regionid)
+                    {
+                        adminInfo.Regionid = regionid;
+                    }
+
+                    _db.SaveChanges();
+
+                    return true;
+                }
+
+                return false;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
 

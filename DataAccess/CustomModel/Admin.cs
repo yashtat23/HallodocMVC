@@ -393,11 +393,46 @@ namespace DataAccess.CustomModel
     {
         public int physicianid { get; set; }
         public BitArray notification { get; set; }
-        public string providername {get;set;}
-        public string role { get; set;}
-        [Required(ErrorMessage ="Message is required")]
-        public string message { get; set;}
+        public string providername { get; set; }
+        public string role { get; set; }
+        [Required(ErrorMessage = "Message is required")]
+        public string message { get; set; }
 
+    }
+
+    public class EditPhysicianAccount
+    {
+        public int FormId { get; set; }
+        public int PhysicianId { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+     
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string MedicalLicenseNumber { get; set; }
+        public string NPINumber { get; set; }
+        public string SyncEmail { get; set; }
+        public List<Region> RegionList { get; set; }
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
+        public string Phone { get; set; }
+        public string BusinessName { get; set; }
+        public string BusinessWebsite { get; set; }
+        public string AdminNote { get; set; }
+
+
+        public IFormFile Photo { get; set; }
+        public IFormFile Signature { get; set; }
+        public IFormFile ICA { get; set; }
+        public IFormFile BGCheck { get; set; }
+        public IFormFile HIPAACompliance { get; set; }
+        public IFormFile NDA { get; set; }
+        public IFormFile LicenseDoc { get; set; }
     }
 
 }

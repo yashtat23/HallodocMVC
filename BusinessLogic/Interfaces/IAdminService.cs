@@ -81,7 +81,7 @@ namespace BusinessLogic.Interfaces
         bool CreateRequest(CreateRequestModel model, string sessionEmail);
 
         //AdminProfile ProfileInfo(int adminId);
-        MyProfileModel MyProfile(string sessionEmail);
+        //MyProfileModel MyProfile(string sessionEmail);
         bool VerifyState(string state);
 
         ProviderList Provider();
@@ -91,6 +91,17 @@ namespace BusinessLogic.Interfaces
 
         void providerContactEmail(int phyIdMain, string msg);
 
+        EditPhysicianAccount EditPhysician(int PhysicianId);
+
+        bool EditSavePhysician(EditPhysicianAccount editPhysicianAccount);
+
+        List<Physicianlocation> GetPhysicianlocations();
+
+        MyProfileModel MyProfile(string sessionEmail);
+
+        bool ResetPassword(string tokenEmail, string resetPassword);
+        bool SubmitAdminInfo(MyProfileModel model, string tokenEmail);
+        bool SubmitBillingInfo(MyProfileModel model, string tokenEmail);
         //void SendRegistrationproviderContactEmail(string provider, string msg, string sessionEmail, int phyIdMain);
     }   
 }
