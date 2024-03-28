@@ -385,20 +385,26 @@ namespace DataAccess.CustomModel
         public string? email { get; set; }
 
     }
-    public class ProviderList
+    public class ProviderModel
     {
-        public List<Provider> List { get; set; }
-    }
-    public class Provider
-    {
-        public int physicianid { get; set; }
-        public BitArray notification { get; set; }
-        public string providername { get; set; }
-        public string role { get; set; }
-        [Required(ErrorMessage = "Message is required")]
-        public string message { get; set; }
+        public string? firstName { get; set; }
+        public string? lastName { get; set; }
 
+
+        public bool? notification { get; set; }
+
+        public string? role { get; set; }
+
+        public string? onCallStatus { get; set; }
+
+        public string? status { get; set; }
+
+        public int? phyId { get; set; }
+
+        [Required(ErrorMessage = "Please Enter A Message")]
+        public string? message { get; set; }
     }
+
 
     public class EditPhysicianAccount
     {
@@ -433,6 +439,19 @@ namespace DataAccess.CustomModel
         public IFormFile HIPAACompliance { get; set; }
         public IFormFile NDA { get; set; }
         public IFormFile LicenseDoc { get; set; }
+    }
+
+    public class AccountAccess
+    {
+        public int RoleId { get; set; }
+        public string Name { get; set; }
+        public short AccountType { get; set; }
+
+    }
+
+    public class CreateAccess
+    {
+        public List<Menu> Menu { get; set; }
     }
 
 }

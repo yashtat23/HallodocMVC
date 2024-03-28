@@ -180,10 +180,11 @@
                                 <label class="ms-2  " for="floatingInputZipCode">Zip</label>
                             </div>
                             <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
-                                <input id="phoneMyProfile2"
-                                       class="d1class form-control contact"
+                                <input id="phoneMyProfile2" asp-for="altphone"
+                                       class="dclass form-control contact" type="number"
                                        aria-label="Contact"
-                                       type="number" disabled />
+                                       disabled />
+                                <label class="ms-2  " for="floatingInputphoneMyProfile2">Contact</label>
                             </div>
                         </div>
                         <div class="d-grid gap-2 d-flex justify-content-center  justify-content-md-end mb-3">
@@ -206,12 +207,6 @@
     </div>
 </div>
 <script>
-
-    //$(document).ready(function () {
-    //    $("#myProfileSecondForm").validate();
-
-    //});
-
     function disableFields() {
         document.querySelectorAll('.d1class').forEach(function (element) {
             element.disabled = true;
@@ -231,7 +226,7 @@
         document.getElementById('cancelBtn').style.display = 'block';
         document.getElementById('editBtn').style.display = 'none';
     }
-    disableFields();
+    // disableFields();
 
     function disableFields2() {
         document.querySelectorAll('.dclass').forEach(function (element) {
@@ -252,7 +247,7 @@
         document.getElementById('cancelBtn2').style.display = 'block';
         document.getElementById('editBtn2').style.display = 'none';
     }
-    disableFields2();
+    // disableFields2();
 
     function passwordVisible2() {
         let a = document.getElementById("passHide2")
@@ -275,7 +270,6 @@
         }
     }
 
-
     function resetPass() {
         var password = $('#floatingPassword2').val();
         if (password == "") {
@@ -288,6 +282,7 @@
             data: { resetPassword: password },
             success: function (response) {
                 if (response.isReset == true) {
+                    $('#floatingPassword2').val("");
                     toastr.success("Reset successfully");
                 }
                 else {
@@ -304,12 +299,8 @@
             email: $("#floatingInputemailAdmin").val(),
             confirm_email: $("#floatingInputConfirmEmailAdmin").val(),
             mobile_no: $("#phoneMyProfile").val(),
-
         };
 
-
-
-        //if ($("#myProfileSecondForm").valid()) {
         $.ajax({
             url: '/Admin/SubmitAdminInfo',
             type: 'POST',
@@ -317,8 +308,12 @@
             success: function (response) {
                 if (response.isSubmit == true) {
                     toastr.success("Data Updated")
-
-                    //document.getElementById("userNameMain").innerHTML = result.userChangeHeader;
+                    document.querySelectorAll('.d1class').forEach(function (element) {
+                        element.disabled = true;
+                    });
+                    document.getElementById('submitBtn2').style.display = 'none';
+                    document.getElementById('cancelBtn2').style.display = 'none';
+                    document.getElementById('editBtn2').style.display = 'block';
                 } else {
                     toastr.error("Change atleast one field");
                 }
@@ -327,7 +322,6 @@
                 alert("Error");
             },
         });
-        //}
     }
 
     function submitBillingInfo() {
@@ -337,10 +331,9 @@
             city: $("#floatingInputCity").val(),
             zip: $("#floatingInputZipCode").val(),
             state: $("#floatingInputState").val(),
+            altphone: $("#phoneMyProfile2").val(),
         };
 
-
-        //if ($("#myProfileThirdForm").valid()) {
         $.ajax({
             url: "/Admin/SubmitBillingInfo",
             type: 'POST',
@@ -351,6 +344,12 @@
                 }
                 else if (response.isSubmit == true) {
                     toastr.success("Data Updated");
+                    document.querySelectorAll('.dclass').forEach(function (element) {
+                        element.disabled = true;
+                    });
+                    document.getElementById('submitBtn').style.display = 'none';
+                    document.getElementById('cancelBtn').style.display = 'none';
+                    document.getElementById('editBtn').style.display = 'block';
                 } else {
                     toastr.error("Change atleast one field");
                 }
@@ -359,7 +358,6 @@
                 alert("Error");
             },
         });
-        //}
     }
 
 </script>

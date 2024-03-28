@@ -84,10 +84,10 @@ namespace BusinessLogic.Interfaces
         //MyProfileModel MyProfile(string sessionEmail);
         bool VerifyState(string state);
 
-        ProviderList Provider();
-        Provider StopProviderNotif(int Physicianid);
+        List<ProviderModel> GetProvider();
+        bool StopNotification(int phyId);
 
-        Provider providerContact(int PhysicianId);
+        public ProviderModel providerContact(int PhysicianId);
 
         void providerContactEmail(int phyIdMain, string msg);
 
@@ -102,6 +102,12 @@ namespace BusinessLogic.Interfaces
         bool ResetPassword(string tokenEmail, string resetPassword);
         bool SubmitAdminInfo(MyProfileModel model, string tokenEmail);
         bool SubmitBillingInfo(MyProfileModel model, string tokenEmail);
+
+        List<AccountAccess> AccountAccess();
+        void DeleteRole(int roleId);
+
+        CreateAccess FetchRole(short selectedValue);
+        void CreateRole(List<int> menuIds, string roleName, short accountType);
         //void SendRegistrationproviderContactEmail(string provider, string msg, string sessionEmail, int phyIdMain);
     }   
 }

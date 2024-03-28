@@ -102,6 +102,7 @@ namespace Hallodocweb.Controllers
         public IActionResult GetRequestsByStatus(int tabNo,int CurrentPage)
         {
             var list = _adminService.GetRequestsByStatus(tabNo, CurrentPage);
+
             if (tabNo == 1)
             {
                 return PartialView("_NewRequests", list);
@@ -602,13 +603,13 @@ namespace Hallodocweb.Controllers
 
         public IActionResult Provider()
         {
-            var provider = _adminService.Provider();
+            var provider = _adminService.GetProvider();
             return PartialView("_Provider",provider);
         }
 
-        public void StopNotification(int PhysicianId)
+        public void ProviderCheckbox(int PhysicianId)
         {
-            _adminService.StopProviderNotif(PhysicianId);
+            _adminService.StopNotification(PhysicianId);
         }
 
         public IActionResult ContactProvider(int physicianId)
@@ -682,6 +683,7 @@ namespace Hallodocweb.Controllers
             {
                 resetPassword = GenerateSHA256(resetPassword);
                 bool isReset = _adminService.ResetPassword(tokenEmail, resetPassword);
+                _notyf.Success("Reset Password!!");
                 return Json(new { isReset = isReset });
             }
             return Json(new { isReset = false });
@@ -717,6 +719,40 @@ namespace Hallodocweb.Controllers
                 }
             }
             return Json(new { isSubmit = false });
+        }
+
+        public IActionResult CreateProviderAccount()
+        {
+            return PartialView("_CreateProviderAccount");
+        }
+
+        [HttpGet]
+        public IActionResult CreateAccess()
+        {
+            var obj = _adminService.FetchRole(0);
+            return PartialView("_CreateAccess", obj);
+        }
+
+
+        [HttpPost]
+        public IActionResult CreateAccessPost(List<int> MenuIds, string RoleName, short AccountType)
+        {
+            _adminService.CreateRole(MenuIds, RoleName, AccountType);
+            return PartialView("_CreateAccess");
+        }
+
+        [HttpGet]
+        public CreateAccess FetchRoles(short selectedValue)
+        {
+            var obj = _adminService.FetchRole(selectedValue);
+            return obj;
+        }
+
+        [HttpGet]
+        public IActionResult ShowAccountAccess()
+        {
+            var obj = _adminService.AccountAccess();
+            return PartialView("_AccountAccess", obj);
         }
     }
 }

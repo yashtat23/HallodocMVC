@@ -131,11 +131,35 @@
                             Partners
                         </button>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="access-tab" data-bs-toggle="tab" data-bs-target="#access-tab-pane"
-                                type="button" role="tab" aria-controls="access-tab-pane" aria-selected="false">
-                            Access
-                        </button>
+                    <li class="nav-item admin-tab" role="presentation" id="access-tab">
+                        <div class="dropdown">
+                            <button class="nav-link" type="button" id="access-tab" data-bs-toggle="dropdown" data-bs-target="#access-tab-pane" aria-expanded="false">
+                                Access
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li>
+                                    <button class="nav-link mx-3" id="access-tab" data-bs-toggle="tab"
+                                            data-bs-target="#access-tab-pane" role="tab"
+                                            aria-controls="access-tab-pane" onclick="AccountAccess()" aria-selected="false">
+                                        Account Access
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="nav-link mx-3" id="access-tab" data-bs-toggle="tab"
+                                            data-bs-target="#access-tab-pane" role="tab"
+                                            aria-controls="access-tab-pane" onclick="UserAccess()" aria-selected="false">
+                                        User Access
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="nav-link mx-3" id="provider-tab" data-bs-toggle="tab"
+                                            data-bs-target="#provider-tab-pane" role="tab"
+                                            aria-controls="provider-tab-pane" onclick="CreateAdminAccount()" aria-selected="false">
+                                        Create Admin Account
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="record-tab" data-bs-toggle="tab" data-bs-target="#record-tab-pane"
@@ -326,7 +350,7 @@
             $.ajax({
                 url: '/Admin/GetRequestsByStatus',
                 type: 'GET',
-                data: { tabNo: status, CurrentPage: 1 },
+                data: { tabNo: status, CurrentPage: 1,},
                 success: function (response) {
                     if (status == 1) {
                         $("#tab1").html(response);
@@ -582,6 +606,16 @@
 
                 success: function (response) {
                     $("#provider-location-tab-pane").html(response);
+                }
+            });
+        }
+
+        function AccountAccess() {
+            $.ajax({
+                url: '/Admin/ShowAccountAccess',
+                type: 'GET',
+                success: function (response) {
+                    $("#access-tab-pane").html(response);
                 }
             });
         }

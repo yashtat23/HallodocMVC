@@ -104,20 +104,32 @@ namespace BusinessLogic.Repository
                 query = query.Where(x => x.status == (int)StatusEnum.Unpaid);
             }
 
-            var region = query.ToList();
+            //var region = query.ToList();
 
-            DashboardModel dashboard = new DashboardModel();
-            dashboard.adminDashboardList = region;
-            dashboard.regionList = _db.Regions.ToList();
+            //DashboardModel dashboard = new DashboardModel();
+            //dashboard.adminDashboardList = region;
+            //dashboard.regionList = _db.Regions.ToList();
 
+            //var result = query.ToList();
+            //int count = result.Count();
+            //int TotalPage = (int)Math.Ceiling(count / (double)5);
+            //result = result.Skip((CurrentPage - 1) * 5).Take(5).ToList();
 
+            //DashboardModel dashboardModel = new DashboardModel();
+            //dashboardModel.adminDashTableList = result;
+            //dashboardModel.regionList = _db.Regions.ToList();
+            //dashboardModel.TotalPage = TotalPage;
+            //dashboardModel.CurrentPage = CurrentPage;
+            //return dashboardModel;
 
             var result = query.ToList();
             int count = result.Count();
             int TotalPage = (int)Math.Ceiling(count / (double)5);
             result = result.Skip((CurrentPage - 1) * 5).Take(5).ToList();
 
+            DashboardModel dashboard = new DashboardModel();
             dashboard.adminDashboardList = result;
+            dashboard.regionList = _db.Regions.ToList();
             dashboard.TotalPage = TotalPage;
             dashboard.CurrentPage = CurrentPage;
             return dashboard;
@@ -1090,32 +1102,31 @@ namespace BusinessLogic.Repository
             }
         }
 
-        public ProviderList Provider()
+        public List<ProviderModel> GetProvider()
         {
-            var provider = (from physician in _db.Physicians
-                            //join role in _db.Roles on physician.Roleid equals role.Roleid
-                            join physiciannotify in _db.Physiciannotifications on physician.Physicianid equals physiciannotify.Pysicianid
-                            select new Provider
-                            {
-                                physicianid = physician.Physicianid,
-                                providername = physician.Firstname + " " + physician.Lastname,
-                                role = "",
-                                notification = physiciannotify.Isnotificationstopped,
-                            }).ToList();
+            var provider = from phy in _db.Physicians
+                           join role in _db.Roles on phy.Roleid equals role.Roleid
+                           join phynoti in _db.Physiciannotifications on phy.Physicianid equals phynoti.Pysicianid
+                           orderby phy.Physicianid
+                           select new ProviderModel
+                           {
+                               phyId = phy.Physicianid,
+                               firstName = phy.Firstname,
+                               lastName = phy.Lastname,
+                               status = phy.Status.ToString(),
+                               role = role.Name,
+                               onCallStatus = "un available",
+                               notification = phynoti.Isnotificationstopped[0],
+                           };
+            var result = provider.ToList();
 
-            ProviderList obj = new()
-            {
-                List = provider
-            };
-            return obj;
-
+            return result;
         }
 
-        public Provider StopProviderNotif(int Physicianid)
+        public bool StopNotification(int PhysicianId)
         {
-            Provider provider = new Provider();
 
-            var phyNotification = _db.Physiciannotifications.Where(r => r.Pysicianid == Physicianid).Select(r => r).First();
+            var phyNotification = _db.Physiciannotifications.Where(r => r.Pysicianid == PhysicianId).Select(r => r).First();
 
             var notification = new BitArray(1);
             notification[0] = false;
@@ -1124,34 +1135,37 @@ namespace BusinessLogic.Repository
             {
                 phyNotification.Isnotificationstopped = new BitArray(1);
                 phyNotification.Isnotificationstopped[0] = true;
+                _db.Physiciannotifications.Update(phyNotification);
                 _db.SaveChanges();
 
-                return provider;
+                return true;
             }
             else
             {
                 phyNotification.Isnotificationstopped = new BitArray(1);
                 phyNotification.Isnotificationstopped[0] = false;
+                _db.Physiciannotifications.Update(phyNotification);
                 _db.SaveChanges();
 
-                return provider;
+                return false;
             }
         }
 
-        public Provider providerContact(int PhysicianId)
+
+        public ProviderModel providerContact(int PhysicianId)
         {
-            Provider provider = new Provider()
+            ProviderModel provider = new ProviderModel()
             {
-                physicianid = PhysicianId,
+                phyId = PhysicianId,
             };
 
             return provider;
         }
         public void providerContactEmail(int phyIdMain, string msg)
         {
-            Provider _provider = new Provider();
+            ProviderModel _provider = new ProviderModel();
 
-            _provider.physicianid = phyIdMain;
+            _provider.phyId = phyIdMain;
 
             var provider = _db.Physicians.FirstOrDefault(x => x.Physicianid == phyIdMain);
 
@@ -1165,6 +1179,7 @@ namespace BusinessLogic.Repository
             }
 
         }
+
         public void SendRegistrationproviderContactEmail(string provider, string msg, int phyIdMain)
         {
             string senderEmail = "tatva.dotnet.yashvariya@outlook.com";
@@ -1447,7 +1462,10 @@ namespace BusinessLogic.Repository
                     {
                         adminInfo.Regionid = regionid;
                     }
-
+                    if (adminInfo.Altphone != model.altphone)
+                    {
+                        adminInfo.Altphone = model.altphone;
+                    }
                     _db.SaveChanges();
 
                     return true;
@@ -1460,6 +1478,80 @@ namespace BusinessLogic.Repository
             {
                 return false;
             }
+        }
+
+        public List<AccountAccess> AccountAccess()
+        {
+            var obj = (from role in _db.Roles
+                       where role.Isdeleted != new BitArray(1, true)
+                       select new AccountAccess
+                       {
+                           Name = role.Name,
+                           RoleId = role.Roleid,
+                           AccountType = role.Accounttype,
+                       }).ToList();
+            return obj;
+        }
+
+        public void DeleteRole(int roleId)
+        {
+            var role = _db.Roles.FirstOrDefault(x => x.Roleid == roleId);
+            role.Isdeleted = new BitArray(1, true);
+            _db.Roles.Update(role);
+            _db.SaveChanges();
+        }
+
+        public CreateAccess FetchRole(short selectedValue)
+        {
+            if (selectedValue == 0)
+            {
+                CreateAccess obj = new()
+                {
+                    Menu = _db.Menus.ToList(),
+                };
+                return obj;
+            }
+            else if (selectedValue == 1 || selectedValue == 2)
+            {
+
+                CreateAccess obj = new()
+                {
+                    Menu = _db.Menus.Where(x => x.Accounttype == selectedValue).ToList(),
+                };
+                return obj;
+            }
+            else
+            {
+                CreateAccess obj = new();
+                return obj;
+            }
+        }
+
+        public void CreateRole(List<int> menuIds, string roleName, short accountType)
+        {
+            Role role = new()
+            {
+                Name = roleName,
+                Accounttype = accountType,
+                Createdby = "Admin",
+                Createddate = DateTime.Now,
+                Isdeleted = new BitArray(1, true),
+            };
+            _db.Roles.Add(role);
+            _db.SaveChanges();
+
+            foreach (int menuId in menuIds)
+            {
+                Rolemenu rolemenu = new()
+                {
+                    Roleid = role.Roleid,
+                    Menuid = menuId,
+                };
+                _db.Rolemenus.Add(rolemenu);
+                _db.SaveChanges();
+            };
+
+
         }
 
 

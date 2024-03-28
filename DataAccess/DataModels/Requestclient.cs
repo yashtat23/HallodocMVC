@@ -36,7 +36,7 @@ public partial class Requestclient
 
     public int? Intdate { get; set; }
 
-    public BitArray? Ismobile { get; set; } = new BitArray(1) { [0] = true };
+    public BitArray? Ismobile { get; set; }
 
     public string? Street { get; set; }
 

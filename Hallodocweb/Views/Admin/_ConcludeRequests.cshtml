@@ -8,7 +8,7 @@
             <span style="color: darkblue;">(New)</span>
         </span>
         <span class="d-flex gap-1 gap-md-2">
-            <button class="action-btn my-3 d-flex gap-2" onclick="SendLink()">
+            <button class="action-btn my-3 d-flex gap-2" onclick="SendLinkConclude()">
                 <i class="bi bi-send"></i> <span class="d-none d-md-block">
                     Send
                     Link
@@ -334,6 +334,7 @@
 </div>
 
 <div id="modelContent"></div>
+<div id="modelContentConcludeSendlink"></div>
 
 @if (Model.TotalPage > 1)
 {
@@ -393,5 +394,23 @@ else
         console.log(request);
         Export(request);
     });
+
+    function SendLinkConclude() {
+
+        $.ajax({
+            method: "GET",
+            url: "/Admin/SendLink",
+            // async: false,
+            // data: { requestid: requestid },
+
+            success: function (result) {
+                $('#modelContentConcludeSendlink').html(result);
+                $('#SendLinkModal').modal('show');
+            },
+            error: function () {
+                alert('Error loading partial view');
+            }
+        })
+    }
 
 </script>
