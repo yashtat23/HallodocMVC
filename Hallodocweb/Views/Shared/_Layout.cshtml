@@ -6,7 +6,7 @@
     <title>@ViewData["Title"] - halloDoc</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/halloDoc.styles.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/halloDoc.styles.css" asp-append-version="true" /> *@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
@@ -22,23 +22,23 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="media/css/jquery.dataTables.css">
+    @* <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css"> *@
+    @* <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script> *@
+    @* <link rel="stylesheet" type="text/css" href="media/css/jquery.dataTables.css"> *@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.min.js"></script>
-    <script type="text/javascript" language="javascript" src="media/js/jquery.dataTables.js"></script>
+    @* <script type="text/javascript" language="javascript" src="media/js/jquery.dataTables.js"></script> *@
 
 
     <script>
-        $(document).ready(function () {
-            $('#dtBasicExample').DataTable(
-                console.log("hjdgchjsagkj")
-                    // info: true,
-                    // ordering: true,
-                    paging: true,
-                searching: true
-            );
-        });
+        // $(document).ready(function () {
+        //     $('#dtBasicExample').DataTable(
+                
+        //             // info: true,
+        //             // ordering: true,
+        //             // paging: true,
+        //         // searching: true
+        //     );
+        // });
     </script>
 
     @await Component.InvokeAsync("Notyf")

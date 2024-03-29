@@ -15,6 +15,7 @@ using System.Text.Json.Nodes;
 using DataAccess.DataModels;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Hallodocweb.Controllers
 {
@@ -99,10 +100,15 @@ namespace Hallodocweb.Controllers
             return PartialView("_AllRequests", statusCountModel);
         }
 
-        public IActionResult GetRequestsByStatus(int tabNo,int CurrentPage)
+        public IActionResult GetRequest(int tabNo)
+        {
+            var list = _adminService.Expert(tabNo);
+            return Json(list);
+        }
+        public IActionResult GetRequestsByStatus(int tabNo, int CurrentPage)
         {
             var list = _adminService.GetRequestsByStatus(tabNo, CurrentPage);
-
+            
             if (tabNo == 1)
             {
                 return PartialView("_NewRequests", list);
@@ -127,7 +133,7 @@ namespace Hallodocweb.Controllers
             {
                 return PartialView("_UnpaidRequests", list);
             }
-            else if(tabNo == 0)
+            else if (tabNo == 0)
             {
                 return Json(list);
             }
@@ -207,10 +213,10 @@ namespace Hallodocweb.Controllers
         }
 
 
-        public IActionResult GetPhysicianData(int regionId)
+        public JsonArray GetPhysicianData(int regionId)
         {
-            var physicianData = _adminService.GetPhysician(regionId);
-            return Json(physicianData);
+            var result = _adminService.GetPhysician(regionId);
+            return result;
         }
 
         [HttpPost]
@@ -398,19 +404,26 @@ namespace Hallodocweb.Controllers
             return View("AdminDashboard", "Admin");
         }
 
-        public IActionResult clearCase(int reqId)
+        [HttpGet]
+        public IActionResult ClearCase(int reqId)
         {
             ViewBag.ClearCaseId = reqId;
-            return PartialView("_ClearCase", "Admin");
+            return PartialView("_ClearCase");
         }
 
         [HttpPost]
         public IActionResult SubmitClearCase(int reqId)
         {
-
-            _adminService.Clearcase(reqId);
-            return View("AdminDashboard", "Admin");
+            bool isClear = _adminService.Clearcase(reqId);
+            if (isClear)
+            {
+                _notyf.Success("Cleared SUccessfully");
+                return RedirectToAction("AdminDashboard");
+            }
+            _notyf.Error("Failed");
+            return RedirectToAction("AdminDashboard");
         }
+
 
 
         [HttpGet]
@@ -461,7 +474,7 @@ namespace Hallodocweb.Controllers
             var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
 
             var model = _adminService.MyProfile(emailClaim.Value);
-            return PartialView("MyProfile",model);
+            return PartialView("MyProfile", model);
 
         }
 
@@ -493,7 +506,7 @@ namespace Hallodocweb.Controllers
             StringBuilder stringbuild = new StringBuilder();
 
             string header = "\"No\"," + "\"Name\"," + "\"DateOfBirth\"," + "\"Requestor\"," +
-                "\"RequestDate\"," + "\"Phone\"," + "\"Notes\"," + "\"Address\"," 
+                "\"RequestDate\"," + "\"Phone\"," + "\"Notes\"," + "\"Address\","
                  + "\"Physician\"," + "\"DateOfService\"," + "\"Region\"," +
                 "\"Status\"," + "\"RequestTypeId\"," + "\"OtherPhone\"," + "\"Email\"," + "\"RequestId\"," + Environment.NewLine + Environment.NewLine;
 
@@ -538,7 +551,7 @@ namespace Hallodocweb.Controllers
             if (isSaved)
             {
                 _notyf.Success("Request Created");
-                return RedirectToAction("AdminDashboard","Admin");
+                return RedirectToAction("AdminDashboard", "Admin");
             }
             else
             {
@@ -604,7 +617,7 @@ namespace Hallodocweb.Controllers
         public IActionResult Provider()
         {
             var provider = _adminService.GetProvider();
-            return PartialView("_Provider",provider);
+            return PartialView("_Provider", provider);
         }
 
         public void ProviderCheckbox(int PhysicianId)
@@ -615,7 +628,7 @@ namespace Hallodocweb.Controllers
         public IActionResult ContactProvider(int physicianId)
         {
             var contact = _adminService.providerContact(physicianId);
-            return PartialView("_ContactProvider",contact);
+            return PartialView("_ContactProvider", contact);
         }
 
         [HttpPost]
@@ -625,12 +638,12 @@ namespace Hallodocweb.Controllers
             return RedirectToAction("AdminDashboard");
         }
 
-            [HttpGet]
-            public IActionResult EditProvider(int PhysicianId)
-            {
-                var edit = _adminService.EditPhysician(PhysicianId);
-                return PartialView("_EditProvider", edit);
-            }
+        [HttpGet]
+        public IActionResult EditProvider(int PhysicianId)
+        {
+            var edit = _adminService.EditPhysician(PhysicianId);
+            return PartialView("_EditProvider", edit);
+        }
 
         [HttpPost]
         public IActionResult EditProviderPost(EditPhysicianAccount edit)
@@ -726,6 +739,22 @@ namespace Hallodocweb.Controllers
             return PartialView("_CreateProviderAccount");
         }
 
+
+        [HttpGet]
+        public IActionResult ShowAccountAccess()
+        {
+            var obj = _adminService.AccountAccess();
+            return PartialView("_AccountAccess", obj);
+        }
+
+        [HttpGet]
+        public IActionResult DeleteRole(int RoleId)
+        {
+            var isDeleted = _adminService.DeleteRole(RoleId);
+            return Json(new { isDeleted = isDeleted });
+        }
+
+
         [HttpGet]
         public IActionResult CreateAccess()
         {
@@ -737,8 +766,18 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult CreateAccessPost(List<int> MenuIds, string RoleName, short AccountType)
         {
-            _adminService.CreateRole(MenuIds, RoleName, AccountType);
-            return PartialView("_CreateAccess");
+            var isRoleExists = _adminService.RoleExists(RoleName, AccountType);
+            if (isRoleExists)
+            {
+                return Json(new { isRoleExists = true });
+            }
+
+            else
+            {
+                var isCreated = _adminService.CreateRole(MenuIds, RoleName, AccountType);
+                return Json(new { isCreated = isCreated });
+            }
+            //return PartialView("_CreateAccess");
         }
 
         [HttpGet]
@@ -748,11 +787,22 @@ namespace Hallodocweb.Controllers
             return obj;
         }
 
+
         [HttpGet]
-        public IActionResult ShowAccountAccess()
+        public IActionResult CreateAdminAccount()
         {
-            var obj = _adminService.AccountAccess();
-            return PartialView("_AccountAccess", obj);
+            var obj = _adminService.RegionList();
+            return PartialView("_CreateAdminAccount", obj);
         }
+
+        [HttpPost]
+        public IActionResult AdminAccount(CreateAdminAccount model)
+        {
+            _adminService.CreateAdminAccount(model);
+            return RedirectToAction("AdminDashboard");
+        }
+
+
+
     }
 }

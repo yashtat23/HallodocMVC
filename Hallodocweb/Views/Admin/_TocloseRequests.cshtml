@@ -254,6 +254,8 @@
 <div id="modelContent"></div>
 <div id="modelContentTocloseSendlink"></div>
 <div id="modelContentclearcase"></div>
+<div id="modelContentclearcasesave"></div>
+
 
 <!-- accordions -->
 <div class="accordion accordion-flush d-md-none d-block" id="accordionFlushExample">
@@ -387,34 +389,36 @@ else
         }
 </style>
 
-<link rel="stylesheet" href=
-"https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
-
-     <!-- jQuery library file -->
-     <script type="text/javascript"
-     src="https://code.jquery.com/jquery-3.5.1.js">
-     </script>
-
-      <!-- Datatable plugin JS library file -->
-     <script type="text/javascript" src=
-"https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
-     </script>
-
 <script>
    
+    // function clearCase(reqId) {
+    //     console.log(reqId);
+    //     $.ajax({
+    //         url: "/Admin/ClearCase",
+    //         type: 'GET',
+    //         data: { reqId: reqId },
+    //         success: function (result) {
+    //             console.log(result);
+    //             $('#modelContent').html(result);
+    //             $('#clearcase').modal('show');
+    //         },
+    //         error: function () {
+    //             alert('Error loading partial view ceddx');
+    //         }
+    //     });
+    // }
+
     function clearCase(reqId) {
-        console.log(reqId);
         $.ajax({
-            url: "/Admin/clearCase",
+            url: '/Admin/ClearCase',
             type: 'GET',
             data: { reqId: reqId },
+            success: function (response) {
 
-            success: function (result) {
-                $('#modelContentclearcase').html(result);
+                $("#modelContentTocloseSendlink").html(response);
+
                 $('#clearcase').modal('show');
-            },
-            error: function () {
-                alert('Error loading partial view ceddx');
+
             }
         });
     }

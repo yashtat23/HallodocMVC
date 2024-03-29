@@ -21,6 +21,8 @@ using static Org.BouncyCastle.Math.EC.ECCurve;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.Extensions.Hosting;
+using System.Security.Cryptography;
 
 namespace BusinessLogic.Repository
 {
@@ -44,6 +46,85 @@ namespace BusinessLogic.Repository
         //{
         //    return _db.Aspnetusers.Any(x=>x.Email == adminLogin.Email && x.Passwordhash==adminLogin.Password);
         //}
+
+        public static string GenerateSHA256(string input)
+        {
+            var bytes = Encoding.UTF8.GetBytes(input);
+            using (var hashEngine = SHA256.Create())
+            {
+                var hashedBytes = hashEngine.ComputeHash(bytes, 0, bytes.Length);
+                var sb = new StringBuilder();
+                foreach (var b in hashedBytes)
+                {
+                    var hex = b.ToString("x2");
+                    sb.Append(hex);
+                }
+                return sb.ToString();
+            }
+        }
+
+        public List<AdminDashTableModel> Expert(int tabNo)
+        {
+            var query = from r in _db.Requests
+                        join rc in _db.Requestclients on r.Requestid equals rc.Requestid
+                        select new AdminDashTableModel
+                        {
+                            firstName = rc.Firstname,
+                            lastName = rc.Lastname,
+                            intDate = rc.Intdate,
+                            intYear = rc.Intyear,
+                            strMonth = rc.Strmonth,
+                            requestorFname = r.Firstname,
+                            requestorLname = r.Lastname,
+                            createdDate = r.Createddate,
+                            mobileNo = rc.Phonenumber,
+                            city = rc.City,
+                            state = rc.State,
+                            street = rc.Street,
+                            zipCode = rc.Zipcode,
+                            requestTypeId = r.Requesttypeid,
+                            status = r.Status,
+                            Requestclientid = rc.Requestclientid,
+                            reqId = r.Requestid,
+                            regionId = rc.Regionid
+                        };
+
+
+            if (tabNo == 1)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.Unassigned);
+            }
+
+            else if (tabNo == 2)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.Accepted);
+            }
+            else if (tabNo == 3)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.MDEnRoute || x.status == (int)StatusEnum.MDOnSite);
+            }
+            else if (tabNo == 4)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.Conclude);
+            }
+            else if (tabNo == 5)
+            {
+
+                query = query.Where(x => (x.status == (int)StatusEnum.Cancelled || x.status == (int)StatusEnum.CancelledByPatient) || x.status == (int)StatusEnum.Closed);
+            }
+            else if (tabNo == 6)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.Unpaid);
+            }
+            var result = query.ToList();
+            return result;
+
+        }
 
         public DashboardModel GetRequestsByStatus(int tabNo, int CurrentPage)
         {
@@ -302,10 +383,17 @@ namespace BusinessLogic.Repository
             var region = _db.Regions.ToList();
             return region;
         }
-        public List<Physician> GetPhysician(int regionId)
+        public JsonArray GetPhysician(int regionId)
         {
-            var physician = _db.Physicians.Where(i => i.Regionid == regionId).ToList();
-            return physician;
+            var result = new JsonArray();
+            IEnumerable<Physician> physician = _db.Physicians.Where(x => x.Regionid == regionId);
+
+            foreach (Physician item in physician)
+            {
+                result.Add(new { physicianId = item.Physicianid, physicianName = item.Firstname });
+            }
+            return result;
+
         }
 
         public void AssignCasePostData(AssignCaseModel assignCaseModel, int requestId)
@@ -1493,12 +1581,28 @@ namespace BusinessLogic.Repository
             return obj;
         }
 
-        public void DeleteRole(int roleId)
+        public bool DeleteRole(int roleId)
         {
-            var role = _db.Roles.FirstOrDefault(x => x.Roleid == roleId);
-            role.Isdeleted = new BitArray(1, true);
-            _db.Roles.Update(role);
-            _db.SaveChanges();
+            try
+            {
+                var role = _db.Roles.FirstOrDefault(x => x.Roleid == roleId);
+                role.Isdeleted = new BitArray(1, true);
+                _db.Roles.Update(role);
+                _db.SaveChanges();
+
+                var rolemenu = _db.Rolemenus.Where(x => x.Roleid == roleId).ToList();
+
+                foreach (var item in rolemenu)
+                {
+                    _db.Rolemenus.Remove(item);
+                }
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public CreateAccess FetchRole(short selectedValue)
@@ -1526,33 +1630,230 @@ namespace BusinessLogic.Repository
                 return obj;
             }
         }
-
-        public void CreateRole(List<int> menuIds, string roleName, short accountType)
+        public bool RoleExists(string roleName, short accountType)
         {
-            Role role = new()
+            BitArray deletedBit = new BitArray(new[] { false });
+            var isRoleExists = _db.Roles.Where(x => (x.Name.ToLower() == roleName.Trim().ToLower() && x.Accounttype == accountType) && (x.Isdeleted.Equals(deletedBit))).Any();
+            if (isRoleExists)
             {
-                Name = roleName,
-                Accounttype = accountType,
-                Createdby = "Admin",
-                Createddate = DateTime.Now,
-                Isdeleted = new BitArray(1, true),
+                return true;
+            }
+            return false;
+        }
+        public bool CreateRole(List<int> menuIds, string roleName, short accountType)
+        {
+            try
+            {
+                Role role = new()
+                {
+                    Name = roleName,
+                    Accounttype = accountType,
+                    Createdby = "Admin",
+                    Createddate = DateTime.Now,
+                    Isdeleted = new BitArray(1, false),
+                };
+                _db.Roles.Add(role);
+                _db.SaveChanges();
+
+                foreach (int menuId in menuIds)
+                {
+                    Rolemenu rolemenu = new()
+                    {
+                        Roleid = role.Roleid,
+                        Menuid = menuId,
+                    };
+                    _db.Rolemenus.Add(rolemenu);
+                };
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+        public CreateAdminAccount RegionList()
+        {
+            CreateAdminAccount obj = new()
+            {
+                RegionList = _db.Regions.ToList(),
             };
-            _db.Roles.Add(role);
+            return obj;
+        }
+
+        public void CreateAdminAccount(CreateAdminAccount obj)
+        {
+            Guid id = Guid.NewGuid();
+            Aspnetuser aspnetuser = new()
+            {
+                Id = id.ToString(),
+                Username = obj.UserName,
+                Passwordhash = obj.AdminPassword,
+                Email = obj.Email,
+                Phonenumber = obj.AdminPhone,
+                Createddate = DateTime.Now,
+
+            };
+            _db.Aspnetusers.Add(aspnetuser);
             _db.SaveChanges();
 
-            foreach (int menuId in menuIds)
+            Admin admin = new Admin();
+
+
+            admin.Aspnetuserid = id.ToString();
+            admin.Firstname = obj.FirstName;
+            admin.Lastname = obj.LastName;
+            admin.Email = obj.Email;
+
+            admin.Mobile = obj.AdminPhone;
+            admin.Address1 = obj.Address1;
+
+            admin.Address2 = obj.Address2;
+            admin.Zip = obj.Zip;
+            admin.Altphone = obj.BillingPhone;
+            admin.Createdby = "admin";
+            admin.Createddate = DateTime.Now;
+            admin.Isdeleted = new BitArray(1, true);
+
+
+            _db.Admins.Add(admin);
+            _db.SaveChanges();
+
+
+
+            var AdminRegions = obj.AdminRegion.ToList();
+            for (int i = 0; i < AdminRegions.Count; i++)
             {
-                Rolemenu rolemenu = new()
+                Adminregion adminregion = new()
                 {
-                    Roleid = role.Roleid,
-                    Menuid = menuId,
+                    Adminid = admin.Adminid,
+                    Regionid = _db.Regions.First(x => x.Regionid == AdminRegions[0]).Regionid,
                 };
-                _db.Rolemenus.Add(rolemenu);
+
+                _db.Adminregions.Add(adminregion);
                 _db.SaveChanges();
-            };
+            }
 
 
         }
+
+        //public void CreateProviderAccount(CreateProviderAccount model, int adminId)
+        //{
+        //    var admin = _db.Admins.FirstOrDefault(x => x.Adminid == adminId);
+        //    List<string> validProfileExtensions = new() { ".jpeg", ".png", ".jpg" };
+        //    List<string> validDocumentExtensions = new() { ".pdf" };
+
+        //    try
+        //    {
+        //        Guid generatedId = Guid.NewGuid();
+
+        //        Aspnetuser aspUser = new()
+        //        {
+        //            Id = generatedId.ToString(),
+        //            Username = model.UserName,
+        //            Passwordhash = GenerateSHA256(model.Password),
+        //            Email = model.Email,
+        //            Phonenumber = model.Phone,
+        //            Createddate = DateTime.Now,
+        //        }; _db.Aspnetusers.Add(aspUser);
+        //        _db.SaveChanges();
+
+
+        //        Physician phy = new()
+        //        {
+        //            Aspnetuserid = generatedId.ToString(),
+        //            Firstname = model.FirstName,
+        //            Lastname = model.LastName,
+        //            Email = model.Email,
+        //            Mobile = model.Phone,
+        //            Medicallicense = model.MedicalLicenseNumber,
+        //            Adminnotes = model.AdminNote,
+        //            Address1 = model.Address1,
+        //            Address2 = model.Address2,
+        //            City = model.City,
+        //            //Regionid = model.RegionId,
+        //            Zip = model.Zip,
+        //            Altphone = model.PhoneNumber,
+        //            Createdby = admin.Aspnetuserid,
+        //            Createddate = DateTime.Now,
+        //            Roleid = model.Role,
+        //            Npinumber = model.NPINumber,
+        //            Businessname = model.BusinessName,
+        //            Businesswebsite = model.BusinessWebsite,
+        //        };
+
+        //        _db.Physicians.Add(phy);
+        //        _db.SaveChanges();
+
+
+        //        Physiciannotification physiciannotification = new()
+        //        {
+        //            Pysicianid = phy.Physicianid,
+        //            //Isnotificationstopped = false,
+        //        };
+        //        _db.Physiciannotifications.Add(physiciannotification);
+        //        _db.SaveChanges();
+
+
+        //        string path = Path.Combine(_environment.WebRootPath, "PhysicianImages", phy.Physicianid.ToString());
+
+        //        if (model.Photo != null)
+        //        {
+        //            string fileExtension = Path.GetExtension(model.Photo.FileName);
+        //            if (validProfileExtensions.Contains(fileExtension))
+        //            {
+        //                InsertFileAfterRename(model.Photo, path, "ProfilePhoto");
+        //                phy.Photo = Path.GetFileName(model.Photo.FileName);
+
+        //            }
+        //        }
+        //        if (model.ICA != null)
+        //        {
+        //            string fileExtension = Path.GetExtension(model.ICA.FileName);
+        //            if (validDocumentExtensions.Contains(fileExtension))
+        //            {
+        //                phy.Isagreementdoc = true;
+        //                InsertFileAfterRename(model.ICA, path, "ICA");
+        //            }
+        //        }
+        //        if (model.BGCheck != null)
+        //        {
+        //            string fileExtension = Path.GetExtension(model.BGCheck.FileName);
+        //            if (validDocumentExtensions.Contains(fileExtension))
+        //            {
+        //                phy.Isbackgrounddoc = true;
+        //                InsertFileAfterRename(model.BGCheck, path, "BackgroundCheck");
+        //            }
+        //        }
+        //        if (model.HIPAACompliance != null)
+        //        {
+        //            string fileExtension = Path.GetExtension(model.HIPAACompliance.FileName);
+        //            if (validDocumentExtensions.Contains(fileExtension))
+        //            {
+        //                phy.Isnondisclosuredoc = true;
+        //                InsertFileAfterRename(model.HIPAACompliance, path, "HipaaCompliance");
+        //            }
+        //        }
+        //        if (model.NDA != null)
+        //        {
+        //            string fileExtension = Path.GetExtension(model.NDA.FileName);
+        //            if (validDocumentExtensions.Contains(fileExtension))
+        //            {
+        //                phy.Isnondisclosuredoc = true;
+        //                InsertFileAfterRename(model.NDA, path, "NDA");
+        //            }
+        //        }
+        //        _db.Physicians.Update(phy);
+        //        _db.SaveChanges();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //    };
+
+
+        //}
 
 
     }

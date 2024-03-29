@@ -33,7 +33,7 @@ namespace BusinessLogic.Interfaces
 
         public List<Region> GetRegion();
 
-        public List<Physician> GetPhysician(int regionId);
+        public JsonArray GetPhysician(int regionId);
 
         void AssignCasePostData(AssignCaseModel assignCaseModel, int requestId);
 
@@ -104,10 +104,14 @@ namespace BusinessLogic.Interfaces
         bool SubmitBillingInfo(MyProfileModel model, string tokenEmail);
 
         List<AccountAccess> AccountAccess();
-        void DeleteRole(int roleId);
-
+        bool DeleteRole(int roleId);
+        List<AdminDashTableModel> Expert(int tabNo);
         CreateAccess FetchRole(short selectedValue);
-        void CreateRole(List<int> menuIds, string roleName, short accountType);
+        bool CreateRole(List<int> menuIds, string roleName, short accountType);
+
+        bool RoleExists(string roleName, short accountType);
+        CreateAdminAccount RegionList();
+        void CreateAdminAccount(CreateAdminAccount obj);
         //void SendRegistrationproviderContactEmail(string provider, string msg, string sessionEmail, int phyIdMain);
     }   
 }

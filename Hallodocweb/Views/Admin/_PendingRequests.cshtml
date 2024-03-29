@@ -252,7 +252,7 @@
 <div id="modelContent9"></div>
 <div id="modelContent"></div>
 <div id="modelContenttransfer"></div>
-<div id="modelContentcancelcase"></div>
+<div id="modelContentcancelcase1"></div>
 
 <!-- accordions -->
 <div class="accordion accordion-flush d-md-none d-block" id="accordionFlushExample">
@@ -412,5 +412,19 @@ else
         Export(request);
     });
 
+    function showCancelCase(reqId) {
+        $.ajax({
+            url: '/Admin/CancelCase',
+            type: 'GET',
+            data: { reqId: reqId },
+            success: function (response) {
+
+                $("#modelContentcancelcase1").html(response);
+
+                $('#cancelModal').modal('show');
+
+            }
+        });
+    }
 
 </script>

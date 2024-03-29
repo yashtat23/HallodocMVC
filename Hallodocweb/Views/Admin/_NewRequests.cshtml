@@ -255,6 +255,7 @@
 </div>
 <div id="modelContent"></div>
 <div id="modelContentreq"></div> 
+<div id="modelContentcancelcase"></div>
 
 <!-- accordions -->
 <div class="accordion accordion-flush d-md-none d-block" id="accordionFlushExample">
@@ -739,5 +740,19 @@ else
         })
     })
 
+    function showCancelCase(reqId) {
+        $.ajax({
+            url: '/Admin/CancelCase',
+            type: 'GET',
+            data: { reqId: reqId },
+            success: function (response) {
+
+                $("#modelContentcancelcase").html(response);
+
+                $('#cancelModal').modal('show');
+
+            }
+        });
+    }
 
 </script>

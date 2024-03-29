@@ -7,7 +7,7 @@
         <div class="modal-content">
             <div class="modal-header" style="background-color:#00B7FF">
                 <h5 class="modal-title text-light" id="exampleModalLabel">Assign Request</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form method="post" asp-controller="Admin" asp-action="AssignCasePost" onsubmit="return Assignvalidation()" id="Assign_Req">
@@ -19,7 +19,7 @@
                     <input type="text" asp-for="@Model.requestId" hidden/>
                     <div class="mb-3 ">
 
-                        <select class="form-select text-secondary"  aria-label="Default select example" id="region" onchange="GetPhysicianData(this.value)">
+                        <select class="form-select text-secondary"  aria-label="Default select example" id="region" onchange="GetPhysicianDataAssign(this.value)">
                             <option selected>Select Region</option>
                             @foreach(var item in Model.region.ToList())
                             {
@@ -55,6 +55,7 @@
 </div>
 
 <script>
+
     $('#region').on('change', function () {
         var phn = $('#region').val();
         if (phn == null) {
@@ -132,7 +133,7 @@
     // }
    
 
-    function GetPhysicianData(regionId) {
+    function GetPhysicianDataAssign(regionId) {
         console.log(regionId);
         $.ajax({
             method: "GET",
@@ -140,20 +141,15 @@
             async: false,
             data: { regionId: regionId },
 
-            success: function (data) {
-                // physicion = document.getElementById('#secondSelection');
-                // region = document.getElementById('#firstSelection');
-                //region.value == '0' ? physicion.disabled : physicion.enabled;
-
-                $('#physician').empty();
-                $('#physician').html("<option selected disabled>" + "Select Physician" + "</option>");
-                $.each(data, function (index, item) {
-                    
-                    $('#physician').append($('<option>', {
-                        value: item.physicianid,
-                        text: item.firstname + " " + item.lastname
-                       
+            success: function (response) {
+                $('#selectphysiscian').empty();
+                console.log(response);
+                $.each(response, function (index, object) {
+                    $('#selectphysiscian').append($('<option>', {
+                        value: object["physicianId"],
+                        text: object["physicianName"]
                     }));
+
                 });
             },
             error: function () {
