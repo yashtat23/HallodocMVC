@@ -7,7 +7,7 @@
         <div class="modal-content">
             <div class="modal-header" style="background-color:#00B7FF">
                 <h5 class="modal-title text-light" id="exampleModalLabel">Transfer Request</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form method="post" id="Assign_Req" asp-controller="Admin" asp-action="TransferReqPost" onsubmit="return transfervalidation()">
@@ -45,7 +45,7 @@
             </div>
             <div class="modal-footer">
 
-                <button type="button" class="btn border border-info" style="color:#00B7FF">Cancel</button>
+                <button type="button" class="btn border border-info" style="color:#00B7FF" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>

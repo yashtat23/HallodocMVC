@@ -23,6 +23,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Hosting;
 
 namespace BusinessLogic.Repository
 {
@@ -30,10 +31,12 @@ namespace BusinessLogic.Repository
     {
 
         private readonly ApplicationDbContext _db;
+        private readonly IWebHostEnvironment _environment;
 
-        public AdminService(ApplicationDbContext db)
+        public AdminService(ApplicationDbContext db, IWebHostEnvironment environment)
         {
             _db = db;
+            _environment = environment;
         }
 
         public Aspnetuser GetAspnetuser(string email)
@@ -1683,177 +1686,221 @@ namespace BusinessLogic.Repository
             return obj;
         }
 
-        public void CreateAdminAccount(CreateAdminAccount obj)
+        public bool CreateAdminAccount(CreateAdminAccount obj, string email)
         {
-            Guid id = Guid.NewGuid();
-            Aspnetuser aspnetuser = new()
+            var emailExists = _db.Aspnetusers.Where(x => x.Email == obj.Email).Any();
+            if (emailExists)
             {
-                Id = id.ToString(),
-                Username = obj.UserName,
-                Passwordhash = obj.AdminPassword,
-                Email = obj.Email,
-                Phonenumber = obj.AdminPhone,
-                Createddate = DateTime.Now,
-
-            };
-            _db.Aspnetusers.Add(aspnetuser);
-            _db.SaveChanges();
-
-            Admin admin = new Admin();
-
-
-            admin.Aspnetuserid = id.ToString();
-            admin.Firstname = obj.FirstName;
-            admin.Lastname = obj.LastName;
-            admin.Email = obj.Email;
-
-            admin.Mobile = obj.AdminPhone;
-            admin.Address1 = obj.Address1;
-
-            admin.Address2 = obj.Address2;
-            admin.Zip = obj.Zip;
-            admin.Altphone = obj.BillingPhone;
-            admin.Createdby = "admin";
-            admin.Createddate = DateTime.Now;
-            admin.Isdeleted = new BitArray(1, true);
-
-
-            _db.Admins.Add(admin);
-            _db.SaveChanges();
-
-
-
-            var AdminRegions = obj.AdminRegion.ToList();
-            for (int i = 0; i < AdminRegions.Count; i++)
+                return false;
+            }
+            else
             {
-                Adminregion adminregion = new()
+                Guid id = Guid.NewGuid();
+                Aspnetuser aspnetuser = new()
                 {
-                    Adminid = admin.Adminid,
-                    Regionid = _db.Regions.First(x => x.Regionid == AdminRegions[0]).Regionid,
-                };
+                    Id = id.ToString(),
+                    Username = obj.UserName,
+                    Passwordhash = obj.AdminPassword,
+                    Email = obj.Email,
+                    Phonenumber = obj.AdminPhone,
+                    Createddate = DateTime.Now,
 
-                _db.Adminregions.Add(adminregion);
+
+                };
+                _db.Aspnetusers.Add(aspnetuser);
                 _db.SaveChanges();
+
+                var aspnetId = _db.Aspnetusers.Where(x => x.Email == email).Select(x => x.Id).First();
+                Admin admin = new Admin();
+
+
+                admin.Aspnetuserid = aspnetuser.Id;
+                admin.Firstname = obj.FirstName;
+                admin.Lastname = obj.LastName;
+                admin.Email = obj.Email;
+
+                admin.Mobile = obj.AdminPhone;
+                admin.Address1 = obj.Address1;
+
+                admin.Address2 = obj.Address2;
+                admin.Zip = obj.Zip;
+                admin.Altphone = obj.BillingPhone;
+                admin.Createdby = aspnetId;
+                admin.Createddate = DateTime.Now;
+                admin.Isdeleted = new BitArray(1, false);
+
+
+                _db.Admins.Add(admin);
+                _db.SaveChanges();
+
+
+
+
+                var AdminRegions = obj.AdminRegion.ToList();
+                for (int i = 0; i < AdminRegions.Count; i++)
+                {
+                    Adminregion adminregion = new()
+                    {
+                        Adminid = admin.Adminid,
+                        Regionid = _db.Regions.First(x => x.Regionid == AdminRegions[i]).Regionid,
+                    };
+
+                    _db.Adminregions.Add(adminregion);
+                    _db.SaveChanges();
+                }
+
+                return true;
+
             }
 
 
         }
 
-        //public void CreateProviderAccount(CreateProviderAccount model, int adminId)
-        //{
-        //    var admin = _db.Admins.FirstOrDefault(x => x.Adminid == adminId);
-        //    List<string> validProfileExtensions = new() { ".jpeg", ".png", ".jpg" };
-        //    List<string> validDocumentExtensions = new() { ".pdf" };
+        public void InsertFileAfterRename(IFormFile file, string path, string updateName)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
 
-        //    try
-        //    {
-        //        Guid generatedId = Guid.NewGuid();
+            string[] oldfiles = Directory.GetFiles(path, updateName + ".*");
+            foreach (string f in oldfiles)
+            {
+                System.IO.File.Delete(f);
+            }
 
-        //        Aspnetuser aspUser = new()
-        //        {
-        //            Id = generatedId.ToString(),
-        //            Username = model.UserName,
-        //            Passwordhash = GenerateSHA256(model.Password),
-        //            Email = model.Email,
-        //            Phonenumber = model.Phone,
-        //            Createddate = DateTime.Now,
-        //        }; _db.Aspnetusers.Add(aspUser);
-        //        _db.SaveChanges();
+            string extension = Path.GetExtension(file.FileName);
 
+            string fileName = updateName + extension;
 
-        //        Physician phy = new()
-        //        {
-        //            Aspnetuserid = generatedId.ToString(),
-        //            Firstname = model.FirstName,
-        //            Lastname = model.LastName,
-        //            Email = model.Email,
-        //            Mobile = model.Phone,
-        //            Medicallicense = model.MedicalLicenseNumber,
-        //            Adminnotes = model.AdminNote,
-        //            Address1 = model.Address1,
-        //            Address2 = model.Address2,
-        //            City = model.City,
-        //            //Regionid = model.RegionId,
-        //            Zip = model.Zip,
-        //            Altphone = model.PhoneNumber,
-        //            Createdby = admin.Aspnetuserid,
-        //            Createddate = DateTime.Now,
-        //            Roleid = model.Role,
-        //            Npinumber = model.NPINumber,
-        //            Businessname = model.BusinessName,
-        //            Businesswebsite = model.BusinessWebsite,
-        //        };
+            string fullPath = Path.Combine(path, fileName);
 
-        //        _db.Physicians.Add(phy);
-        //        _db.SaveChanges();
+            using FileStream stream = new(fullPath, FileMode.Create);
+            file.CopyTo(stream);
+        }
+        public CreateProviderAccount GetProviderList()
+        {
+            CreateProviderAccount obj = new()
+            {
+                RolesList = _db.Roles.ToList(),
+                RegionList = _db.Regions.ToList(),
+            };
+            return obj;
+        }
+        public void CreateProviderAccount(CreateProviderAccount model)
+        {
+            List<string> validProfileExtensions = new() { ".jpeg", ".png", ".jpg" };
+            List<string> validDocumentExtensions = new() { ".pdf" };
 
+            try
+            {
+                Guid generatedId = Guid.NewGuid();
 
-        //        Physiciannotification physiciannotification = new()
-        //        {
-        //            Pysicianid = phy.Physicianid,
-        //            //Isnotificationstopped = false,
-        //        };
-        //        _db.Physiciannotifications.Add(physiciannotification);
-        //        _db.SaveChanges();
+                Aspnetuser aspUser = new()
+                {
+                    Id = generatedId.ToString(),
+                    Username = model.UserName,
+                    Passwordhash = GenerateSHA256(model.Password),
+                    Email = model.Email,
+                    Phonenumber = model.Phone,
+                    Createddate = DateTime.Now,
+                }; _db.Aspnetusers.Add(aspUser);
+                _db.SaveChanges();
 
 
-        //        string path = Path.Combine(_environment.WebRootPath, "PhysicianImages", phy.Physicianid.ToString());
+                Physician phy = new()
+                {
+                    Aspnetuserid = generatedId.ToString(),
+                    Firstname = model.FirstName,
+                    Lastname = model.LastName,
+                    Email = model.Email,
+                    Mobile = model.Phone,
+                    Medicallicense = model.MedicalLicenseNumber,
+                    Adminnotes = model.AdminNote,
+                    Address1 = model.Address1,
+                    Address2 = model.Address2,
+                    City = model.City,
+                    //Regionid = model.RegionId,
+                    Zip = model.Zip,
+                    Altphone = model.PhoneNumber,
+                    Createdby = "1",
+                    Createddate = DateTime.Now,
+                    Roleid = model.Role,
+                    Npinumber = model.NPINumber,
+                    Businessname = model.BusinessName,
+                    Businesswebsite = model.BusinessWebsite,
+                };
 
-        //        if (model.Photo != null)
-        //        {
-        //            string fileExtension = Path.GetExtension(model.Photo.FileName);
-        //            if (validProfileExtensions.Contains(fileExtension))
-        //            {
-        //                InsertFileAfterRename(model.Photo, path, "ProfilePhoto");
-        //                phy.Photo = Path.GetFileName(model.Photo.FileName);
-
-        //            }
-        //        }
-        //        if (model.ICA != null)
-        //        {
-        //            string fileExtension = Path.GetExtension(model.ICA.FileName);
-        //            if (validDocumentExtensions.Contains(fileExtension))
-        //            {
-        //                phy.Isagreementdoc = true;
-        //                InsertFileAfterRename(model.ICA, path, "ICA");
-        //            }
-        //        }
-        //        if (model.BGCheck != null)
-        //        {
-        //            string fileExtension = Path.GetExtension(model.BGCheck.FileName);
-        //            if (validDocumentExtensions.Contains(fileExtension))
-        //            {
-        //                phy.Isbackgrounddoc = true;
-        //                InsertFileAfterRename(model.BGCheck, path, "BackgroundCheck");
-        //            }
-        //        }
-        //        if (model.HIPAACompliance != null)
-        //        {
-        //            string fileExtension = Path.GetExtension(model.HIPAACompliance.FileName);
-        //            if (validDocumentExtensions.Contains(fileExtension))
-        //            {
-        //                phy.Isnondisclosuredoc = true;
-        //                InsertFileAfterRename(model.HIPAACompliance, path, "HipaaCompliance");
-        //            }
-        //        }
-        //        if (model.NDA != null)
-        //        {
-        //            string fileExtension = Path.GetExtension(model.NDA.FileName);
-        //            if (validDocumentExtensions.Contains(fileExtension))
-        //            {
-        //                phy.Isnondisclosuredoc = true;
-        //                InsertFileAfterRename(model.NDA, path, "NDA");
-        //            }
-        //        }
-        //        _db.Physicians.Update(phy);
-        //        _db.SaveChanges();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //    };
+                _db.Physicians.Add(phy);
+                _db.SaveChanges();
 
 
-        //}
+                Physiciannotification physiciannotification = new()
+                {
+                    Pysicianid = phy.Physicianid,
+                    Isnotificationstopped = new BitArray(1,false),
+                };
+                _db.Physiciannotifications.Add(physiciannotification);
+                _db.SaveChanges();
+
+
+                string path = Path.Combine(_environment.WebRootPath, "PhysicianImages", phy.Physicianid.ToString());
+
+                if (model.Photo != null)
+                {
+                    string fileExtension = Path.GetExtension(model.Photo.FileName);
+                    if (validProfileExtensions.Contains(fileExtension))
+                    {
+                        InsertFileAfterRename(model.Photo, path, "ProfilePhoto");
+                        phy.Photo = Path.GetFileName(model.Photo.FileName);
+
+                    }
+                }
+                if (model.ICA != null)
+                {
+                    string fileExtension = Path.GetExtension(model.ICA.FileName);
+                    if (validDocumentExtensions.Contains(fileExtension))
+                    {
+                        phy.Isagreementdoc = new BitArray(1, true);
+                        InsertFileAfterRename(model.ICA, path, "ICA");
+                    }
+                }
+                if (model.BGCheck != null)
+                {
+                    string fileExtension = Path.GetExtension(model.BGCheck.FileName);
+                    if (validDocumentExtensions.Contains(fileExtension))
+                    {
+                        phy.Isbackgrounddoc = new BitArray(1, true);
+                        InsertFileAfterRename(model.BGCheck, path, "BackgroundCheck");
+                    }
+                }
+                if (model.HIPAACompliance != null)
+                {
+                    string fileExtension = Path.GetExtension(model.HIPAACompliance.FileName);
+                    if (validDocumentExtensions.Contains(fileExtension))
+                    {
+                        phy.Isnondisclosuredoc = new BitArray(1, true);
+                        InsertFileAfterRename(model.HIPAACompliance, path, "HipaaCompliance");
+                    }
+                }
+                if (model.NDA != null)
+                {
+                    string fileExtension = Path.GetExtension(model.NDA.FileName);
+                    if (validDocumentExtensions.Contains(fileExtension))
+                    {
+                        phy.Isnondisclosuredoc = new BitArray(1, true);
+                        InsertFileAfterRename(model.NDA, path, "NDA");
+                    }
+                }
+                _db.Physicians.Update(phy);
+                _db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+            };
+
+
+        }
 
 
     }

@@ -16,6 +16,7 @@ using DataAccess.DataModels;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hallodocweb.Controllers
 {
@@ -105,6 +106,9 @@ namespace Hallodocweb.Controllers
             var list = _adminService.Expert(tabNo);
             return Json(list);
         }
+
+
+
         public IActionResult GetRequestsByStatus(int tabNo, int CurrentPage)
         {
             var list = _adminService.GetRequestsByStatus(tabNo, CurrentPage);
@@ -223,6 +227,7 @@ namespace Hallodocweb.Controllers
         public IActionResult AssignCasePost(AssignCaseModel assignCaseModel)
         {
             _adminService.AssignCasePostData(assignCaseModel, assignCaseModel.requestId);
+            _notyf.Success("Assign Successfully!");
             return RedirectToAction("AdminDashboard");
         }
 
@@ -233,7 +238,6 @@ namespace Hallodocweb.Controllers
                 requestId = requestId,
                 region = _adminService.GetRegion(),
             };
-            _notyf.Success("Assign Successfully!");
             return PartialView("_AssignCase", assignCase);
         }
 
@@ -734,10 +738,6 @@ namespace Hallodocweb.Controllers
             return Json(new { isSubmit = false });
         }
 
-        public IActionResult CreateProviderAccount()
-        {
-            return PartialView("_CreateProviderAccount");
-        }
 
 
         [HttpGet]
@@ -798,11 +798,38 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult AdminAccount(CreateAdminAccount model)
         {
-            _adminService.CreateAdminAccount(model);
-            return RedirectToAction("AdminDashboard");
+            var email = GetTokenEmail();
+            var isCreated = _adminService.CreateAdminAccount(model, email);
+            if (isCreated)
+            {
+                _notyf.Success("Account Created!!");
+                return RedirectToAction("AdminDashboard");
+            }
+            else
+            {
+                _notyf.Error("Somethng Went Wrong!!");
+                return PartialView("_createadminaccount");
+            }
         }
 
+        public IActionResult CreateProviderAccount()
+        {
+            var obj = _adminService.GetProviderList();
+            return PartialView("_CreateProviderAccount",obj);
+        }
 
+        //public IActionResult CreateProviderAccount()
+        //{
+        //    return View("ProviderMenu/CreateProviderAccount", obj);
+        //}
+
+        [HttpPost]
+        public IActionResult CreateProviderAccount(CreateProviderAccount model)
+        {
+
+            _adminService.CreateProviderAccount(model);
+            return RedirectToAction("AdminDashboard");
+        }
 
     }
 }

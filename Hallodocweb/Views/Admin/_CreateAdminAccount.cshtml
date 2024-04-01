@@ -2,32 +2,31 @@
 @using DataAccess.DataModels;
 @model CreateAdminAccount;
 
-
 <div class="">
     <div class="container-fluid d-flex justify-content-between mt-4" style="max-width:1000px">
         <h4>
             Create Admin Account
         </h4>
-        <a href="@Url.Action("AdminDashboard", "Admin")" class="btn btn-outline-info m-2 text-decoration-none float-end"
+        <a href="@Url.Action("admin_dashboard", "Admin")" class="btn btn-outline-info m-2 text-decoration-none float-end"
            id="back-btn">
             &#60; Back
         </a>
     </div>
     <div class="container-fluid justify-content-center shadow mt-4" style="max-width:1000px">
         <div class="viewCaseForm form-floating patient-request-form p-3">
-            <form method="post" asp-action="AdminAccount" asp-controller="Admin" class="mb-4">
+            <form method="post" id="CreateAdminAccountForm" class="mb-4">
                 <h5>Account Information</h5>
                 <div class="row g-2 m-1">
                     <div class="col-4">
                         <div class="form-floating">
-                            <input asp-for="UserName" type="text" class="form-control" id="userName">
+                            <input asp-for="UserName" type="text" class="form-control" id="AdminUserName">
                             <label for="">User Name</label>
                         </div>
                     </div>
 
                     <div class="col-4">
                         <div class="form-floating">
-                            <input asp-for="AdminPassword" type="password" class="form-control " id="password">
+                            <input asp-for="AdminPassword" type="password" class="form-control" id="AdminPassword">
                             <label for="floatingSelectGrid">Password</label>
                         </div>
                     </div>
@@ -48,26 +47,27 @@
                 <div class="row g-2 m-1">
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input asp-for="FirstName" type="text" class="form-control">
+                            <input asp-for="FirstName" type="text" class="form-control" id="AdminFirstName">
                             <label for="">First Name</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input asp-for="LastName" type="text" class="form-control">
+                            <input asp-for="LastName" type="text" class="form-control" id="AdminLastName">
                             <label for="floatingSelectGrid">Last Name</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="email" asp-for="Email" class="form-control">
+                            <input type="email" asp-for="Email" class="form-control" id="AdminEmail">
                             <label for="">Email</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="email" asp-for="ConfirmEmail" class="form-control">
+                            <input type="email" asp-for="ConfirmEmail" class="form-control" id="AdminConfirmEmail" onblur="confirmEmail()">
                             <label for="">Confirm Email</label>
+                            <span class="d-none" style="color:red" id="EmailConfirmVedidation">Email And Confirm Email is Not Matching</span>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -81,7 +81,7 @@
                         {
 
                             <div class="form-floating mt-1 me-3 checkColor ">
-                                <input class="form-check-input border" value="@region.Regionid" name="AdminRegion" type="checkbox" style="" />
+                                <input class="region-checkbox form-check-input border" value="@region.Regionid" name="AdminRegion" type="checkbox" style="" />
                                 <span>@region.Name</span>
                             </div>
 
@@ -135,7 +135,7 @@
                 </div>
 
 
-                <button type="submit" class="btn btn-success float-end m-1">Create Account</button><br />
+                <button type="button" onclick="createAdminPostFor()" class="btn btn-success float-end m-1">Create Account</button><br />
             </form>
         </div>
 
@@ -145,6 +145,52 @@
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
 </script>
 <script>
+    function confirmEmail() {
+        var email = document.getElementById("AdminEmail").value
+        var confemail = document.getElementById("AdminConfirmEmail").value
+        if (email != confemail) {
+            $('#EmailConfirmVedidation').addClass("d-block").removeClass("d-none");
+            // alert('Email Not Matching!');
+        }
+        else{
+            $('#EmailConfirmVedidation').addClass("d-block").removeClass("d-none");
+        }
+    }
+
     $('.admin-tab').removeClass("active");
     $('#access-tab').addClass("active");
+
+    function createAdminPostFor() {
+       
+        var payload2 = $("#CreateAdminAccountForm").serializeArray();
+        var RegionArray = [];
+        var checkedBoxes = $('.region-checkbox:checkbox:checked');
+        console.log(RegionArray);
+;        $.each(checkedBoxes, function () {
+            RegionArray.push(parseInt(this.value))
+        });
+        console.log(payload2);
+        payload2.push({name:'RegionArray',value: RegionArray });
+        //if ($("#myProfileThirdForm").valid()) {
+        $.ajax({
+            url: "/Admin/AdminAccount",
+            type: 'POST',
+            data: payload2,
+            success: function (response) {
+            //     if (response.isRegionExists == false) {
+            //         toastr.error("State doesn't exists !!");
+            //     }
+            //     else if (response.isSubmit == true) {
+            //         toastr.success("Data Updated");
+            //     } else {
+            //         toastr.error("Change atleast one field");
+            //     }
+             },
+                
+            error: function (e) {
+                alert("Error");
+            },
+        });
+        //}
+    }
 </script>

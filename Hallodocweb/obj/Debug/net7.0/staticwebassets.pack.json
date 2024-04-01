@@ -5,6 +5,26 @@
       "PackagePath": "staticwebassets\\Hallodocweb.bundle.scp.css"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\13\\BackgroundCheck.pdf",
+      "PackagePath": "staticwebassets\\PhysicianImages\\13\\BackgroundCheck.pdf"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\13\\HipaaCompliance.pdf",
+      "PackagePath": "staticwebassets\\PhysicianImages\\13\\HipaaCompliance.pdf"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\13\\ICA.pdf",
+      "PackagePath": "staticwebassets\\PhysicianImages\\13\\ICA.pdf"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\13\\NDA.pdf",
+      "PackagePath": "staticwebassets\\PhysicianImages\\13\\NDA.pdf"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\13\\ProfilePhoto.jpg",
+      "PackagePath": "staticwebassets\\PhysicianImages\\13\\ProfilePhoto.jpg"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg",
       "PackagePath": "staticwebassets\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg"
     },

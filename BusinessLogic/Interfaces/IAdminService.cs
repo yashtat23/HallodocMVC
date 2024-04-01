@@ -111,7 +111,12 @@ namespace BusinessLogic.Interfaces
 
         bool RoleExists(string roleName, short accountType);
         CreateAdminAccount RegionList();
-        void CreateAdminAccount(CreateAdminAccount obj);
+
+        CreateProviderAccount GetProviderList();
+        bool CreateAdminAccount(CreateAdminAccount obj, string email);
         //void SendRegistrationproviderContactEmail(string provider, string msg, string sessionEmail, int phyIdMain);
+
+        void InsertFileAfterRename(IFormFile file, string path, string updateName);
+        void CreateProviderAccount(CreateProviderAccount model);
     }   
 }

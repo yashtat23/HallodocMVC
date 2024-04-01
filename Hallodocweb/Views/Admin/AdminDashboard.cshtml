@@ -206,6 +206,7 @@
 
         window.addEventListener('load', function () {
             document.getElementById("home-tab").click();
+            ShowAllRequests();
         })
 
     </script>
@@ -254,57 +255,57 @@
 
         }
 
-        $(document).ready(function () {
+        // $(document).ready(function () {
 
-            ShowAllRequests();
-            // Convert table rows to accordions in mobile view
-            if ($(window).width() < 768) {
-                $('.data-table tbody tr').each(function () {
-                    var name = $(this).find('td:eq(0)').text();
-                    var address = $(this).find('td:eq(5)').text();
-                    var requestor = $(this).find('td:eq(2)').text();
+        //     ShowAllRequests();
+        //     // Convert table rows to accordions in mobile view
+        //     if ($(window).width() < 768) {
+        //         $('.data-table tbody tr').each(function () {
+        //             var name = $(this).find('td:eq(0)').text();
+        //             var address = $(this).find('td:eq(5)').text();
+        //             var requestor = $(this).find('td:eq(2)').text();
 
-                    var accordionItem = `
-                                                                            <div class="accordion-item">
+        //             var accordionItem = `
+        //                                                                     <div class="accordion-item">
 
-                                                                                <div class="accordion-content">
-                                                                                    <p><strong>Name:</strong> ${name}</p>
-                                                                                    <p><strong>Address:</strong> ${address}</p>
-                                                                                    <p><strong>Requestor:</strong> ${requestor}</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        `;
+        //                                                                         <div class="accordion-content">
+        //                                                                             <p><strong>Name:</strong> ${name}</p>
+        //                                                                             <p><strong>Address:</strong> ${address}</p>
+        //                                                                             <p><strong>Requestor:</strong> ${requestor}</p>
+        //                                                                         </div>
+        //                                                                     </div>
+        //                                                                 `;
 
-                    $('#accordionFlushExample').append(accordionItem);
-                });
-            }
-        });
+        //             $('#accordionFlushExample').append(accordionItem);
+        //         });
+        //     }
+        // });
 
         // Resize event listener to update accordion on window resize
-        $(window).resize(function () {
-            $('#accordionFlushExample').empty();
-            if ($(window).width() < 768) {
-                $('.data-table tbody tr').each(function () {
-                    var name = $(this).find('td:eq(0)').text();
-                    var address = $(this).find('td:eq(5)').text();
-                    var requestor = $(this).find('td:eq(2)').text();
+        // $(window).resize(function () {
+        //     $('#accordionFlushExample').empty();
+        //     if ($(window).width() < 768) {
+        //         $('.data-table tbody tr').each(function () {
+        //             var name = $(this).find('td:eq(0)').text();
+        //             var address = $(this).find('td:eq(5)').text();
+        //             var requestor = $(this).find('td:eq(2)').text();
 
 
-                    var accordionItem = `
-                                                                            <div class="accordion-item">
+        //             var accordionItem = `
+        //                                                                     <div class="accordion-item">
 
-                                                                                <div class="accordion-content">
-                                                                                    <p><strong>Name:</strong> ${name}</p>
-                                                                                    <p><strong>Address:</strong> ${address}</p>
-                                                                                    <p><strong>Requestor:</strong> ${requestor}</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        `;
+        //                                                                         <div class="accordion-content">
+        //                                                                             <p><strong>Name:</strong> ${name}</p>
+        //                                                                             <p><strong>Address:</strong> ${address}</p>
+        //                                                                             <p><strong>Requestor:</strong> ${requestor}</p>
+        //                                                                         </div>
+        //                                                                     </div>
+        //                                                                 `;
 
-                    $('#accordionFlushExample').append(accordionItem);
-                });
-            }
-        });
+        //             $('#accordionFlushExample').append(accordionItem);
+        //         });
+        //     }
+        // });
 
         // pagination
         // $(document).ready(function () {
@@ -499,6 +500,18 @@
                 url: '/Admin/GetRequest',
                 type: 'GET',
                 data: { tabNo: 0 },
+                success: function (response) {
+                    console.log(response);
+                    Export(response);
+                }
+            });
+        }
+
+        function ExpertSingleTab(tabNo) {
+            $.ajax({
+                url: '/Admin/GetRequest',
+                type: 'GET',
+                data: { tabNo: tabNo },
                 success: function (response) {
                     console.log(response);
                     Export(response);

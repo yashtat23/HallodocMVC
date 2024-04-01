@@ -473,6 +473,7 @@ namespace DataAccess.CustomModel
         public string? State { get; set; }
         public string? Zip { get; set; }
         public string? BillingPhone { get; set; }
+        public int[] RegionArray { get; set; }
     }
 
     public class CreateProviderAccount
@@ -498,8 +499,6 @@ namespace DataAccess.CustomModel
         public string BusinessName { get; set; }
         public string BusinessWebsite { get; set; }
         public string AdminNote { get; set; }
-
-
         public IFormFile Photo { get; set; }
         public IFormFile ICA { get; set; }
         public IFormFile BGCheck { get; set; }
