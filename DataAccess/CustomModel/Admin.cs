@@ -506,4 +506,173 @@ namespace DataAccess.CustomModel
         public IFormFile NDA { get; set; }
     }
 
+    public class CreateShift
+    {
+        public int RegionId { get; set; }
+
+        public int PhysicianId { get; set; }
+
+        public DateOnly StartDate { get; set; }
+
+        public TimeOnly StartTime { get; set; }
+        public TimeOnly EndTime { get; set; }
+
+        public bool IsRepeat { get; set; }
+
+        public string? WeekDays { get; set; }
+
+        public int? RepeatUpto { get; set; }
+
+        public IEnumerable<Region> Regions { get; set; }
+        public IEnumerable<Physician> Physicians { get; set; }
+
+        public IEnumerable<CheckBoxData> Days { get; set; }
+
+    }
+    public class CheckBoxData
+    {
+        public int Id { get; set; }
+        public string value { get; set; }
+
+        public bool Checked { get; set; }
+    }
+
+    public class EditProviderModel
+    {
+        public string? username { get; set; }
+
+        public string? password { get; set; }
+
+        public string? Email { get; set; }
+        public string? Con_Email { get; set; }
+
+        public string? PhoneNumber { get; set; }
+
+        public string? Status { get; set; }
+
+
+        public string? city { get; set; }
+
+        public string? country { get; set; }
+
+        public string? zipcode { get; set; }
+
+        public string? Firstname { get; set; }
+
+        public string? Lastname { get; set; }
+
+        public int? Regionid { get; set; }
+
+        public int? Roleid { get; set; }
+
+        public string? MedicalLicesnse { get; set; }
+
+        public string? NPInumber { get; set; }
+
+        public string? SycnEmail { get; set; }
+
+        public string? Businessname { get; set; }
+
+        public string? BusinessWebsite { get; set; }
+
+        public string? Adminnotes { get; set; }
+
+        public string? Address1 { get; set; }
+        public string? Address2 { get; set; }
+
+        public int PhyID { get; set; }
+        public int statusId { get; set; }
+
+        public List<Region> regions { get; set; }
+
+        //public List<Physicianregion> physicianregions { get; set; }
+
+        public string? altPhone { get; set; }
+        public string? State { get; set; }
+        public int? StateId { get; set; }
+        public string? flag { get; set; }
+
+        public IFormFile? Photo { get; set; }
+
+        public string? PhotoValue { get; set; }
+
+        public IFormFile? Signature { get; set; }
+
+        public string? SignatureValue { get; set; }
+
+        public IFormFile? ContractorAgreement { get; set; }
+
+        public bool IsContractorAgreement { get; set; }
+
+        public IFormFile? BackgroundCheck { get; set; }
+
+        public bool IsBackgroundCheck { get; set; }
+
+        public IFormFile? HIPAA { get; set; }
+
+        public bool IsHIPAA { get; set; }
+
+        public IFormFile? NonDisclosure { get; set; }
+
+        public bool IsNonDisclosure { get; set; }
+
+        public IFormFile? LicenseDocument { get; set; }
+
+        public bool IsLicenseDocument { get; set; }
+
+        public List<Role> roles { get; set; }
+
+        public bool? indicate { get; set; }
+    }
+    public class PhysicianRegionTable
+    {
+        public int? PhysicianId { get; set; }
+
+        public int? Regionid { get; set; }
+
+        public string? Name { get; set; }
+
+        public bool ExistsInTable { get; set; }
+    }
+    public class EditProviderModel2
+    {
+        public EditProviderModel? editPro { get; set; }
+        public List<Region>? regions { get; set; }
+
+        public List<PhysicianRegionTable>? physicianregiontable { get; set; }
+        public List<Role>? roles { get; set; }
+    }
+
+    public class AddBusinessModel
+    {
+        public string BusinessName { get; set; }
+        public int ProfessionId { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string FaxNumber { get; set; }
+        public string BusinessContact { get; set; }
+        public string Street { get; set; }
+        public string City { get; set; }
+        public string Zip { get; set; }
+        public List<Region> RegionList { get; set; }
+        public int RegionId { get; set; }
+        public List<Healthprofessionaltype> ProfessionList { get; set; }
+
+    }
+
+    public class BusinessTable
+    {
+        public int BusinessId { get; set; }
+        public int ProfessionId { get; set; }
+        public string ProfessionName { get; set; }
+        public string BusinessName { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string FaxNumber { get; set; }
+        public string BusinessContact { get; set; }
+
+    }
+
+
+
 }

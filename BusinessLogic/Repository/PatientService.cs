@@ -434,21 +434,46 @@ namespace BusinessLogic.Repository
         public Profile GetProfile(int userid)
         {
             var user = _db.Users.FirstOrDefault(x => x.Userid == userid);
-            Profile profile = new()
+            if (user.Intdate == null && user.Intyear == null && user.Strmonth == "")
             {
-                FirstName = user.Firstname,
-                LastName = user.Lastname,
-                Email = user.Email,
-                PhoneNo = user.Mobile,
-                State = user.State,
-                City = user.City,
-                Street = user.Street,
-                ZipCode = user.Zipcode,
-                //DateOfBirth = new DateTime(Convert.ToInt32(user.Intyear), DateTime.ParseExact(user.Strmonth, "MMM", CultureInfo.InvariantCulture).Month, Convert.ToInt32(user.Intdate)),
-                //isMobileCheck = user.Ismobile[0] ? 1 : 0,
+                Profile obj = new()
+                {
 
-            };
-            return profile;
+                    FirstName = user.Firstname,
+                    LastName = user.Lastname,
+                    Email = user.Email,
+                    PhoneNo = user.Mobile,
+                    State = user.State,
+                    City = user.City,
+                    Street = user.Street,
+                    ZipCode = user.Zipcode,
+                    //DateOfBirth = new DateTime(Convert.ToInt32(user.Intyear), DateTime.ParseExact(user.Strmonth, "MMM", CultureInfo.InvariantCulture).Month, Convert.ToInt32(user.Intdate)),
+                    //isMobileCheck = user.Ismobile[0] ? 1 : 0,
+
+                };
+                return obj;
+            }
+            else
+            {
+                Profile profile = new()
+                {
+
+                    FirstName = user.Firstname,
+                    LastName = user.Lastname,
+                    Email = user.Email,
+                    PhoneNo = user.Mobile,
+                    State = user.State,
+                    City = user.City,
+                    Street = user.Street,
+                    ZipCode = user.Zipcode,
+                    DateOfBirth = new DateTime(Convert.ToInt32(user.Intyear), DateTime.ParseExact(user.Strmonth, "MMM", CultureInfo.InvariantCulture).Month, Convert.ToInt32(user.Intdate)),
+                    //isMobileCheck = user.Ismobile[0] ? 1 : 0,
+
+                };
+                return profile;
+            }
+           
+            
         }
 
         public bool EditProfile(Profile profile)
@@ -459,7 +484,6 @@ namespace BusinessLogic.Repository
                 var existingUser = _db.Users.Where(x => x.Userid == profile.userId).FirstOrDefault();
                 if (existingUser != null)
                 {
-
                     existingUser.Firstname = profile.FirstName;
                     existingUser.Lastname = profile.LastName;
                     existingUser.Mobile = profile.PhoneNo;
@@ -471,7 +495,7 @@ namespace BusinessLogic.Repository
                     existingUser.Strmonth = profile.DateOfBirth.ToString("MMM");
                     existingUser.Intyear = profile.DateOfBirth.Year;
 
-                    //existingUser.Ismobile[0] = profile.isMobileCheck == 1 ? true : false;
+                    //existingUser.Ismobile[1] = profile.isMobileCheck == 1 ? true : false;
                     _db.Users.Update(existingUser);
                     _db.SaveChanges();
 

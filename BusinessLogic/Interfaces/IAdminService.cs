@@ -93,7 +93,7 @@ namespace BusinessLogic.Interfaces
 
         EditPhysicianAccount EditPhysician(int PhysicianId);
 
-        bool EditSavePhysician(EditPhysicianAccount editPhysicianAccount);
+        //bool EditSavePhysician(EditPhysicianAccount editPhysicianAccount);
 
         List<Physicianlocation> GetPhysicianlocations();
 
@@ -103,8 +103,18 @@ namespace BusinessLogic.Interfaces
         bool SubmitAdminInfo(MyProfileModel model, string tokenEmail);
         bool SubmitBillingInfo(MyProfileModel model, string tokenEmail);
 
+        EditProviderModel EditProviderProfile(int phyId, string tokenEmail);
+        List<Region> RegionTable();
+
         List<AccountAccess> AccountAccess();
         bool DeleteRole(int roleId);
+
+        List<Role> GetRoles();
+
+        List<PhysicianRegionTable> PhyRegionTable(int phyId);
+
+        bool providerResetPass(string email, string password);
+
         List<AdminDashTableModel> Expert(int tabNo);
         CreateAccess FetchRole(short selectedValue);
         bool CreateRole(List<int> menuIds, string roleName, short accountType);
@@ -117,6 +127,22 @@ namespace BusinessLogic.Interfaces
         //void SendRegistrationproviderContactEmail(string provider, string msg, string sessionEmail, int phyIdMain);
 
         void InsertFileAfterRename(IFormFile file, string path, string updateName);
-        void CreateProviderAccount(CreateProviderAccount model);
+        void CreateProviderAccount(CreateProviderAccount model,string loginId);
+
+        void CreateNewShiftSubmit(string selectedDays, CreateShift obj, int adminId);
+
+        CreateShift GetCreateShift();
+
+        bool editProviderForm1(int phyId, int roleId, int statusId);
+        bool editProviderForm2(string fname, string lname, string email, string phone, string medical, string npi, string sync, int phyId, int[] phyRegionArray);
+        bool editProviderForm3(EditProviderModel2 dataMain);
+        bool PhysicianBusinessInfoUpdate(EditProviderModel2 dataMain);
+        void AddProviderBusinessPhotos(IFormFile photo, IFormFile signature, int phyId);
+        bool EditOnBoardingData(EditProviderModel2 dataMain);
+        void editProviderDeleteAccount(int phyId);
+
+        List<BusinessTable> BusinessTable();
+        void AddBusiness(AddBusinessModel obj);
+        List<Healthprofessionaltype> GetProfession();
     }   
 }

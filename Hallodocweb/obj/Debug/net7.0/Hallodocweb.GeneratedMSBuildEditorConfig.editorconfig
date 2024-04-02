@@ -64,6 +64,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0FjdGl2ZVJlcXVlc3RzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_AddVendor.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0FkZFZlbmRvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_AllRequests.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0FsbFJlcXVlc3RzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -74,6 +78,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_BlockCase.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0Jsb2NrQ2FzZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_BusinessTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0J1c2luZXNzVGFibGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_CancelCase.cshtml]
@@ -104,8 +112,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0NyZWF0ZVByb3ZpZGVyQWNjb3VudC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_CreateShift.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0NyZWF0ZVNoaWZ0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_DayTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0RheVRhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_EditProvider.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0VkaXRQcm92aWRlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_MonthTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX01vbnRoVGFibGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_Navbar.cshtml]
@@ -114,6 +134,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_NewRequests.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX05ld1JlcXVlc3RzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_Patners.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1BhdG5lcnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_PendingRequests.cshtml]
@@ -136,6 +160,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1Jldmlld0NhbmNlbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_Scheduling.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1NjaGVkdWxpbmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_SendAgreement.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1NlbmRBZ3JlZW1lbnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -154,6 +182,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_UnpaidRequests.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1VucGFpZFJlcXVlc3RzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_WeekTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1dlZWtUYWJsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Home/CancelAgreementModal.cshtml]

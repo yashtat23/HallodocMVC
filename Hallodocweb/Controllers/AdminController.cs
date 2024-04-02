@@ -642,20 +642,73 @@ namespace Hallodocweb.Controllers
             return RedirectToAction("AdminDashboard");
         }
 
-        [HttpGet]
-        public IActionResult EditProvider(int PhysicianId)
+        public IActionResult EditProvider(int phyId)
         {
-            var edit = _adminService.EditPhysician(PhysicianId);
-            return PartialView("_EditProvider", edit);
+            var tokenemail = GetTokenEmail();
+            if (tokenemail != null)
+            {
+                EditProviderModel2 model = new EditProviderModel2();
+                model.editPro = _adminService.EditProviderProfile(phyId, tokenemail);
+                model.regions = _adminService.RegionTable();
+                model.physicianregiontable = _adminService.PhyRegionTable(phyId);
+                model.roles = _adminService.GetRoles();
+                return PartialView("_EditProvider", model);
+            }
+            _notyf.Error("Token is expired,Login again");
+            return RedirectToAction("AdminLogin");
         }
 
         [HttpPost]
-        public IActionResult EditProviderPost(EditPhysicianAccount edit)
+        public IActionResult providerEditFirst(string password, int phyId, string email)
         {
-            var update = _adminService.EditSavePhysician(edit);
-            _notyf.Success("Save Changes!!");
-            return RedirectToAction("AdminDashboard");
+            bool editProvider = _adminService.providerResetPass(email, password);
+            _notyf.Success("Edit Save!");
+            return Json(new { indicate = editProvider, phyId = phyId });
         }
+        [HttpPost]
+        public IActionResult editProviderForm1(int phyId, int roleId, int statusId)
+        {
+            bool editProviderForm1 = _adminService.editProviderForm1(phyId, roleId, statusId);
+            _notyf.Success("Edit Save!");
+            return Json(new { indicate = editProviderForm1, phyId = phyId });
+        }
+        [HttpPost]
+        public IActionResult editProviderForm2(string fname, string lname, string email, string phone, string medical, string npi, string sync, int phyId, int[] phyRegionArray)
+        {
+            bool editProviderForm2 = _adminService.editProviderForm2(fname, lname, email, phone, medical, npi, sync, phyId, phyRegionArray);
+            _notyf.Success("Edit Save!");
+            return Json(new { indicate = editProviderForm2, phyId = phyId });
+        }
+        [HttpPost]
+        public IActionResult editProviderForm3(EditProviderModel2 payloadMain)
+        {
+            bool editProviderForm3 = _adminService.editProviderForm3(payloadMain);
+            _notyf.Success("Edit Save!"); 
+            return Json(new { indicate = editProviderForm3, phyId = payloadMain.editPro.PhyID });
+        }
+        [HttpPost]
+        public IActionResult PhysicianBusinessInfoEdit(EditProviderModel2 payloadMain)
+        {
+            bool editProviderForm4 = _adminService.PhysicianBusinessInfoUpdate(payloadMain);
+            _notyf.Success("Edit Save!");
+            return Json(new { indicate = editProviderForm4, phyId = payloadMain.editPro.PhyID });
+
+
+        }
+        [HttpPost]
+        public IActionResult UpdateOnBoarding(EditProviderModel2 payloadMain)
+        {
+            var editProviderForm5 = _adminService.EditOnBoardingData(payloadMain);
+            _notyf.Success("Edit Save!");
+            return Json(new { indicate = editProviderForm5, phyId = payloadMain.editPro.PhyID });
+        }
+        public IActionResult editProviderDeleteAccount(int phyId)
+        {
+            _adminService.editProviderDeleteAccount(phyId);
+            return Ok();
+        }
+
+
 
         public IActionResult ProviderLocation()
         {
@@ -691,6 +744,17 @@ namespace Hallodocweb.Controllers
             }
             var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
             return emailClaim.Value;
+        }
+
+        public string GetLoginId()
+        {
+            var token = HttpContext.Request.Cookies["jwt"];
+            if (token == null || !_jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
+            {
+                return "";
+            }
+            var loginId = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "aspNetUserId");
+            return loginId.Value;
         }
         [HttpPost]
         public IActionResult ResetPassword(string resetPassword)
@@ -826,9 +890,79 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult CreateProviderAccount(CreateProviderAccount model)
         {
-
-            _adminService.CreateProviderAccount(model);
+            var loginId = GetLoginId();
+            if (loginId == "")
+            {
+                return RedirectToAction("AdminLogin");
+            }
+            _adminService.CreateProviderAccount(model,loginId);
             return RedirectToAction("AdminDashboard");
+        }
+
+        public IActionResult CreateShift()
+        {
+            var obj = _adminService.GetCreateShift();
+            return View("_CreateShift", obj);
+        }
+
+        public IActionResult Scheduling()
+        {
+            //var obj = _adminService.CreateNewShiftSubmit();
+            return PartialView("_Scheduling");
+        }
+
+        public IActionResult MonthTable()
+        {
+            return PartialView("_MonthTable");
+        }
+        public IActionResult WeekTable()
+        {
+            return PartialView("_WeekTable");
+        }
+        public IActionResult DayTable()
+        {
+            return PartialView("_DayTable");
+        }
+
+        public IActionResult Partners()
+        {
+            return PartialView("_Patners");
+        }
+        public IActionResult BusinessTable()
+         {
+            var obj = _adminService.BusinessTable();
+            return PartialView("_BusinessTable",obj);
+        }
+
+        public IActionResult Patners()
+        {
+            AddBusinessModel obj = new()
+            {
+                RegionList = _adminService.GetRegion(),
+                ProfessionList = _adminService.GetProfession()
+            };
+            return PartialView("_Partners", obj);
+        }
+
+        [HttpPost]
+        public IActionResult AddBusiness(AddBusinessModel obj)
+        {
+
+                _adminService.AddBusiness(obj);
+            return RedirectToAction("AdminDashboard");
+            
+            //int? adminId = HttpContext.Session.GetInt32("adminId");
+            
+        }
+
+        public IActionResult AddVendor()
+        {
+            AddBusinessModel obj = new()
+            {
+                RegionList=_adminService.GetRegion(),   
+                ProfessionList=_adminService.GetProfession()    
+            };
+            return PartialView("_AddVendor",obj);
         }
 
     }

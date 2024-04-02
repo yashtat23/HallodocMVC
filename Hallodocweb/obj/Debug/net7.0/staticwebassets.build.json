@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Ptl9A0DVEMibqNY3gVP11NywWRvBIuExIf9NGDzygSs=",
+  "Hash": "8VqDK48P/C1sZKpkqejSh5cFroF9s2hBGpxPbWdvBOs=",
   "Source": "Hallodocweb",
   "BasePath": "_content/Hallodocweb",
   "Mode": "Default",
@@ -1732,6 +1732,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\UploadedFiles\\back (3).png"
+    },
+    {
+      "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\back (4).png",
+      "SourceId": "Hallodocweb",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\",
+      "BasePath": "_content/Hallodocweb",
+      "RelativePath": "UploadedFiles/back (4).png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\UploadedFiles\\back (4).png"
     },
     {
       "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\back.png",

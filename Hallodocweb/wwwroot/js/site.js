@@ -10,9 +10,9 @@ var modal = document.getElementById("myModal");
 
 var btn = document.getElementById("myBtn");
 
-$(document).ready(function () {
-    modal.style.display = "block";
-});
+//$(document).ready(function () {
+//    modal.style.display = "block";
+//});
 
 var span = document.getElementsByClassName("close")[0];
 
