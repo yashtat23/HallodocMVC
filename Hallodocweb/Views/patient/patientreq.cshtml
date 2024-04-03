@@ -155,7 +155,6 @@
         });
     }
         $('#email').focusout(function () {
-            debugger
             var email = $(this).val();
             $.ajax({
                 url: '/Patient/CheckEmailExists',

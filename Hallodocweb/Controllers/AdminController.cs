@@ -947,9 +947,17 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult AddBusiness(AddBusinessModel obj)
         {
-
+            if (obj.BusinessName != null && obj.FaxNumber != null)
+            {
                 _adminService.AddBusiness(obj);
-            return RedirectToAction("AdminDashboard");
+                _notyf.Success("Save Data!!");
+                return Ok();
+            }
+            else {
+                _notyf.Error("Please Enter a Data");
+                return BadRequest();
+            }
+            
             
             //int? adminId = HttpContext.Session.GetInt32("adminId");
             
@@ -963,6 +971,26 @@ namespace Hallodocweb.Controllers
                 ProfessionList=_adminService.GetProfession()    
             };
             return PartialView("_AddVendor",obj);
+        }
+
+        public void DeleteBusiness(int VendorId)
+        {
+            _adminService.RemoveBusiness(VendorId);
+            _notyf.Success("Delete Successfully!!");
+        }
+
+        public IActionResult EditBusinessData(int VendorId)
+        {
+            var obj = _adminService.GetEditBusiness(VendorId);
+            return PartialView("_EditBusiness", obj);
+        }
+
+        [HttpPost]
+        public IActionResult EditBusinessSubmit(EditBusinessModel model)
+        {
+            _adminService.EditBusiness(model);
+            _notyf.Success("Data Updated!!");
+            return Partners(); 
         }
 
     }

@@ -1316,7 +1316,7 @@ namespace BusinessLogic.Repository
             _db.SaveChanges();
         }
 
-        
+
 
         public EditPhysicianAccount EditPhysician(int PhysicianId)
         {
@@ -1344,7 +1344,7 @@ namespace BusinessLogic.Repository
                 BusinessName = physician.Businessname,
                 BusinessWebsite = physician.Businesswebsite,
                 RegionList = _db.Regions.ToList(),
-                
+
             };
 
             return obj;
@@ -1354,7 +1354,7 @@ namespace BusinessLogic.Repository
         //{
         //    try
         //    {
-                
+
         //        var physician = _db.Physicians.FirstOrDefault(x => x.Physicianid == editPhysicianAccount.PhysicianId);
         //        //var aspnetuser = _db.Aspnetusers.FirstOrDefault(x => x.Id == physician.Aspnetuserid);
         //        //var region = _db.Regions.Where(x => x.Regionid == physician.Regionid).Select(x=>x.Name).First();
@@ -1398,7 +1398,7 @@ namespace BusinessLogic.Repository
         //    {
         //        return false;
         //    }
-            
+
 
         //}
 
@@ -1875,8 +1875,8 @@ namespace BusinessLogic.Repository
             };
             return obj;
         }
-        
-        public void CreateProviderAccount(CreateProviderAccount model,string loginId)
+
+        public void CreateProviderAccount(CreateProviderAccount model, string loginId)
         {
             List<string> validProfileExtensions = new() { ".jpeg", ".png", ".jpg" };
             List<string> validDocumentExtensions = new() { ".pdf" };
@@ -1927,7 +1927,7 @@ namespace BusinessLogic.Repository
                 Physiciannotification physiciannotification = new()
                 {
                     Pysicianid = phy.Physicianid,
-                    Isnotificationstopped = new BitArray(1,false),
+                    Isnotificationstopped = new BitArray(1, false),
                 };
                 _db.Physiciannotifications.Add(physiciannotification);
                 _db.SaveChanges();
@@ -2349,12 +2349,15 @@ namespace BusinessLogic.Repository
 
         public List<BusinessTable> BusinessTable()
         {
+            BitArray deletedBit = new BitArray(1,false); 
+            
             var obj = (from t1 in _db.Healthprofessionals
                        join t2 in _db.Healthprofessionaltypes on t1.Profession equals t2.Healthprofessionalid
-                       where t2.Isdeleted != new BitArray(1,true)
+                       where t1.Isdeleted == deletedBit
                        select new BusinessTable
                        {
                            BusinessId = t1.Vendorid,
+                           BusinessName = t1.Vendorname,
                            ProfessionId = t2.Healthprofessionalid,
                            ProfessionName = t2.Professionname,
                            Email = t1.Email,
@@ -2362,13 +2365,14 @@ namespace BusinessLogic.Repository
                            FaxNumber = t1.Faxnumber,
                            BusinessContact = t1.Businesscontact
                        });
-            return obj.ToList();    
+            return obj.ToList();
         }
 
         public void AddBusiness(AddBusinessModel obj)
         {
-            
-
+            try {
+            if(obj.BusinessName != null && obj.FaxNumber != null)
+            {
             Healthprofessional healthprofessional = new()
             {
                 Vendorname = obj.BusinessName,
@@ -2380,12 +2384,21 @@ namespace BusinessLogic.Repository
                 Zip = obj.Zip,
                 Regionid = obj.RegionId,
                 Createddate = DateTime.Now,
+                Businesscontact = obj.BusinessContact,
                 Phonenumber = obj.PhoneNumber,
-                Email = obj.BusinessContact,
+                Email = obj.Email,
                 Isdeleted = new BitArray(1, false),
             };
             _db.Healthprofessionals.Add(healthprofessional);
             _db.SaveChanges();
+            }
+                
+            }
+            catch (Exception e){ 
+
+            }
+
+
 
         }
 
@@ -2395,6 +2408,57 @@ namespace BusinessLogic.Repository
             return obj;
         }
 
+        public void RemoveBusiness(int VendorId)
+        {
+            var vendor = _db.Healthprofessionals.FirstOrDefault(x => x.Vendorid == VendorId);
+            vendor.Isdeleted[0] = true;
+            _db.Healthprofessionals.Update(vendor);
+            _db.SaveChanges();
+        }
 
+        public EditBusinessModel GetEditBusiness(int VendorId)
+        {
+            var vendor = _db.Healthprofessionals.FirstOrDefault(x => x.Vendorid == VendorId);
+            var vendorType = _db.Healthprofessionaltypes.FirstOrDefault(x => x.Healthprofessionalid == vendor.Profession);
+            EditBusinessModel obj = new()
+            {
+                VendorId = VendorId,
+                BusinessName = vendor.Vendorname,
+                ProfessionId = (int)vendor.Profession,
+                Email = vendor.Email,
+                PhoneNumber = vendor.Phonenumber,
+                FaxNumber = vendor.Faxnumber,
+                BusinessContact = vendor.Businesscontact,
+                Street = vendor.Address,
+                City = vendor.City,
+                Zip = vendor.Zip,
+                RegionList = GetRegion(),
+                ProfessionList = GetProfession(),
+                RegionId = (int)vendor.Regionid
+            };
+            return obj;
+
+        }
+
+        public void EditBusiness(EditBusinessModel obj)
+        {
+            var vendor = _db.Healthprofessionals.FirstOrDefault(x => x.Vendorid == obj.VendorId);
+
+            vendor.Vendorname = obj.BusinessName;
+            vendor.Profession = obj.ProfessionId;
+            vendor.Email = obj.Email;
+            vendor.Faxnumber = obj.FaxNumber;
+            vendor.Phonenumber = obj.PhoneNumber;
+            vendor.Businesscontact = obj.BusinessContact;
+            vendor.Address = obj.Street;
+            vendor.City = obj.City;
+            vendor.Zip = obj.Zip;
+            vendor.Regionid = obj.RegionId;
+
+            _db.Healthprofessionals.Update(vendor);
+            _db.SaveChanges();
+
+
+        }
     }
 }

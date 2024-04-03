@@ -645,10 +645,13 @@ namespace DataAccess.CustomModel
 
     public class AddBusinessModel
     {
+        [Required(ErrorMessage = "Business Name is required")]
         public string BusinessName { get; set; }
         public int ProfessionId { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
+
+        [Required(ErrorMessage = "Fax Number is required")]
         public string FaxNumber { get; set; }
         public string BusinessContact { get; set; }
         public string Street { get; set; }
@@ -665,14 +668,34 @@ namespace DataAccess.CustomModel
         public int BusinessId { get; set; }
         public int ProfessionId { get; set; }
         public string ProfessionName { get; set; }
+
+        [Required(ErrorMessage = "Business Name is required")]
         public string BusinessName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
+
+        [Required(ErrorMessage = "Fax Number is required")]
         public string FaxNumber { get; set; }
         public string BusinessContact { get; set; }
 
     }
 
-
+    public class EditBusinessModel
+    {
+        public int VendorId { get; set; }
+        public string BusinessName { get; set; }
+        public int ProfessionId { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string FaxNumber { get; set; }
+        public string BusinessContact { get; set; }
+        public string Street { get; set; }
+        public string City { get; set; }
+        public string Zip { get; set; }
+        public List<Region> RegionList { get; set; }
+        public int RegionId { get; set; }
+        public List<Healthprofessionaltype> ProfessionList { get; set; }
+        public int PageSize { get; set; }
+    }
 
 }

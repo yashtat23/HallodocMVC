@@ -514,7 +514,7 @@ namespace BusinessLogic.Repository
         {
             User? user = _db.Users.FirstOrDefault(i => i.Userid == userid);
             var BirthDay = Convert.ToInt32(user.Intdate);
-            var BirthMonth = Convert.ToInt32(user.Strmonth);
+            var BirthMonth = user.Strmonth;
             var BirthYear = Convert.ToInt32(user.Intyear);
             var userdata = new PatientInfoModel()
             {

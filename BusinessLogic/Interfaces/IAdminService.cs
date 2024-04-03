@@ -144,5 +144,9 @@ namespace BusinessLogic.Interfaces
         List<BusinessTable> BusinessTable();
         void AddBusiness(AddBusinessModel obj);
         List<Healthprofessionaltype> GetProfession();
+        void RemoveBusiness(int VendorId);
+
+        EditBusinessModel GetEditBusiness(int VendorId);
+        void EditBusiness(EditBusinessModel obj);
     }   
 }

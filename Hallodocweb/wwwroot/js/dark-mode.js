@@ -10,7 +10,7 @@ function toggleDarkMode() {
     // Store the dark mode preference in local storage
     const isDarkMode = body.classList.contains('dark-mode');
     localStorage.setItem('darkMode', isDarkMode);
-    var img = element.querySelector(".light")
-    img.src.includes("dark") ? img.src = "../img/light.png" : img.src = "../img/dark.png";
+    //var img = element.querySelector(".light")
+    //img.src.includes("dark") ? img.src = "../img/light.png" : img.src = "../img/dark.png";
 
 }

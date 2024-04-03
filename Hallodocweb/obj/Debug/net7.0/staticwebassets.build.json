@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "8VqDK48P/C1sZKpkqejSh5cFroF9s2hBGpxPbWdvBOs=",
+  "Hash": "1UO3NBd/KbtHw7e/JqWIV9Ng1b2+/I5UvfWgMZseBic=",
   "Source": "Hallodocweb",
   "BasePath": "_content/Hallodocweb",
   "Mode": "Default",
@@ -1562,6 +1562,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\PhysicianImages\\13\\ProfilePhoto.jpg"
+    },
+    {
+      "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\14\\ProfilePhoto.jpg",
+      "SourceId": "Hallodocweb",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\",
+      "BasePath": "_content/Hallodocweb",
+      "RelativePath": "PhysicianImages/14/ProfilePhoto.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\PhysicianImages\\14\\ProfilePhoto.jpg"
     },
     {
       "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg",
