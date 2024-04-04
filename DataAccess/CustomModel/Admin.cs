@@ -478,16 +478,23 @@ namespace DataAccess.CustomModel
 
     public class CreateProviderAccount
     {
+        [Required(ErrorMessage = "User Name is required")]
         public string UserName { get; set; }
+        [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
+        [Required(ErrorMessage = "Role is required")]
         public List<Role> RolesList { get; set; }
         public int Role { get; set; }
+        [Required(ErrorMessage = "First Name is required")]
         public string FirstName { get; set; }
+        [Required(ErrorMessage = "Last Name is required")]
         public string LastName { get; set; }
+        [Required(ErrorMessage = "Email Name is required")]
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string MedicalLicenseNumber { get; set; }
         public string NPINumber { get; set; }
+        [Required(ErrorMessage = "Region is required")]
         public List<Region> RegionList { get; set; }
         public List<int> ProviderRegion { get; set; }
         public string Address1 { get; set; }
@@ -696,6 +703,52 @@ namespace DataAccess.CustomModel
         public int RegionId { get; set; }
         public List<Healthprofessionaltype> ProfessionList { get; set; }
         public int PageSize { get; set; }
+    }
+
+    public class RecordsModel
+    {
+        public List<RequestsRecordModel>? requestListMain { get; set; }
+        public int? searchRecordOne { get; set; }
+        public string? searchRecordTwo { get; set; }
+        public int? searchRecordThree { get; set; }
+        public DateOnly? searchRecordFour { get; set; }
+        public DateOnly? searchRecordFive { get; set; }
+        public string? searchRecordSix { get; set; }
+        public string? searchRecordSeven { get; set; }
+        public string? searchRecordEight { get; set; }
+    }
+    public class RequestsRecordModel
+    {
+        public string? patientname { get; set; }
+        public string? requestor { get; set; }
+        public DateTime? dateOfService { get; set; }
+        public DateTime? closeCaseDate { get; set; }
+        public string? email { get; set; }
+        public string? contact { get; set; }
+        public string? address { get; set; }
+        public string? zip { get; set; }
+        public string? status { get; set; }
+        public int? statusId { get; set; }
+        public string? physician { get; set; }
+        public string? physicianNote { get; set; }
+        public string? providerNote { get; set; }
+        public string? AdminNote { get; set; }
+        public string? pateintNote { get; set; }
+        public int? requestid { get; set; }
+        public int? requesttypeid { get; set; }
+        public int? userid { get; set; }
+        public int? flag { get; set; }
+
+    }
+
+    public class PatientRecordsModel
+    {
+        public List<User>? users { get; set; }
+        public string? searchRecordOne { get; set; }
+        public string? searchRecordTwo { get; set; }
+        public string? searchRecordThree { get; set; }
+        public string? searchRecordFour { get; set; }
+        public int? flag { get; set; }
     }
 
 }

@@ -48,8 +48,8 @@
                     </li>
                     <li class="nav-item p-2 fw-bolder">
                         <span class="d-flex gap-1">
-                            <span> @Model.firstName</span>
-                            <span> @Model.lastName</span>
+                            <span class="navbarfullname"> @Model.firstName</span>
+                            <span class="navbarfullname"> @Model.lastName</span>
                         </span>
                     </li>
             </div>
@@ -61,7 +61,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <img onclick="toggleDarkMode()" class="light" src="~/img/dark.png" alt="">
+                <img onclick="toggleDarkMode()" class="light" id="navbarpatientdashboard" src="~/img/dark.png" alt="">
             </li>
             </ul>
         </div>
@@ -384,5 +384,12 @@
             }
         });
     }
+
+    $('#navbarpatientdashboard').on('change', function () {
+        $('.navbarfullname').addClass("text-white");
+
+        // $('#regionreq').addClass("d-none").removeClass("d-block");
+
+    })
 
 </script>

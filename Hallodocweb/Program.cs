@@ -63,6 +63,7 @@ app.Use(async (context, next) =>
 
 
     await next.Invoke();
+
 });
 //Jwt configuration starts here
 

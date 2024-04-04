@@ -107,8 +107,6 @@ namespace Hallodocweb.Controllers
             return Json(list);
         }
 
-
-
         public IActionResult GetRequestsByStatus(int tabNo, int CurrentPage)
         {
             var list = _adminService.GetRequestsByStatus(tabNo, CurrentPage);
@@ -661,6 +659,7 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult providerEditFirst(string password, int phyId, string email)
         {
+
             bool editProvider = _adminService.providerResetPass(email, password);
             _notyf.Success("Edit Save!");
             return Json(new { indicate = editProvider, phyId = phyId });
@@ -890,6 +889,8 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult CreateProviderAccount(CreateProviderAccount model)
         {
+            if(ModelState.IsValid)
+            {
             var loginId = GetLoginId();
             if (loginId == "")
             {
@@ -897,6 +898,12 @@ namespace Hallodocweb.Controllers
             }
             _adminService.CreateProviderAccount(model,loginId);
             return RedirectToAction("AdminDashboard");
+
+            }
+            else
+            {
+                return PartialView("_CreateProviderAccount");
+            }
         }
 
         public IActionResult CreateShift()
@@ -991,6 +998,37 @@ namespace Hallodocweb.Controllers
             _adminService.EditBusiness(model);
             _notyf.Success("Data Updated!!");
             return Partners(); 
+        }
+
+        [HttpGet]
+        public IActionResult SearchRecords(RecordsModel recordsModel)
+        {
+            RecordsModel model = new RecordsModel();
+            model.requestListMain = _adminService.SearchRecords(recordsModel);
+            if (model.requestListMain.Count() == 0)
+            {
+                RequestsRecordModel rec = new RequestsRecordModel();
+                rec.flag = 1;
+                model.requestListMain.Add(rec);
+            }
+
+            return PartialView("_SearchRecord", model);
+
+
+        }
+
+        [HttpGet]
+        public IActionResult PatientRecords(PatientRecordsModel patientRecordsModel)
+        {
+            PatientRecordsModel model = new PatientRecordsModel();
+            model.users = _adminService.PatientRecords(patientRecordsModel);
+
+            if (model.users.Count() == 0)
+            {
+                model.flag = 1;
+            }
+
+            return PartialView("_PatientRecord", model);
         }
 
     }

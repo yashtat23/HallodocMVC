@@ -148,5 +148,8 @@ namespace BusinessLogic.Interfaces
 
         EditBusinessModel GetEditBusiness(int VendorId);
         void EditBusiness(EditBusinessModel obj);
-    }   
+
+        List<RequestsRecordModel> SearchRecords(RecordsModel recordsModel);
+        public List<User> PatientRecords(PatientRecordsModel patientRecordsModel);
+    }
 }

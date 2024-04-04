@@ -27,8 +27,9 @@
                 <div class="row g-2 m-1">
                     <div class="col-md">
                         <div class="form-floating">
-                            <input type="text" asp-for="UserName" class="form-control" id="userName">
+                            <input type="text" asp-for="UserName" class="form-control" id="userName" placeholder="">
                             <label for="">User Name</label>
+                            <span class="text-danger" asp-validation-for="UserName"></span>
                         </div>
                     </div>
 
@@ -36,6 +37,7 @@
                         <div class="form-floating">
                             <input type="text" asp-for="Password" class="form-control" id="password">
                             <label for="password">Password</label>
+                            <span class="text-danger" asp-validation-for="Password"></span>
                         </div>
                     </div>
                     <div class="col-md">
@@ -48,6 +50,7 @@
                                 } 
                             </select>
                             <label for="role">Role</label>
+                            <span class="text-danger" asp-validation-for="Role"></span>
                         </div>
                     </div>
                 </div>
@@ -60,18 +63,21 @@
                         <div class="form-floating">
                             <input type="text" class="form-control" asp-for="FirstName">
                             <label for="">First Name</label>
+                            <span class="text-danger" asp-validation-for="FirstName"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
                             <input type="text" class="form-control" asp-for="LastName">
-                            <label for="floatingSelectGrid">Last Name</label>
+                            <label for="floatingSelectGrid">Last Name</label
+                            <span class="text-danger" asp-validation-for="LastName"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
                             <input type="email" class="form-control" asp-for="Email">
                             <label for="">Email</label>
+                            <span class="text-danger" asp-validation-for="Email"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -101,6 +107,8 @@
                                     @item.Name
                                 </label>
                             } 
+                            <span class="text-danger" asp-validation-for="RegionList"></span>
+
                         </div>
                     </div>
                 </div>

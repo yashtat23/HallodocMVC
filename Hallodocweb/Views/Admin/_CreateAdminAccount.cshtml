@@ -135,7 +135,7 @@
                 </div>
 
 
-                <button type="button" onclick="createAdminPostFor()" class="btn btn-success float-end m-1">Create Account</button><br />
+                <button type="submit"  class="btn btn-success float-end m-1">Create Account</button><br />
             </form>
         </div>
 
@@ -160,37 +160,6 @@
     $('.admin-tab').removeClass("active");
     $('#access-tab').addClass("active");
 
-    function createAdminPostFor() {
-       
-        var payload2 = $("#CreateAdminAccountForm").serializeArray();
-        var RegionArray = [];
-        var checkedBoxes = $('.region-checkbox:checkbox:checked');
-        console.log(RegionArray);
-;        $.each(checkedBoxes, function () {
-            RegionArray.push(parseInt(this.value))
-        });
-        console.log(payload2);
-        payload2.push({name:'RegionArray',value: RegionArray });
-        //if ($("#myProfileThirdForm").valid()) {
-        $.ajax({
-            url: "/Admin/AdminAccount",
-            type: 'POST',
-            data: payload2,
-            success: function (response) {
-            //     if (response.isRegionExists == false) {
-            //         toastr.error("State doesn't exists !!");
-            //     }
-            //     else if (response.isSubmit == true) {
-            //         toastr.success("Data Updated");
-            //     } else {
-            //         toastr.error("Change atleast one field");
-            //     }
-             },
-                
-            error: function (e) {
-                alert("Error");
-            },
-        });
-        //}
-    }
+    
+    
 </script>

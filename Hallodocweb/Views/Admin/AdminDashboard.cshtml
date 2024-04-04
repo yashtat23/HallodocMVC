@@ -165,10 +165,33 @@
                         </div>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="record-tab" data-bs-toggle="tab" data-bs-target="#record-tab-pane"
-                                type="button" role="tab" aria-controls="record-tab-pane" aria-selected="false">
-                            Records
-                        </button>
+                        <div class="dropdown">
+                            <button class="nav-link" type="button" id="provider-tab" data-bs-toggle="dropdown" data-bs-target="#record-tab-pane" aria-expanded="false">
+                                Records
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li>
+                                    <button class="nav-link mx-3" id="record-tab" data-bs-toggle="tab"
+                                            data-bs-target="#record-tab-pane" type="button" role="tab"
+                                            aria-controls="record-tab-pane" onclick="searchRecords()" aria-selected="false">
+                                        Search Records
+                                    </button>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">Email Logs</a>
+
+                                </li>
+                                <li><a class="dropdown-item" href="#">SMS Logs</a></li>
+                                <li>
+                                    <button class="nav-link mx-3" id="record-tab" data-bs-toggle="tab"
+                                            data-bs-target="#record-tab-pane" type="button" role="tab"
+                                            aria-controls="record-tab-pane" onclick="patientRecord()" aria-selected="false">
+                                        Patient Records
+                                    </button>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Block History</a></li>
+                            </ul>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -671,7 +694,32 @@
                 }
             });
         }
-
+        
+        function searchRecords() {
+            $.ajax({
+                url: '/Admin/SearchRecords',
+                type: 'GET',
+                success: function (response) {
+                    $("#record-tab-pane").html(response);
+                },
+                error: function (e) {
+                    alert("Error loading partial view");
+                }
+            })
+        }
+        function patientRecord() {
+            $.ajax({
+                url: '/Admin/PatientRecords',
+                type: 'GET',
+                success: function (response) {
+                    $("#record-tab-pane").html(response);
+                },
+                error: function (e) {
+                    alert("Error loading partial view");
+                }
+            })
+        }
+    
     </script>
 
 

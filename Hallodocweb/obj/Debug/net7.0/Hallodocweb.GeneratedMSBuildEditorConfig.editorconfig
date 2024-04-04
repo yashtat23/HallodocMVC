@@ -140,6 +140,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX05ld1JlcXVlc3RzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_PatientRecord.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1BhdGllbnRSZWNvcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_Patners.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1BhdG5lcnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -166,6 +170,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_Scheduling.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1NjaGVkdWxpbmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_SearchRecord.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1NlYXJjaFJlY29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Final Project/Hallodoc/Hallodocweb/Views/Admin/_SendAgreement.cshtml]
