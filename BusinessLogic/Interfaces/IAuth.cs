@@ -16,9 +16,10 @@ namespace BusinessLogic.Interfaces
         Task EmailSendar(string email, string subject, string message);
 
         public void Resetreq(forgotpassword forgotpassword);
+        
         //Task<bool> IsEmailExists(string email);
 
         //Task<bool> IsEmailExists(string email);
-        
+
     }
 }

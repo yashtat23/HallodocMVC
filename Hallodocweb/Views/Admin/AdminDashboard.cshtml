@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="~/css/AdminDashboard.css">
     <link rel="stylesheet" href="~/css/dark-mode.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
 
 <body>
@@ -220,7 +220,7 @@
             @* partner...... *@
         </div>
         <div class="tab-pane fade" id="access-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-            access......
+            
         </div>
         <div class="tab-pane fade" id="record-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
             record......
@@ -671,6 +671,16 @@
                     $("#access-tab-pane").html(response);
                 }
                 
+            });
+        }
+
+        function UserAccess() {
+            $.ajax({
+                url: '/Admin/ShowUserAccess',
+                type: 'GET',
+                success: function (response) {
+                    $("#access-tab-pane").html(response);
+                }
             });
         }
 

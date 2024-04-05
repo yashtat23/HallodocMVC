@@ -17,6 +17,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
+using DataAccess.Data;
 
 namespace Hallodocweb.Controllers
 {
@@ -35,6 +37,7 @@ namespace Hallodocweb.Controllers
             _notyf = notyf;
             _petientService = petientService;
             _jwtService = jwtService;
+
         }
 
         public static string GenerateSHA256(string input)
@@ -110,7 +113,7 @@ namespace Hallodocweb.Controllers
         public IActionResult GetRequestsByStatus(int tabNo, int CurrentPage)
         {
             var list = _adminService.GetRequestsByStatus(tabNo, CurrentPage);
-            
+
             if (tabNo == 1)
             {
                 return PartialView("_NewRequests", list);
@@ -682,7 +685,7 @@ namespace Hallodocweb.Controllers
         public IActionResult editProviderForm3(EditProviderModel2 payloadMain)
         {
             bool editProviderForm3 = _adminService.editProviderForm3(payloadMain);
-            _notyf.Success("Edit Save!"); 
+            _notyf.Success("Edit Save!");
             return Json(new { indicate = editProviderForm3, phyId = payloadMain.editPro.PhyID });
         }
         [HttpPost]
@@ -878,7 +881,7 @@ namespace Hallodocweb.Controllers
         public IActionResult CreateProviderAccount()
         {
             var obj = _adminService.GetProviderList();
-            return PartialView("_CreateProviderAccount",obj);
+            return PartialView("_CreateProviderAccount", obj);
         }
 
         //public IActionResult CreateProviderAccount()
@@ -889,15 +892,15 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult CreateProviderAccount(CreateProviderAccount model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-            var loginId = GetLoginId();
-            if (loginId == "")
-            {
-                return RedirectToAction("AdminLogin");
-            }
-            _adminService.CreateProviderAccount(model,loginId);
-            return RedirectToAction("AdminDashboard");
+                var loginId = GetLoginId();
+                if (loginId == "")
+                {
+                    return RedirectToAction("AdminLogin");
+                }
+                _adminService.CreateProviderAccount(model, loginId);
+                return RedirectToAction("AdminDashboard");
 
             }
             else
@@ -912,11 +915,11 @@ namespace Hallodocweb.Controllers
             return View("_CreateShift", obj);
         }
 
-        public IActionResult Scheduling()
-        {
-            //var obj = _adminService.CreateNewShiftSubmit();
-            return PartialView("_Scheduling");
-        }
+        //public IActionResult Scheduling()
+        //{
+        //    //var obj = _adminService.CreateNewShiftSubmit();
+        //    return PartialView("_Scheduling");
+        //}
 
         public IActionResult MonthTable()
         {
@@ -936,9 +939,9 @@ namespace Hallodocweb.Controllers
             return PartialView("_Patners");
         }
         public IActionResult BusinessTable()
-         {
+        {
             var obj = _adminService.BusinessTable();
-            return PartialView("_BusinessTable",obj);
+            return PartialView("_BusinessTable", obj);
         }
 
         public IActionResult Patners()
@@ -960,24 +963,25 @@ namespace Hallodocweb.Controllers
                 _notyf.Success("Save Data!!");
                 return Ok();
             }
-            else {
+            else
+            {
                 _notyf.Error("Please Enter a Data");
                 return BadRequest();
             }
-            
-            
+
+
             //int? adminId = HttpContext.Session.GetInt32("adminId");
-            
+
         }
 
         public IActionResult AddVendor()
         {
             AddBusinessModel obj = new()
             {
-                RegionList=_adminService.GetRegion(),   
-                ProfessionList=_adminService.GetProfession()    
+                RegionList = _adminService.GetRegion(),
+                ProfessionList = _adminService.GetProfession()
             };
-            return PartialView("_AddVendor",obj);
+            return PartialView("_AddVendor", obj);
         }
 
         public void DeleteBusiness(int VendorId)
@@ -997,7 +1001,7 @@ namespace Hallodocweb.Controllers
         {
             _adminService.EditBusiness(model);
             _notyf.Success("Data Updated!!");
-            return Partners(); 
+            return Partners();
         }
 
         [HttpGet]
@@ -1031,5 +1035,35 @@ namespace Hallodocweb.Controllers
             return PartialView("_PatientRecord", model);
         }
 
+        [HttpGet]
+        public IActionResult ShowUserAccess(short selectedValue)
+        {
+            var obj = _adminService.FetchAccess(selectedValue);
+            return PartialView("_UserAccess", obj);
+        }
+
+        public IActionResult Scheduling(SchedulingViewModel model)
+        {
+
+            model.regions = _adminService.GetRegion().ToList();
+            return PartialView("_Scheduling", model);
+        }
+
+        public IActionResult LoadSchedulingPartial(string PartialName, string date, int regionid, int status)
+        {
+           
+                var day = _adminService.GetDayTable(PartialName, date, regionid, status);
+            return PartialView("_DayTable", day);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddShift(CreateNewShift model, List<int> repeatdays)
+        {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            await _adminService.CreateShift(model, email, repeatdays);
+            TempData["Success"] = "Shift Created Successfully";
+            return RedirectToAction("_Scheduling");
+        }
     }
 }

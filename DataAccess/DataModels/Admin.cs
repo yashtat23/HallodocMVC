@@ -40,9 +40,9 @@ public partial class Admin
 
     public BitArray? Isdeleted { get; set; }
 
-    public string? Roleid { get; set; }
-
     public string? City { get; set; }
+
+    public int? Roleid { get; set; }
 
     public virtual ICollection<Adminregion> Adminregions { get; set; } = new List<Adminregion>();
 
@@ -59,4 +59,6 @@ public partial class Admin
     public virtual ICollection<Requeststatuslog> Requeststatuslogs { get; set; } = new List<Requeststatuslog>();
 
     public virtual ICollection<Requestwisefile> Requestwisefiles { get; set; } = new List<Requestwisefile>();
+
+    public virtual Role? Role { get; set; }
 }

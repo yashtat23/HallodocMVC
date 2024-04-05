@@ -1721,48 +1721,122 @@ namespace BusinessLogic.Repository
                 return obj;
             }
         }
-        public bool RoleExists(string roleName, short accountType)
+        public bool RoleExists(string roleName, short accType)
         {
             BitArray deletedBit = new BitArray(new[] { false });
-            var isRoleExists = _db.Roles.Where(x => (x.Name.ToLower() == roleName.Trim().ToLower() && x.Accounttype == accountType) && (x.Isdeleted.Equals(deletedBit))).Any();
-            if (isRoleExists)
-            {
-                return true;
-            }
-            return false;
+
+            var isRoleExists = (accType == 0) ? _db.Roles.Where(x => x.Name.ToLower() == roleName.Trim().ToLower() && x.Isdeleted.Equals(deletedBit)).Any() : _db.Roles.Where(x => (x.Name.ToLower() == roleName.Trim().ToLower() && x.Accounttype == accType) && (x.Isdeleted.Equals(deletedBit))).Any();
+
+            return isRoleExists ? true : false;
         }
         public bool CreateRole(List<int> menuIds, string roleName, short accountType)
         {
             try
             {
-                Role role = new()
+                if (accountType == 1)
                 {
-                    Name = roleName,
-                    Accounttype = accountType,
-                    Createdby = "Admin",
-                    Createddate = DateTime.Now,
-                    Isdeleted = new BitArray(1, false),
-                };
-                _db.Roles.Add(role);
-                _db.SaveChanges();
-
-                foreach (int menuId in menuIds)
-                {
-                    Rolemenu rolemenu = new()
+                    Role role = new()
                     {
-                        Roleid = role.Roleid,
-                        Menuid = menuId,
+                        Name = roleName,
+                        Accounttype = accountType,
+                        Createdby = "Admin",
+                        Createddate = DateTime.Now,
+                        Isdeleted = new BitArray(1, false),
                     };
-                    _db.Rolemenus.Add(rolemenu);
-                };
-                _db.SaveChanges();
-                return true;
+                    _db.Roles.Add(role);
+                    _db.SaveChanges();
+
+                    foreach (int menuId in menuIds)
+                    {
+                        Rolemenu rolemenu = new()
+                        {
+                            Roleid = role.Roleid,
+                            Menuid = menuId,
+                        };
+                        _db.Rolemenus.Add(rolemenu);
+                    };
+                    _db.SaveChanges();
+                    return true;
+                }
+
+                else if (accountType == 2)
+                {
+                    Role role = new()
+                    {
+                        Name = roleName,
+                        Accounttype = accountType,
+                        Createdby = "Physician",
+                        Createddate = DateTime.Now,
+                        Isdeleted = new BitArray(1, false),
+                    };
+                    _db.Roles.Add(role);
+                    _db.SaveChanges();
+
+                    foreach (int menuId in menuIds)
+                    {
+                        Rolemenu rolemenu = new()
+                        {
+                            Roleid = role.Roleid,
+                            Menuid = menuId,
+                        };
+                        _db.Rolemenus.Add(rolemenu);
+                    };
+                    _db.SaveChanges();
+                    return true;
+                }
+
+                else
+                {
+                    Role role = new()
+                    {
+                        Name = roleName,
+                        Accounttype = 1,
+                        Createdby = "Admin",
+                        Createddate = DateTime.Now,
+                        Isdeleted = new BitArray(1, false),
+                    };
+                    _db.Roles.Add(role);
+                    _db.SaveChanges();
+
+                    foreach (int menuId in menuIds)
+                    {
+                        Rolemenu rolemenu = new()
+                        {
+                            Roleid = role.Roleid,
+                            Menuid = menuId,
+                        };
+                        _db.Rolemenus.Add(rolemenu);
+                        _db.SaveChanges();
+                    };
+
+                    Role role2 = new()
+                    {
+                        Name = roleName,
+                        Accounttype = 2,
+                        Createdby = "Physician",
+                        Createddate = DateTime.Now,
+                        Isdeleted = new BitArray(1, false),
+                    };
+                    _db.Roles.Add(role2);
+                    _db.SaveChanges();
+
+                    foreach (int menuId in menuIds)
+                    {
+                        Rolemenu rolemenu2 = new()
+                        {
+                            Roleid = role2.Roleid,
+                            Menuid = menuId,
+                        };
+                        _db.Rolemenus.Add(rolemenu2);
+                        _db.SaveChanges();
+                    };
+                    return true;
+                }
             }
             catch (Exception ex)
             {
                 return false;
             }
-
         }
 
         public CreateAdminAccount RegionList()
@@ -2598,6 +2672,220 @@ namespace BusinessLogic.Repository
             }
 
             return users;
+        }
+
+        public List<UserAccess> FetchAccess(short selectedValue)
+        {
+            if (selectedValue == 1)
+            { 
+                var admin = from admins in _db.Admins
+                            join role in _db.Roles on admins.Roleid equals role.Roleid
+                            orderby admins.Createddate
+                            select new UserAccess
+                            {
+                                fname = admins.Firstname,
+                                lname = admins.Lastname,
+                                accType = role.Accounttype,
+                                phone = admins.Mobile,
+                                status = admins.Status,
+                            };
+                var result1 = admin.ToList();
+                return result1;
+            }
+            else if (selectedValue == 2)
+            {
+                var physician = from phy in _db.Physicians
+                                join role in _db.Roles on phy.Roleid equals role.Roleid
+                                orderby phy.Createddate
+                                select new UserAccess
+                                {
+                                    fname = phy.Firstname,
+                                    lname = phy.Lastname,
+                                    accType = role.Accounttype,
+                                    phone = phy.Mobile,
+                                    status = phy.Status,
+                                };
+                var result2 = physician.ToList();
+                return result2;
+            }
+            else
+            {
+                var r1 = FetchAccess(1);
+                var r2 = FetchAccess(2);
+                var r3 = r1.Union(r2).ToList();
+                return r3;
+            }
+        }
+
+        public DayWiseScheduling GetDayTable(string PartialName, string date, int regionid, int status)
+        {
+            var currentDate = DateTime.Parse(date);
+            List<Physician> physician = _db.Physicianregions.Include(u => u.Physician).Where(u => u.Regionid == regionid).Select(u => u.Physician).ToList();
+            if (regionid == 0)
+            {
+                physician = _db.Physicians.ToList();
+            }
+
+
+            DayWiseScheduling day = new DayWiseScheduling
+            {
+                date = currentDate,
+                physicians = physician,
+            };
+            if (regionid != 0 && status != 0)
+            {
+                day.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid && m.Status == status).ToList();
+            }
+            else if (regionid != 0)
+            {
+                day.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid).ToList();
+
+            }
+            else if (status != 0)
+            {
+                day.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Status == status).ToList();
+
+            }
+            else
+            {
+                day.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).ToList();
+            }
+
+            return day;
+        }
+
+
+        public async Task CreateShift(CreateNewShift model, string Email, List<int> repeatdays)
+        {
+            Aspnetuser? aspNetUser = _db.Aspnetusers.FirstOrDefault(a => a.Email == Email);
+
+
+            var chk = repeatdays.ToList();
+
+            var shiftid = _db.Shifts.Where(u => u.Physicianid == model.PhysicianId).Select(u => u.Shiftid).ToList();
+            if (shiftid.Count() > 0)
+            {
+                foreach (var obj in shiftid)
+                {
+                    var shiftdetailchk = _db.Shiftdetails.Where(u => u.Shiftid == obj && u.Shiftdate ==  model.ShiftDate).ToList();
+                    if (shiftdetailchk.Count() > 0)
+                    {
+                        foreach (var item in shiftdetailchk)
+                        {
+                            if ((model.Start >= item.Starttime && model.Start <= item.Endtime) || (model.End >= item.Starttime && model.End <= item.Endtime))
+                            {
+                                //TempData["error"] = "Shift is already assigned in this time";
+                                //return RedirectToAction("Scheduling");
+                            }
+                        }
+                    }
+                }
+            }
+            Shift shift = new Shift
+            {
+                Physicianid = model.PhysicianId,
+                Startdate = model.ShiftDate,
+                Repeatupto = model.RepeatEnd,
+                Createddate = DateTime.Now,
+                Createdby = aspNetUser!.Id
+            };
+            if (chk.Count != 0)
+            {
+                foreach (var obj in chk)
+                {
+                    shift.Weekdays += obj;
+                }
+            }
+            if (model.RepeatEnd > 0)
+            {
+                shift.Isrepeat = new BitArray(new[] { true });
+            }
+            else
+            {
+                shift.Isrepeat = new BitArray(new[] { false });
+            }
+            _db.Shifts.Add(shift);
+            await _db.SaveChangesAsync();
+            DateOnly curdate = model.ShiftDate;
+
+            Shiftdetail shiftdetail = new Shiftdetail();
+            shiftdetail.Shiftid = shift.Shiftid;
+            shiftdetail.Shiftdate = curdate;
+            shiftdetail.Regionid = model.RegionId;
+            shiftdetail.Starttime = model.Start;
+            shiftdetail.Endtime = model.End;
+            shiftdetail.Isdeleted = new BitArray(new[] { false });
+            _db.Shiftdetails.Add(shiftdetail);
+            await _db.SaveChangesAsync();
+
+            var dayofweek = model.ShiftDate.DayOfWeek.ToString();
+            int valueforweek;
+            if (dayofweek == "Sunday")
+            {
+                valueforweek = 0;
+            }
+            else if (dayofweek == "Monday")
+            {
+                valueforweek = 1;
+            }
+            else if (dayofweek == "Tuesday")
+            {
+                valueforweek = 2;
+            }
+            else if (dayofweek == "Wednesday")
+            {
+                valueforweek = 3;
+            }
+            else if (dayofweek == "Thursday")
+            {
+                valueforweek = 4;
+            }
+            else if (dayofweek == "Friday")
+            {
+                valueforweek = 5;
+            }
+            else
+            {
+                valueforweek = 6;
+            }
+            if (shift.Isrepeat[0] == true)
+            {
+                for (int j = 0; j < shift.Weekdays.Count(); j++)
+                {
+                    var z = shift.Weekdays;
+                    var p = shift.Weekdays.ElementAt(j).ToString();
+                    int ele = Int32.Parse(p);
+                    int x;
+                    if (valueforweek > ele)
+                    {
+                        x = 6 - valueforweek + 1 + ele;
+                    }
+                    else
+                    {
+                        x = ele - valueforweek;
+                    }
+                    if (x == 0)
+                    {
+                        x = 7;
+                    }
+                    DateOnly newcurdate = model.ShiftDate.AddDays(x);
+                    for (int i = 0; i < model.RepeatEnd; i++)
+                    {
+                        Shiftdetail shiftdetailnew = new Shiftdetail
+                        {
+                            Shiftid = shift.Shiftid,
+                            Shiftdate = newcurdate,
+                            Regionid = model.RegionId,
+                            Starttime = model.Start,
+                            Endtime = model.End,
+                            Isdeleted = new BitArray(new[] { false })
+                        };
+                        _db.Shiftdetails.Add(shiftdetailnew);
+                        await _db.SaveChangesAsync();
+                        newcurdate = newcurdate.AddDays(7);
+                    }
+                }
+            }
         }
     }
 }

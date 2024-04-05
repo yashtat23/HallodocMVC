@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using DataAccess.DataModels;
 using Microsoft.AspNetCore.Http;
+using DataAccess.Enums;
 
 namespace DataAccess.CustomModel
 {
@@ -11,6 +12,13 @@ namespace DataAccess.CustomModel
 
         [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
+    }
+
+    public class LoginResponseViewModel
+    {
+        public ResponseStatus Status { get; set; }
+        public string Message { get; set; }
+        public string Token { get; set; }
     }
 
     public class forgotpassword

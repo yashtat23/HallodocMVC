@@ -751,4 +751,96 @@ namespace DataAccess.CustomModel
         public int? flag { get; set; }
     }
 
+    public class UserAccess
+    {
+        public short? accType { get; set; }
+        public string? fname { get; set; }
+        public string? lname { get; set; }
+        public string? phone { get; set; }
+        public short? status { get; set; }
+        public int? openReq { get; set; }
+    }
+
+    public class SchedulingViewModel
+    {
+
+        public List<Region> regions { get; set; }
+        public List<Physicianregion> physicianregionlist { get; set; }
+        [Required]
+        public int regionid { get; set; }
+        [Required]
+        public int providerid { get; set; }
+        public DateOnly shiftdateviewshift { get; set; }
+        [Required]
+        public DateTime shiftdate { get; set; }
+        public DateTime starttime { get; set; }
+        public DateTime endtime { get; set; }
+        public int repeatcount { get; set; }
+        public int shiftid { get; set; }
+        public int shiftdetailid { get; set; }
+        public string physicianname { get; set; }
+        public string regionname { get; set; }
+
+    }
+    public class DayWiseScheduling
+    {
+        public int shiftid { get; set; }
+        public DateTime date { get; set; }
+        public List<Physician> physicians { get; set; }
+        public List<Shiftdetail> shiftdetails { get; set; }
+    }
+    public class MonthWiseScheduling
+    {
+        public DateTime date { get; set; }
+        public List<Shiftdetail> shiftdetails { get; set; }
+        public List<Physician> physicians { get; set; }
+
+    }
+    public class WeekWiseScheduling
+    {
+        public DateTime date { get; set; }
+        public List<Physician> physicians { get; set; }
+
+        public List<Shiftdetail> shiftdetails { get; set; }
+
+    }
+
+    public class ProviderOnCall
+    {
+        public IEnumerable<Shiftdetail> shiftdetaillist { get; set; }
+        public IEnumerable<Shift> shiftlist { get; set; }
+        public IEnumerable<Physician> ondutyphysicianlist { get; set; }
+        public IEnumerable<Physician> offdutyphysicianlist { get; set; }
+        public List<Region> regions { get; set; }
+
+    }
+
+        public class CreateNewShift
+        {
+            public List<Region>? RegionList { get; set; }
+
+            [Required(ErrorMessage = "Please Select Region")]
+            public int RegionId { get; set; }
+            public string? RegionName { get; set; }
+
+            [Required(ErrorMessage = "Please Select Physician")]
+            public int PhysicianId { get; set; }
+            public string PhysicianName { get; set; }
+
+            [Required(ErrorMessage = "ShiftDate is required")]
+            public DateOnly ShiftDate { get; set; }
+
+            [Required(ErrorMessage = "StartTime is required")]
+            public TimeOnly Start { get; set; }
+
+            [Required(ErrorMessage = "EndTime is required")]
+            public TimeOnly End { get; set; }
+
+            public List<int>? RepeatDays { get; set; }
+
+            public int RepeatEnd { get; set; }
+        
+    }
+
+
 }

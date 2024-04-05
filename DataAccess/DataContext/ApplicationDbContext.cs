@@ -146,9 +146,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("modifieddate");
             entity.Property(e => e.Regionid).HasColumnName("regionid");
-            entity.Property(e => e.Roleid)
-                .HasColumnType("character varying")
-                .HasColumnName("roleid");
+            entity.Property(e => e.Roleid).HasColumnName("roleid");
             entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.Zip)
                 .HasMaxLength(10)
@@ -171,6 +169,10 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.Region).WithMany(p => p.Admins)
                 .HasForeignKey(d => d.Regionid)
                 .HasConstraintName("fk_admin3");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Admins)
+                .HasForeignKey(d => d.Roleid)
+                .HasConstraintName("fk_admin4");
         });
 
         modelBuilder.Entity<Adminregion>(entity =>

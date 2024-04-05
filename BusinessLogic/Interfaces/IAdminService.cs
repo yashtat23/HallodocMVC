@@ -151,5 +151,10 @@ namespace BusinessLogic.Interfaces
 
         List<RequestsRecordModel> SearchRecords(RecordsModel recordsModel);
         public List<User> PatientRecords(PatientRecordsModel patientRecordsModel);
+
+        List<UserAccess> FetchAccess(short selectedValue);
+        DayWiseScheduling GetDayTable(string PartialName, string date, int regionid, int status);
+
+        Task CreateShift(CreateNewShift model, string Email, List<int> repeatdays);
     }
 }
