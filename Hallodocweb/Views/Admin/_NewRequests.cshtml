@@ -724,7 +724,7 @@ else
         //alert("exportbtn was clicked.");
         var request = @Html.Raw(Json.Serialize(Model));
         console.log(request);
-        Export(request);
+        // Export(request);
     });
 
     $('#newRegionFilter').on('change', function () {
@@ -735,6 +735,7 @@ else
             type: 'GET',
             data: { regionId: searchRegion, tabNo: 1 },
             success: function (response) {
+                console.log(response);
                 $("#tab1").html(response);
             }
         })

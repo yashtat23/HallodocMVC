@@ -1,4 +1,4 @@
-﻿@{    ViewData["Title"] = "ViewCase";}@model DataAccess.CustomModel.ViewCaseViewModel;<link rel="stylesheet" href="~/css/dark-mode.css" /><Partial name="_Navbar" />@{    var bgColor = "He";
+﻿@{    ViewData["Title"] = "ViewCase";}@using DataAccess.CustomModel;@model ViewCaseViewModel;<link rel="stylesheet" href="~/css/dark-mode.css" /> @* <Partial name="_Navbar" />  *@@{    var bgColor = "He";
     var requestType = "VIP";    @if (Model.RequestTypeId == 2)
     {
         bgColor = "#60be5e";

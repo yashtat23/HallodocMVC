@@ -195,29 +195,29 @@ namespace BusinessLogic.Repository
             //dashboard.adminDashboardList = region;
             //dashboard.regionList = _db.Regions.ToList();
 
-            //var result = query.ToList();
-            //int count = result.Count();
-            //int TotalPage = (int)Math.Ceiling(count / (double)5);
-            //result = result.Skip((CurrentPage - 1) * 5).Take(5).ToList();
-
-            //DashboardModel dashboardModel = new DashboardModel();
-            //dashboardModel.adminDashTableList = result;
-            //dashboardModel.regionList = _db.Regions.ToList();
-            //dashboardModel.TotalPage = TotalPage;
-            //dashboardModel.CurrentPage = CurrentPage;
-            //return dashboardModel;
-
             var result = query.ToList();
             int count = result.Count();
             int TotalPage = (int)Math.Ceiling(count / (double)5);
             result = result.Skip((CurrentPage - 1) * 5).Take(5).ToList();
 
-            DashboardModel dashboard = new DashboardModel();
-            dashboard.adminDashboardList = result;
-            dashboard.regionList = _db.Regions.ToList();
-            dashboard.TotalPage = TotalPage;
-            dashboard.CurrentPage = CurrentPage;
-            return dashboard;
+            DashboardModel dashboardModel = new DashboardModel();
+            dashboardModel.adminDashboardList = result;
+            dashboardModel.regionList = _db.Regions.ToList();
+            dashboardModel.TotalPage = TotalPage;
+            dashboardModel.CurrentPage = CurrentPage;
+            return dashboardModel;
+
+            //var result = query.ToList();
+            //int count = result.Count();
+            //int TotalPage = (int)Math.Ceiling(count / (double)5);
+            //result = result.Skip((CurrentPage - 1) * 5).Take(5).ToList();
+
+            //DashboardModel dashboard = new DashboardModel();
+            //dashboard.adminDashboardList = result;
+            //dashboard.regionList = _db.Regions.ToList();
+            //dashboard.TotalPage = TotalPage;
+            //dashboard.CurrentPage = CurrentPage;
+            //return dashboard;
         }
 
         public DashboardModel GetRequestByRegion(int regionId, int tabNo)
@@ -2755,24 +2755,94 @@ namespace BusinessLogic.Repository
         }
 
 
-        public async Task CreateShift(CreateNewShift model, string Email, List<int> repeatdays)
+        public WeekWiseScheduling GetWeekTable( string date, int regionid, int status)
+        {
+            var currentDate = DateTime.Parse(date);
+            List<Physician> physician = _db.Physicianregions.Include(u => u.Physician).Where(u => u.Regionid == regionid).Select(u => u.Physician).ToList();
+            if (regionid == 0)
+            {
+                physician = _db.Physicians.ToList();
+            }
+            WeekWiseScheduling week = new WeekWiseScheduling
+            {
+                date = currentDate,
+                physicians = physician,
+
+            };
+            if (regionid != 0 && status != 0)
+            {
+                week.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid && m.Status == status).ToList();
+            }
+            else if (regionid != 0)
+            {
+                week.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid).ToList();
+
+            }
+            else if (status != 0)
+            {
+                week.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Status == status).ToList();
+
+            }
+            else
+            {
+                week.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).ToList();
+            }
+
+            return week;
+        }
+
+        public MonthWiseScheduling GetMonthTable(string date, int regionid, int status)
+        {
+            var currentDate = DateTime.Parse(date);
+            List<Physician> physician = _db.Physicianregions.Include(u => u.Physician).Where(u => u.Regionid == regionid).Select(u => u.Physician).ToList();
+            if (regionid == 0)
+            {
+                physician = _db.Physicians.ToList();
+            }
+            MonthWiseScheduling month = new MonthWiseScheduling
+            {
+                date = currentDate,
+                physicians = physician,
+            };
+            if (regionid != 0 && status != 0)
+            {
+                month.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid && m.Status == status).ToList();
+            }
+            else if (regionid != 0)
+            {
+                month.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid).ToList();
+
+            }
+            else if (status != 0)
+            {
+                month.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Status == status).ToList();
+
+            }
+            else
+            {
+                month.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).ToList();
+            }
+            return month;
+        }
+
+        public async Task CreateShift(SchedulingViewModel model, string Email, List<int> repeatdays)
         {
             Aspnetuser? aspNetUser = _db.Aspnetusers.FirstOrDefault(a => a.Email == Email);
 
 
             var chk = repeatdays.ToList();
 
-            var shiftid = _db.Shifts.Where(u => u.Physicianid == model.PhysicianId).Select(u => u.Shiftid).ToList();
+            var shiftid = _db.Shifts.Where(u => u.Physicianid == model.providerid).Select(u => u.Shiftid).ToList();
             if (shiftid.Count() > 0)
             {
                 foreach (var obj in shiftid)
                 {
-                    var shiftdetailchk = _db.Shiftdetails.Where(u => u.Shiftid == obj && u.Shiftdate ==  model.ShiftDate).ToList();
+                    var shiftdetailchk = _db.Shiftdetails.Where(u => u.Shiftid == obj && u.Shiftdate ==  model.shiftdate).ToList();
                     if (shiftdetailchk.Count() > 0)
                     {
                         foreach (var item in shiftdetailchk)
                         {
-                            if ((model.Start >= item.Starttime && model.Start <= item.Endtime) || (model.End >= item.Starttime && model.End <= item.Endtime))
+                            if ((model.starttime >= item.Starttime && model.starttime <= item.Endtime) || (model.endtime >= item.Starttime && model.endtime <= item.Endtime))
                             {
                                 //TempData["error"] = "Shift is already assigned in this time";
                                 //return RedirectToAction("Scheduling");
@@ -2783,9 +2853,9 @@ namespace BusinessLogic.Repository
             }
             Shift shift = new Shift
             {
-                Physicianid = model.PhysicianId,
-                Startdate = model.ShiftDate,
-                Repeatupto = model.RepeatEnd,
+                Physicianid = model.providerid,
+                Startdate = model.shiftdate,
+                Repeatupto = model.repeatcount,
                 Createddate = DateTime.Now,
                 Createdby = aspNetUser!.Id
             };
@@ -2796,7 +2866,7 @@ namespace BusinessLogic.Repository
                     shift.Weekdays += obj;
                 }
             }
-            if (model.RepeatEnd > 0)
+            if (model.repeatcount > 0)
             {
                 shift.Isrepeat = new BitArray(new[] { true });
             }
@@ -2806,19 +2876,19 @@ namespace BusinessLogic.Repository
             }
             _db.Shifts.Add(shift);
             await _db.SaveChangesAsync();
-            DateOnly curdate = model.ShiftDate;
+            DateOnly curdate = model.shiftdate;
 
             Shiftdetail shiftdetail = new Shiftdetail();
             shiftdetail.Shiftid = shift.Shiftid;
             shiftdetail.Shiftdate = curdate;
-            shiftdetail.Regionid = model.RegionId;
-            shiftdetail.Starttime = model.Start;
-            shiftdetail.Endtime = model.End;
+            shiftdetail.Regionid = model.regionid;
+            shiftdetail.Starttime = model.starttime;
+            shiftdetail.Endtime = model.endtime;
             shiftdetail.Isdeleted = new BitArray(new[] { false });
             _db.Shiftdetails.Add(shiftdetail);
             await _db.SaveChangesAsync();
 
-            var dayofweek = model.ShiftDate.DayOfWeek.ToString();
+            var dayofweek = model.shiftdate.DayOfWeek.ToString();
             int valueforweek;
             if (dayofweek == "Sunday")
             {
@@ -2868,16 +2938,16 @@ namespace BusinessLogic.Repository
                     {
                         x = 7;
                     }
-                    DateOnly newcurdate = model.ShiftDate.AddDays(x);
-                    for (int i = 0; i < model.RepeatEnd; i++)
+                    DateOnly newcurdate = model.shiftdate.AddDays(x);
+                    for (int i = 0; i < model.repeatcount; i++)
                     {
                         Shiftdetail shiftdetailnew = new Shiftdetail
                         {
                             Shiftid = shift.Shiftid,
                             Shiftdate = newcurdate,
-                            Regionid = model.RegionId,
-                            Starttime = model.Start,
-                            Endtime = model.End,
+                            Regionid = model.regionid,
+                            Starttime = model.starttime,
+                            Endtime = model.endtime,
                             Isdeleted = new BitArray(new[] { false })
                         };
                         _db.Shiftdetails.Add(shiftdetailnew);
@@ -2886,6 +2956,24 @@ namespace BusinessLogic.Repository
                     }
                 }
             }
+        }
+
+        public async Task<CreateNewShift> ViewShift(int ShiftDetailId)
+        {
+            Shiftdetail? shiftDetails = await _db.Shiftdetails.Include(a => a.Shift).Where(a => a.Shiftdetailid == ShiftDetailId).FirstOrDefaultAsync();
+            Physician? physicians = await _db.Physicians.Where(a => a.Physicianid == shiftDetails.Shift.Physicianid).FirstOrDefaultAsync();
+            Region? region = await _db.Regions.Where(a => a.Regionid == physicians!.Regionid).FirstOrDefaultAsync();
+            CreateNewShift model = new CreateNewShift()
+            {
+                PhysicianId = physicians.Physicianid,
+                PhysicianName = physicians.Firstname + " " + physicians.Lastname,
+                RegionId = region.Regionid,
+                RegionName = region.Name,
+                ShiftDate = shiftDetails.Shiftdate,
+                Start = shiftDetails.Starttime,
+                End = shiftDetails.Endtime,
+            };
+            return model;
         }
     }
 }

@@ -154,7 +154,11 @@ namespace BusinessLogic.Interfaces
 
         List<UserAccess> FetchAccess(short selectedValue);
         DayWiseScheduling GetDayTable(string PartialName, string date, int regionid, int status);
+        WeekWiseScheduling GetWeekTable(string date, int regionid, int status);
+        MonthWiseScheduling GetMonthTable(string date, int regionid, int status);
 
-        Task CreateShift(CreateNewShift model, string Email, List<int> repeatdays);
+        Task CreateShift(SchedulingViewModel model, string Email, List<int> repeatdays);
+
+        Task<CreateNewShift> ViewShift(int ShiftDetailId);
     }
 }

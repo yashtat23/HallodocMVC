@@ -19,6 +19,9 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using DataAccess.Data;
+using DataAccess.Enums;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Drawing;
 
 namespace Hallodocweb.Controllers
 {
@@ -1051,19 +1054,51 @@ namespace Hallodocweb.Controllers
 
         public IActionResult LoadSchedulingPartial(string PartialName, string date, int regionid, int status)
         {
-           
+            if (PartialName == "_DayTable")
+            {
                 var day = _adminService.GetDayTable(PartialName, date, regionid, status);
             return PartialView("_DayTable", day);
 
+            }
+
+            else if(PartialName == "_WeekTable")
+            {
+                var week = _adminService.GetWeekTable(date, regionid, status);
+                return PartialView("_WeekTable", week);
+            }
+            else if(PartialName == "_MonthTable")
+            {
+                var month = _adminService.GetMonthTable(date, regionid, status);
+                return PartialView("_MonthTable", month);
+            }
+            else
+            {
+                var day = _adminService.GetDayTable(PartialName, date, regionid, status);
+                return PartialView("_DayTable", day);
+            }
         }
 
+        //[HttpGet]
+        //public IActionResult WeekTable(string date, int regionid, int status)
+        //{
+            
+        //}
+        
         [HttpPost]
-        public async Task<IActionResult> AddShift(CreateNewShift model, List<int> repeatdays)
-        {
-            var email = User.FindFirstValue(ClaimTypes.Email);
+        public async Task<IActionResult> AddShift(SchedulingViewModel model, List<int> repeatdays)
+         {
+            var email = GetTokenEmail();
+
+            //var email = User.FindFirstValue(ClaimTypes.Email);
             await _adminService.CreateShift(model, email, repeatdays);
             TempData["Success"] = "Shift Created Successfully";
-            return RedirectToAction("_Scheduling");
+            return RedirectToAction("AdminDashboard");
+        }
+
+        public async Task<IActionResult> ViewShift(int ShiftDetailId)
+        {
+            var data = await _adminService.ViewShift(ShiftDetailId);
+            return View("_ViewShift", data);
         }
     }
 }

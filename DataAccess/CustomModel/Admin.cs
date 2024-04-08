@@ -772,9 +772,9 @@ namespace DataAccess.CustomModel
         public int providerid { get; set; }
         public DateOnly shiftdateviewshift { get; set; }
         [Required]
-        public DateTime shiftdate { get; set; }
-        public DateTime starttime { get; set; }
-        public DateTime endtime { get; set; }
+        public DateOnly shiftdate { get; set; }
+        public TimeOnly starttime { get; set; }
+        public TimeOnly endtime { get; set; }
         public int repeatcount { get; set; }
         public int shiftid { get; set; }
         public int shiftdetailid { get; set; }
