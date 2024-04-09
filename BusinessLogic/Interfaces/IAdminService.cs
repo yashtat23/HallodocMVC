@@ -160,5 +160,20 @@ namespace BusinessLogic.Interfaces
         Task CreateShift(SchedulingViewModel model, string Email, List<int> repeatdays);
 
         Task<CreateNewShift> ViewShift(int ShiftDetailId);
+
+        List<BlockHistory> BlockHistory(BlockHistory2 blockHistory2);
+        bool UnblockRequest(int blockId);
+        bool IsBlockRequestActive(int blockId);
+        EmailSmsRecords2 EmailSmsLogs(int tempId, EmailSmsRecords2 recordsModel);
+        bool EditShift(CreateNewShift model, string email);
+
+        bool ReturnShift(int ShiftDetailId, string email);
+        bool DeleteShift(int ShiftDetailId, string email);
+
+        //SchedulingViewModel MdOnCall();
+        //SchedulingViewModel MdOnCallData(int region);
+        OnCallModal GetOnCallDetails(int regionId);
+        List<ShiftReview> GetShiftReview(int regionId, int callId);
+        void DeleteShiftReview(int[] shiftDetailsId, int Aspid);
     }
 }

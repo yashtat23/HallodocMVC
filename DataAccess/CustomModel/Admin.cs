@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -763,7 +764,6 @@ namespace DataAccess.CustomModel
 
     public class SchedulingViewModel
     {
-
         public List<Region> regions { get; set; }
         public List<Physicianregion> physicianregionlist { get; set; }
         [Required]
@@ -780,6 +780,8 @@ namespace DataAccess.CustomModel
         public int shiftdetailid { get; set; }
         public string physicianname { get; set; }
         public string regionname { get; set; }
+
+        public List<Physician> Physicians { get; set; }
 
     }
     public class DayWiseScheduling
@@ -815,7 +817,17 @@ namespace DataAccess.CustomModel
 
     }
 
-        public class CreateNewShift
+    public class OnCallModal
+    {
+
+        public List<Physician> OnCall { get; set; }
+
+        public List<Physician> OffDuty { get; set; }
+
+        public List<Region> regions { get; set; }
+    }
+
+    public class CreateNewShift
         {
             public List<Region>? RegionList { get; set; }
 
@@ -839,7 +851,91 @@ namespace DataAccess.CustomModel
             public List<int>? RepeatDays { get; set; }
 
             public int RepeatEnd { get; set; }
+
+            public int shiftdetailid { get; set; }
         
+    }
+
+    public class BlockHistory
+    {
+        public string? patientname { get; set; }
+        public string? phonenumber { get; set; }
+        public string? email { get; set; }
+        public string? createddate { get; set; }
+        public BitArray? isActive { get; set; }
+        public string? notes { get; set; }
+
+        public int? blockId { get; set; }
+
+
+        public bool indicate { get; set; }
+
+    }
+
+    public class BlockHistory2
+    {
+        public List<BlockHistory>? blockHistories { get; set; }
+        public string? searchRecordOne { get; set; }
+        public DateTime searchRecordTwo { get; set; }
+        public string? searchRecordThree { get; set; }
+        public string? searchRecordFour { get; set; }
+        public int? flag { get; set; }
+
+    }
+
+    public class EmailSmsRecords
+    {
+
+        public int? requestid { get; set; }
+        public string? recipient { get; set; }
+        public string? action { get; set; }
+        public string? rolename { get; set; }
+        public string? email { get; set; }
+        public DateTime? createddate { get; set; }
+        public DateTime? sentdate { get; set; }
+        public string? sent { get; set; }
+        public int? senttries { get; set; }
+        public string? confirmationNumber { get; set; }
+        public string? contact { get; set; }
+    }
+
+    public class EmailSmsRecords2
+    {
+        public List<EmailSmsRecords>? emailRecords { get; set; }
+        public int? tempid { get; set; }
+        public string? searchRecordOne { get; set; }
+        public string? searchRecordTwo { get; set; }
+        public string? searchRecordThree { get; set; }
+        public DateTime? searchRecordFour { get; set; }
+        public DateTime? searchRecordFive { get; set; }
+    }
+
+    public class ShiftReview
+    {
+        public int shiftDetailId { get; set; }
+
+        public string PhysicianName { get; set; }
+
+        public string ShiftDate { get; set; }
+
+        public string ShiftTime { get; set; }
+
+        public string ShiftRegion { get; set; }
+
+    }
+
+    public class ShiftReview2
+    {
+        
+        
+        public List<Region> regions { get; set; }
+
+       
+        public List<ShiftReview> ShiftReview { get; set; }
+
+        public int regionId { get; set; }
+
+        public int callId { get; set; }
     }
 
 

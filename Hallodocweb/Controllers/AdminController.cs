@@ -667,7 +667,7 @@ namespace Hallodocweb.Controllers
         {
 
             bool editProvider = _adminService.providerResetPass(email, password);
-            _notyf.Success("Edit Save!");
+            //_notyf.Success("Edit Save!");
             return Json(new { indicate = editProvider, phyId = phyId });
         }
         [HttpPost]
@@ -1100,5 +1100,106 @@ namespace Hallodocweb.Controllers
             var data = await _adminService.ViewShift(ShiftDetailId);
             return View("_ViewShift", data);
         }
+
+        public IActionResult BlockedHistory(BlockHistory2 blockHistory2)
+        {
+            BlockHistory2 _data = new BlockHistory2();
+            _data.blockHistories = _adminService.BlockHistory(blockHistory2);
+
+
+            return PartialView("_BlockHistory", _data);
+        }
+
+
+        public IActionResult unblockBlockHistory(int blockId)
+        {
+            bool isUnblocked = _adminService.UnblockRequest(blockId);
+            return Json(new { isUnblocked = isUnblocked });
+        }
+
+        public IActionResult BlockHistoryCheckBox(int blockId)
+        {
+            bool isActive = _adminService.IsBlockRequestActive(blockId);
+            return Json(new { isActive });
+        }
+
+        [HttpGet]
+        public IActionResult EmailLogs(EmailSmsRecords2 recordsModel)
+        {
+            EmailSmsRecords2 _data = new EmailSmsRecords2();
+            _data = _adminService.EmailSmsLogs(0, recordsModel);
+            return PartialView("_EmailLogs", _data);
+        }
+
+        public IActionResult ReturnShift(int ShiftDetailId)
+        {
+            var email = GetTokenEmail();
+            var data =  _adminService.ReturnShift(ShiftDetailId, email);
+            return Json(new {isReturned=data});
+        }
+
+        public IActionResult DeleteShift(int ShiftDetailId)
+        {
+            var email = GetTokenEmail();
+            var data =  _adminService.DeleteShift(ShiftDetailId, email);
+            return Json(new { isDeleted = data });
+        }
+
+        public IActionResult EditViewShift(CreateNewShift model)
+        {
+            var email = GetTokenEmail();
+            bool isEditted =  _adminService.EditShift(model, email);
+            
+            return Json(new {isEditted});
+        }
+
+        //public IActionResult MdOnCall()
+        //{
+        //    var data =  _adminService.MdOnCall();
+        //    return View(data);
+        //}
+
+        ////public IActionResult MdOnCallData(int region)
+        ////{
+        ////    var data = _adminService.MdOnCallData(region);
+        ////    return PartialView("_ProviderOnCall", data);
+        ////}
+
+
+        public IActionResult MdOnCallData(int region)
+        {
+            var data = _adminService.GetOnCallDetails(region);
+            return PartialView("_ProviderOnCall", data);
+        }
+        public IActionResult ShiftReview(int regionId, int callId)
+        {
+            ShiftReview2 schedulingCm = new ShiftReview2()
+            {
+                regions = _adminService.RegionTable(),
+                ShiftReview = _adminService.GetShiftReview(regionId, callId),
+                regionId = regionId,
+                callId = callId,
+            };
+
+            return PartialView("_ShiftForReview", schedulingCm);
+        }
+
+        //public IActionResult ApproveShift(int[] shiftDetailsId)
+        //{
+        //    var Aspid = HttpContext.Session.GetInt32("AspNetUserID");
+
+        //    _adminService.ApproveSelectedShift(shiftDetailsId, (int)Aspid);
+
+        //    return Ok();
+        //}
+
+        //public IActionResult DeleteSelectedShift(int[] shiftDetailsId)
+        //{
+        //    var Aspid = HttpContext.Session.GetInt32("AspNetUserID");
+
+        //    _adminService.DeleteShiftReview(shiftDetailsId, (int)Aspid);
+
+        //    return Ok();
+        //}   
     }
 }

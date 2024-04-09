@@ -2972,8 +2972,395 @@ namespace BusinessLogic.Repository
                 ShiftDate = shiftDetails.Shiftdate,
                 Start = shiftDetails.Starttime,
                 End = shiftDetails.Endtime,
+                shiftdetailid=ShiftDetailId,
+                
             };
             return model;
         }
+
+        public List<BlockHistory> BlockHistory(BlockHistory2 blockHistory2)
+        {
+            var requestData = _db.Blockrequests.Where(x => x.Isactive != null).Select(x => new BlockHistory()
+            {
+                patientname = _db.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Firstname).First(),
+                phonenumber = x.Phonenumber,
+                email = x.Email,
+                createddate = Convert.ToDateTime(x.Createddate).ToString("yyyy-MM-dd"),
+                notes = x.Reason,
+                blockId = x.Blockrequestid,
+                isActive = x.Isactive,
+            }).ToList();
+
+            if (blockHistory2 != null)
+            {
+                if (blockHistory2.searchRecordOne != null)
+                {
+                    requestData = requestData.Where(r => r.patientname.Trim().ToLower().Contains(blockHistory2.searchRecordOne.Trim().ToLower())).Select(r => r).ToList();
+                }
+                if (blockHistory2.searchRecordTwo != null && blockHistory2.searchRecordTwo != DateTime.MinValue)
+                {
+                    requestData = requestData.Where(r => r.createddate == Convert.ToDateTime(blockHistory2.searchRecordTwo).ToString("yyyy-MM-dd")).Select(r => r).ToList();
+                }
+                if (blockHistory2.searchRecordThree != null)
+                {
+                    requestData = requestData.Where(r => r.email.Trim().ToLower().Contains(blockHistory2.searchRecordThree.Trim().ToLower())).Select(r => r).ToList();
+                }
+                if (blockHistory2.searchRecordFour != null)
+                {
+                    requestData = requestData.Where(r => r.phonenumber.Trim().ToLower().Contains(blockHistory2.searchRecordFour.Trim().ToLower())).Select(r => r).ToList();
+                }
+            }
+
+
+            return requestData;
+        }
+
+        public bool UnblockRequest(int blockId)
+        {
+            try
+            {
+                var block = _db.Blockrequests.Where(r => r.Blockrequestid == blockId).Select(r => r).First();
+
+                block.Isactive = null;
+                _db.Blockrequests.Update(block);
+                _db.SaveChanges();
+
+                Requeststatuslog requeststatuslog = new()
+                {
+                    Requestid = block.Requestid,
+                    Status = (int)StatusEnum.Unassigned,
+                    Notes = "unblocked",
+                    Createddate = DateTime.Now
+                };
+                _db.Requeststatuslogs.Add(requeststatuslog);
+
+                var request = _db.Requests.Where(r => r.Requestid == block.Requestid).Select(r => r).First();
+
+                request.Status = (int)StatusEnum.Unassigned;
+                request.Isdeleted = null;
+                request.Modifieddate = DateTime.Now;
+                _db.Requests.Update(request);
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+        public bool IsBlockRequestActive(int blockId)
+        {
+            var blockrequest = _db.Blockrequests.Where(x => x.Blockrequestid == blockId).First();
+            var isActive = new BitArray(1);
+            isActive[0] = false;
+
+            if (blockrequest.Isactive != null && blockrequest.Isactive[0] == isActive[0])
+            {
+                blockrequest.Isactive[0] = true;
+                _db.Blockrequests.Update(blockrequest);
+                _db.SaveChanges();
+
+                return true;
+            }
+            else
+            {
+                if (blockrequest.Isactive != null)
+                    blockrequest.Isactive[0] = false;
+                _db.Blockrequests.Update(blockrequest);
+                _db.SaveChanges();
+
+                return false;
+            }
+        }
+
+        public EmailSmsRecords2 EmailSmsLogs(int tempId, EmailSmsRecords2 recordsModel)
+        {
+            EmailSmsRecords2 model = new EmailSmsRecords2();
+            model.tempid = tempId;
+            model.emailRecords = new List<EmailSmsRecords>();
+            if (tempId == 0)
+            {
+                var records = _db.Emaillogs.ToList();
+                foreach (var item in records)
+                {
+                    if (item.Requestid != null)
+                    {
+
+                        var newRecord = new EmailSmsRecords
+                        {
+                            email = item.Emailid,
+                            createddate = item.Createdate,
+                            sentdate = item.Sentdate,
+                            sent = item.Isemailsent[0] ? "Yes" : "No",
+                            recipient = _db.Requestclients.Where(i => i.Requestid == item.Requestid).Select(i => i.Firstname).First(),
+                            rolename = _db.Aspnetroles.Where(i => i.Id == item.Roleid.ToString()).Select(i => i.Name).First(),
+                            senttries = item.Senttries,
+                            confirmationNumber = item.Confirmationnumber,
+                        };
+
+                        model.emailRecords.Add(newRecord);
+                    }
+                    else
+                    {
+                        var newRecord = new EmailSmsRecords
+                        {
+                            email = item.Emailid,
+                            createddate = item.Createdate,
+                            sentdate = item.Sentdate,
+                            sent = item.Isemailsent[0] ? "Yes" : "No",
+                            recipient = _db.Physicians.Where(i => i.Physicianid == item.Physicianid).Select(i => i.Firstname).FirstOrDefault(),
+                            rolename = _db.Aspnetroles.Where(i => i.Id == item.Roleid.ToString()).Select(i => i.Name).First(),
+                            senttries = item.Senttries,
+                            confirmationNumber = item.Confirmationnumber,
+                        };
+
+                        model.emailRecords.Add(newRecord);
+                    }
+                }
+
+                if (recordsModel != null)
+                {
+                    if (recordsModel.searchRecordOne != null && recordsModel.searchRecordOne != "All")
+                    {
+                        model.emailRecords = model.emailRecords.Where(r => r.rolename.Trim().ToLower().Contains(recordsModel.searchRecordOne.Trim().ToLower())).Select(r => r).ToList();
+                    }
+                    if (recordsModel.searchRecordTwo != null)
+                    {
+                        model.emailRecords = model.emailRecords.Where(r => r.recipient.Trim().ToLower().Contains(recordsModel.searchRecordTwo.Trim().ToLower())).Select(r => r).ToList();
+                    }
+                    if (recordsModel.searchRecordThree != null)
+                    {
+                        model.emailRecords = model.emailRecords.Where(r => r.email.Trim().ToLower().Contains(recordsModel.searchRecordThree.Trim().ToLower())).Select(r => r).ToList();
+                    }
+                    if (recordsModel.searchRecordFour != null)
+                    {
+                        model.emailRecords = model.emailRecords.Where(item => item.createddate >= recordsModel.searchRecordFour).Select(r => r).ToList();
+                    }
+                    if (recordsModel.searchRecordFive != null)
+                    {
+                        model.emailRecords = model.emailRecords.Where(item => item.createddate <= recordsModel.searchRecordFive).Select(r => r).ToList();
+                    }
+                }
+            }
+
+            else
+            {
+                var records = _db.Smslogs.ToList();
+                foreach (var item in records)
+                {
+
+                    var newRecord = new EmailSmsRecords
+                    {
+                        contact = item.Mobilenumber,
+                        createddate = item.Createdate,
+                        sentdate = item.Sentdate,
+                        sent = item.Issmssent[0] ? "Yes" : "No",
+                        recipient = _db.Requestclients.Where(i => i.Requestid == item.Requestid).Select(i => i.Firstname).FirstOrDefault(),
+                        rolename = _db.Aspnetroles.Where(i => i.Id == item.Roleid.ToString()).Select(i => i.Name).First(),
+                        senttries = item.Senttries,
+                        confirmationNumber = item.Confirmationnumber,
+                    };
+
+                    model.emailRecords.Add(newRecord);
+                }
+                if (recordsModel != null)
+                {
+                    if (recordsModel.searchRecordOne != null && recordsModel.searchRecordOne != "All")
+                    {
+                        model.emailRecords = model.emailRecords.Where(r => r.rolename.Contains(recordsModel.searchRecordOne)).Select(r => r).ToList();
+                    }
+                    if (recordsModel.searchRecordTwo != null)
+                    {
+                        model.emailRecords = model.emailRecords.Where(r => r.recipient.Trim().ToLower().Contains(recordsModel.searchRecordTwo.Trim().ToLower())).Select(r => r).ToList();
+                    }
+                    if (recordsModel.searchRecordThree != null)
+                    {
+                        model.emailRecords = model.emailRecords.Where(r => r.contact.Trim().ToLower().Contains(recordsModel.searchRecordThree.Trim().ToLower())).Select(r => r).ToList();
+                    }
+                    if (recordsModel.searchRecordFour != null)
+                    {
+                        model.emailRecords = model.emailRecords.Where(item => item.createddate >= recordsModel.searchRecordFour).Select(r => r).ToList();
+                    }
+                    if (recordsModel.searchRecordFive != null)
+                    {
+                        model.emailRecords = model.emailRecords.Where(item => item.createddate <= recordsModel.searchRecordFive).Select(r => r).ToList();
+                    }
+                }
+
+            }
+            return model;
+        }
+
+
+        public bool EditShift(CreateNewShift model, string email)
+        {
+            Aspnetuser? aspNetUser =  _db.Aspnetusers.FirstOrDefault(a => a.Email == email);
+            Shiftdetail? shiftDetails =  _db.Shiftdetails.Include(a => a.Shift).Where(a => a.Shiftdetailid == model.shiftdetailid).FirstOrDefault();
+
+            if (shiftDetails != null)
+            {
+                shiftDetails.Shiftdate = model.ShiftDate;
+                shiftDetails.Starttime = model.Start;
+                shiftDetails.Endtime = model.End;
+                shiftDetails.Modifieddate = DateTime.Now;
+                shiftDetails.Modifiedby = aspNetUser.Id;
+                _db.Shiftdetails.Update(shiftDetails);
+            }
+             _db.SaveChanges();
+            return true;
+        }
+
+        public bool ReturnShift(int ShiftDetailId, string email)
+        {
+            Aspnetuser? aspNetUser = _db.Aspnetusers.FirstOrDefault(a => a.Email == email);
+            Shiftdetail? shiftDetails =  _db.Shiftdetails.Include(a => a.Shift).Where(a => a.Shiftdetailid == ShiftDetailId).FirstOrDefault();
+
+            if (shiftDetails != null)
+            {
+                shiftDetails!.Status = 1;
+                shiftDetails.Modifieddate = DateTime.Now;
+                shiftDetails.Modifiedby = aspNetUser.Id;
+                _db.Shiftdetails.Update(shiftDetails);
+            }
+             _db.SaveChangesAsync();
+            return true;
+        }
+
+        public bool DeleteShift(int ShiftDetailId, string email)
+        {
+            Aspnetuser? aspNetUser =  _db.Aspnetusers.FirstOrDefault(a => a.Email == email);
+            Shiftdetail? shiftDetails =  _db.Shiftdetails.Include(a => a.Shift).Where(a => a.Shiftdetailid == ShiftDetailId).FirstOrDefault();
+            if (shiftDetails != null)
+
+            {
+                shiftDetails.Isdeleted = new BitArray(new[] { true });
+                shiftDetails.Modifieddate = DateTime.Now;
+                shiftDetails.Modifiedby = aspNetUser.Id;
+                _db.Shiftdetails.Update(shiftDetails);
+            }
+             _db.SaveChanges();
+            return true;
+        }
+
+        //public SchedulingViewModel MdOnCall()
+        //{
+        //    List<Region> regions =  _db.Regions.ToList();
+
+        //    SchedulingViewModel model = new SchedulingViewModel()
+        //    {
+        //        regions = regions
+        //    };
+        //    return model;
+        //}
+
+        //public SchedulingViewModel MdOnCallData(int region)
+        //{
+        //    List<Physician> physicians = _db.Physicians.Include(a => a.Shifts).ThenInclude(x => x.Shiftdetails).ToList();
+
+        //    SchedulingViewModel model = new SchedulingViewModel();
+        //    if (physicians != null)
+        //    {
+        //        model.Physicians = physicians;
+        //    }
+
+        //    if (region != 0)
+        //    {
+        //        model.Physicians = model.Physicians!.Where(a => a.Regionid == region).ToList();
+        //    }
+        //    return model;
+        //}
+
+        public OnCallModal GetOnCallDetails(int regionId)
+        {
+            var currentTime = new TimeOnly(DateTime.Now.Hour, DateTime.Now.Minute);
+            BitArray deletedBit = new BitArray(new[] { false });
+
+            var onDutyQuery = _db.Shiftdetails
+                .Include(sd => sd.Shift.Physician)
+                .Where(sd => (regionId == 0 || sd.Shift.Physician.Physicianregions.Any(pr => pr.Regionid == regionId)) &&
+                             //sd.Shiftdate.Date == DateTime.Today &&
+                             currentTime >= sd.Starttime &&
+                             currentTime <= sd.Endtime &&
+                             sd.Isdeleted.Equals(deletedBit))
+                .Select(sd => sd.Shift.Physician)
+                .Distinct()
+                .ToList();
+
+
+            var offDutyQuery = _db.Physicians
+                .Include(p => p.Physicianregions)
+                .Where(p => (regionId == 0 || p.Physicianregions.Any(pr => pr.Regionid == regionId))
+                    && !_db.Shiftdetails.Any(sd =>
+                    sd.Shift.Physicianid == p.Physicianid &&
+                    //sd.Shiftdate.Date == DateTime.Today &&
+                    currentTime >= sd.Starttime &&
+                    currentTime <= sd.Endtime &&
+                    sd.Isdeleted.Equals(deletedBit)) && p.Isdeleted == null).ToList();
+            var onCallModal = new OnCallModal
+            {
+                OnCall = onDutyQuery,
+                OffDuty = offDutyQuery,
+                regions = GetRegion(),
+            };
+
+            return onCallModal;
+        }
+
+        public List<ShiftReview> GetShiftReview(int regionId, int callId)
+        {
+            BitArray deletedBit = new BitArray(new[] { false });
+
+            var shiftDetail = _db.Shiftdetails.Where(i => i.Isdeleted.Equals(deletedBit) && i.Status != 2);
+
+            DateTime currentDate = DateTime.Now;
+
+            if (regionId != 0)
+            {
+                shiftDetail = shiftDetail.Where(i => i.Regionid == regionId);
+            }
+
+            if (callId == 1)
+            {
+                shiftDetail = shiftDetail.Where(i => i.Shiftdate.Month == currentDate.Month);
+            }
+
+            var reviewList = shiftDetail.Select(x => new ShiftReview
+            {
+                shiftDetailId = x.Shiftdetailid,
+                PhysicianName = _db.Physicians.FirstOrDefault(y => y.Physicianid == _db.Shifts.FirstOrDefault(z => z.Shiftid == x.Shiftid).Physicianid).Firstname + ", " + _db.Physicians.FirstOrDefault(y => y.Physicianid == _db.Shifts.FirstOrDefault(z => z.Shiftid == x.Shiftid).Physicianid).Lastname,
+                ShiftDate = x.Shiftdate.ToString("MMM dd, yyyy"),
+                ShiftTime = x.Starttime.ToString("hh:mm tt") + " - " + x.Endtime.ToString("hh:mm tt"),
+                ShiftRegion = _db.Regions.FirstOrDefault(y => y.Regionid == x.Regionid).Name,
+            }).ToList();
+            return reviewList;
+        }
+        public void ApproveSelectedShift(int[] shiftDetailsId, int Aspid)
+        {
+            foreach (var shiftId in shiftDetailsId)
+            {
+                var shift = _db.Shiftdetails.FirstOrDefault(i => i.Shiftdetailid == shiftId);
+                shift.Status = 2;
+                shift.Modifieddate = DateTime.Now;
+                shift.Modifiedby = "Admin";
+            }
+            _db.SaveChanges();
+        }
+
+        public void DeleteShiftReview(int[] shiftDetailsId, int Aspid)
+        {
+            foreach (var shiftId in shiftDetailsId)
+            {
+                var shift = _db.Shiftdetails.FirstOrDefault(i => i.Shiftdetailid == shiftId);
+
+                shift.Isdeleted = new BitArray(1, true);
+                shift.Modifieddate = DateTime.Now;
+                shift.Modifiedby = "Admin";
+
+            }
+            _db.SaveChanges();
+        }
+
     }
 }

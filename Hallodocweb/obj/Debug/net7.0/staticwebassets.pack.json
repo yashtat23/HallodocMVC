@@ -357,6 +357,10 @@
       "PackagePath": "staticwebassets\\img\\light.png"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\img\\mcsk.png",
+      "PackagePath": "staticwebassets\\img\\mcsk.png"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\img\\transfer.svg",
       "PackagePath": "staticwebassets\\img\\transfer.svg"
     },

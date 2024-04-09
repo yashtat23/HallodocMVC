@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ocOMdIEVupZTPbvYxap4QdnJ7NkGGdVfvWwA+heLIng=",
+  "Hash": "a0xKVoRG0Kr4KU7u1RKUjS7e2RlHwv5FNLm0NTCUGGc=",
   "Source": "Hallodocweb",
   "BasePath": "_content/Hallodocweb",
   "Mode": "Default",
@@ -457,6 +457,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\light.png"
+    },
+    {
+      "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\img\\mcsk.png",
+      "SourceId": "Hallodocweb",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\",
+      "BasePath": "_content/Hallodocweb",
+      "RelativePath": "img/mcsk.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\mcsk.png"
     },
     {
       "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\img\\transfer.svg",
