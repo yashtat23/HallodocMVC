@@ -174,6 +174,8 @@ namespace BusinessLogic.Interfaces
         //SchedulingViewModel MdOnCallData(int region);
         OnCallModal GetOnCallDetails(int regionId);
         List<ShiftReview> GetShiftReview(int regionId, int callId);
-        void DeleteShiftReview(int[] shiftDetailsId, int Aspid);
+        bool DeleteShiftReview(int[] shiftDetailsId, string Aspid);
+        bool ApproveSelectedShift(int[] shiftDetailsId, string Aspid);
+        DashboardModel GetRequestByRegion(FilterModel filterModel);
     }
 }

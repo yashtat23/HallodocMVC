@@ -3,7 +3,7 @@
 }
 
 <link rel="stylesheet" href="~/css/dark-mode.css" />
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 <div class="d-flex justify-content-center align-items-center" style="margin-top:-20px">
 
     <div class="d-flex flex-column main justify-content-between">
@@ -15,7 +15,11 @@
                 </div>
 
                 <div>
-                    <img onclick="toggleDarkMode()" class="light" src="../img/dark.png" alt="" id="changeicon">
+                    <button type="button" class="btn shadow border-info ms-2"
+                            style="border-radius: 10px; border-color: aqua" id="colorButton">
+                        <i id="moon" class="bi bi-moon text-info fs-5"></i>
+                        <i id="sun" class="bi bi-sun text-info fs-5 d-none"></i>
+                    </button>
                 </div>
             </div>
 

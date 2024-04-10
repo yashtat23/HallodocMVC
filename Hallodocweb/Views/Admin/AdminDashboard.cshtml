@@ -24,9 +24,11 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
 
+
+
 <body>
     <!-- navbar -->
-    <nav class="bg-white navbr navbar navbar-expand w-100 ">
+    <nav class="navbar navbar-expand w-100 dark-mode1">
 
         <div class="container-fluid">
             <div class="d-flex align-items-center">
@@ -42,25 +44,30 @@
                 <ul class="navbar-nav ms-auto d-flex flex-nowrap align-items-center gap-2">
                     <div class="d-none d-sm-flex  justify-content-center align-items-center ">
                     <li class="nav-item">
-                        <span>Welcome</span>
+                        <span class="">Welcome</span>
                     </li>
                     <li class="nav-item p-2 fw-bolder">
                         <span class="d-flex gap-1">
-                            <span>Yash</span>
-                            <span>Variya</span>
+                            <span class="dark-mode1">Yash</span>
+                            <span class="dark-mode1">Variya</span>
                         </span>
                     </li>
             </div>
             <li class="nav-item">
                 <a asp-conroller="Admin" asp-action="Logout">
-                    <button id="logout" onclick="location.href='@Url.Action("AdminLogin", "Admin")'" class="px-2">
+                    <button onclick="location.href='@Url.Action("AdminLogin", "Admin")'" class="px-2 btn btn-outline-info mx-2 float-end">
                         <span class=" d-none d-md-block">Logout</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
                     </button>
+                   
                 </a>
 
             </li>
             <li class="nav-item">
-                <img onclick="toggleDarkMode()" class="light" src="~/img/dark.png" alt="">
+                <button type="button" class="btn shadow border-info ms-2"
+                        style="border-radius: 10px; border-color: aqua" id="colorButton">
+                    <i id="moon" class="bi bi-moon text-info fs-5"></i>
+                    <i id="sun" class="bi bi-sun text-info fs-5 d-none"></i>
+                </button>
             </li>
             </ul>
         </div>
@@ -70,13 +77,13 @@
         <!-- tabs -->
     </nav>
 
-    <hr class="m-0 hr_line d-none d-lg-block">
-    <nav class="navbr navbar navbar-expand-lg py-0 pt-2 bg-white" style="z-index: 10;">
+    <hr class="m-0 hr_line d-none d-lg-block dark-mode1">
+    <nav class="navbar-expand-lg py-0 pt-2 shadow dark-mode1" style="z-index: 10;">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class=" bg-white ps-5 nav nav-underline" id="myTab" role="tablist">
+                <ul class="ps-5 nav nav-underline" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                        <button class="nav-link active " id="home-tab" data-bs-toggle="tab"
                                 data-bs-target="#home-tab-pane" type="button" onclick="ShowAllRequests()" role="tab" aria-controls="home-tab-pane"
                                 aria-selected="true">
                             Dashboard
@@ -207,7 +214,7 @@
             </div>
         </div>
     </nav>
-
+    
 
     <!-- tab content -->
     <div class="tab-content" id="myTabContent">

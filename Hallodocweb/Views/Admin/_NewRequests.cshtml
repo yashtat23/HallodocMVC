@@ -8,22 +8,22 @@
             <span style="color: darkblue;">(New)</span>
         </span>
         <span class="d-flex gap-1 gap-md-2">
-            <button class="action-btn my-3 d-flex gap-2" onclick="SendLink()">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="SendLink()">
                 <i class="bi bi-send"></i> <span class="d-none d-md-block">
                     Send
                     Link
                 </span>
             </button>
-            <a class="action-btn my-3 d-flex gap-2" asp-controller="Admin" asp-action="CreateReq">
+            <a class="action-btn my-3 d-flex gap-2 dark-mode1" asp-controller="Admin" asp-action="CreateReq">
                 <i class="bi bi-journal-text"></i> <span class="d-none d-md-block">Create Requests</span>
             </a>
-            <button class="action-btn my-3 d-flex gap-2" id="exportbtn" onclick="ExpertSingleTab(1)">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1" id="exportbtn" onclick="ExpertSingleTab(1)">
                 <i class="bi bi-reply"></i> <span class="d-none d-md-block">Export</span>
             </button>
-            <button class="action-btn my-3 d-flex gap-2" onclick="ExportAll()">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="ExportAll()">
                 <i class="bi bi-reply-all"></i> <span class="d-none d-md-block">Export All</span>
             </button>
-            <button class="action-btn my-3 d-flex gap-2" onclick="RequestSupport()">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="RequestSupport()">
                 <i class="bi bi-person"></i> <span class="d-none d-md-block">
                     Request
                     Support
@@ -31,16 +31,16 @@
             </button>
         </span>
     </div>
-    <div class="row mt-3 bg-white">
+    <div class="row mt-3 dark-mode1">
         <div class="col-12 col-md-2 pt-2">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="my-search-input" placeholder="Search">
+                <input type="text" class="form-control" id="searchword" onkeypress="newReqSearch(event)" placeholder="Search">
                 <label for="floatingInput"><i class="bi bi-search"></i> Search</label>
             </div>
         </div>
         <div class="col-12 col-md-2 pt-2">
             <div class="form-floating">
-                <select class="form-select" id="newRegionFilter" aria-label="Floating label select example">
+                <select class="form-select" id="newRegionFilter" onchange="FilterData(1)" aria-label="Floating label select example">
                     <option disabled selected>Regions</option>
                     @foreach (var item in Model.regionList)
                     {
@@ -125,7 +125,7 @@
                             <div class="table_name_email d-flex justify-content-between">
 
                                 <div class="d-flex">
-
+                                   
                                     @item.firstName, @item.lastName
                                 </div>
                                 <div class="d-flex">
@@ -756,6 +756,36 @@ else
         });
     }
 
-    
+    function newReqSearch(event) {
+        var x = event.code;
+        if (x == "Enter") {
+            FilterData(1);
+        }
+
+    }
+    function FilterData(tabNo) {
+
+        var searchRegion = $('#newRegionFilter').val();
+        var searchword = $('#searchword').val();
+        let payload = {
+            regionId: searchRegion,
+            tabNo: tabNo,
+            searchWord: searchword,
+
+        }
+        $.ajax({
+            url: '/Admin/FilterRegion',
+            type: 'GET',
+            data: payload,
+            success: function (response) {
+                $("#tab1").html(response);
+
+                $('#newRegionFilter').val(searchRegion);
+                $('#searchword').val(searchword);
+
+
+            }
+        })
+    }
 
 </script>

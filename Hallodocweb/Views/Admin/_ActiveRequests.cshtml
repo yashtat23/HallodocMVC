@@ -2,29 +2,29 @@
 @using DataAccess.Enums;
 @model DashboardModel;
 
-<div class="container-fluid p-4 pb-0">
+<div class="container-fluid p-4 pb-0 ">
     <div class="d-flex justify-content-between">
         <span class="fw-bold">
             <span class="fs-4">Patients</span>
             <span style="color: darkblue;">(New)</span>
         </span>
         <span class="d-flex gap-1 gap-md-2">
-            <button class="action-btn my-3 d-flex gap-2" onclick="SendLinkActive()">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="SendLinkActive()">
                 <i class="bi bi-send"></i> <span class="d-none d-md-block">
                     Send
                     Link
                 </span>
             </button>
-            <a class="action-btn my-3 d-flex gap-2" asp-controller="Admin" asp-action="CreateReq">
+            <a class="action-btn my-3 d-flex gap-2 dark-mode1" asp-controller="Admin" asp-action="CreateReq">
                 <i class="bi bi-journal-text"></i> <span class="d-none d-md-block">Create Requests</span>
             </a>
-            <button class="action-btn my-3 d-flex gap-2" onclick="ExpertSingleTab(3)">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="ExpertSingleTab(3)">
                 <i class="bi bi-reply"></i> <span class="d-none d-md-block" id="actexportbtn">Export</span>
             </button>
-            <button class="action-btn my-3 d-flex gap-2">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1">
                 <i class="bi bi-reply-all"></i> <span class="d-none d-md-block" onclick="ExportAll()">Export All</span>
             </button>
-            <button class="action-btn my-3 d-flex gap-2">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1">
                 <i class="bi bi-person"></i> <span class="d-none d-md-block">
                     Request
                     DTY Support
@@ -32,7 +32,7 @@
             </button>
         </span>
     </div>
-    <div class="row mt-3 bg-white">
+    <div class="row mt-3 dark-mode1">
         <div class="col-12 col-md-2 pt-2">
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="my-search-input" placeholder="Search">

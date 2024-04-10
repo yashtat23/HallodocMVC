@@ -867,18 +867,19 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult AdminAccount(CreateAdminAccount model)
         {
-            var email = GetTokenEmail();
-            var isCreated = _adminService.CreateAdminAccount(model, email);
-            if (isCreated)
-            {
-                _notyf.Success("Account Created!!");
-                return RedirectToAction("AdminDashboard");
-            }
-            else
-            {
-                _notyf.Error("Somethng Went Wrong!!");
-                return PartialView("_createadminaccount");
-            }
+                var email = GetTokenEmail();
+                var isCreated = _adminService.CreateAdminAccount(model, email);
+                if (isCreated)
+                {
+                    _notyf.Success("Account Created!!");
+                    return RedirectToAction("AdminDashboard");
+                }
+                
+                else
+                {
+                    _notyf.Error("Somethng Went Wrong!!");
+                    return CreateAdminAccount();
+                }
         }
 
         public IActionResult CreateProviderAccount()
@@ -1057,16 +1058,16 @@ namespace Hallodocweb.Controllers
             if (PartialName == "_DayTable")
             {
                 var day = _adminService.GetDayTable(PartialName, date, regionid, status);
-            return PartialView("_DayTable", day);
+                return PartialView("_DayTable", day);
 
             }
 
-            else if(PartialName == "_WeekTable")
+            else if (PartialName == "_WeekTable")
             {
                 var week = _adminService.GetWeekTable(date, regionid, status);
                 return PartialView("_WeekTable", week);
             }
-            else if(PartialName == "_MonthTable")
+            else if (PartialName == "_MonthTable")
             {
                 var month = _adminService.GetMonthTable(date, regionid, status);
                 return PartialView("_MonthTable", month);
@@ -1081,17 +1082,16 @@ namespace Hallodocweb.Controllers
         //[HttpGet]
         //public IActionResult WeekTable(string date, int regionid, int status)
         //{
-            
+
         //}
-        
+
         [HttpPost]
         public async Task<IActionResult> AddShift(SchedulingViewModel model, List<int> repeatdays)
-         {
+        {
             var email = GetTokenEmail();
 
             //var email = User.FindFirstValue(ClaimTypes.Email);
             await _adminService.CreateShift(model, email, repeatdays);
-            TempData["Success"] = "Shift Created Successfully";
             return RedirectToAction("AdminDashboard");
         }
 
@@ -1134,23 +1134,23 @@ namespace Hallodocweb.Controllers
         public IActionResult ReturnShift(int ShiftDetailId)
         {
             var email = GetTokenEmail();
-            var data =  _adminService.ReturnShift(ShiftDetailId, email);
-            return Json(new {isReturned=data});
+            var data = _adminService.ReturnShift(ShiftDetailId, email);
+            return Json(new { isReturned = data });
         }
 
         public IActionResult DeleteShift(int ShiftDetailId)
         {
             var email = GetTokenEmail();
-            var data =  _adminService.DeleteShift(ShiftDetailId, email);
+            var data = _adminService.DeleteShift(ShiftDetailId, email);
             return Json(new { isDeleted = data });
         }
 
         public IActionResult EditViewShift(CreateNewShift model)
         {
             var email = GetTokenEmail();
-            bool isEditted =  _adminService.EditShift(model, email);
-            
-            return Json(new {isEditted});
+            bool isEditted = _adminService.EditShift(model, email);
+
+            return Json(new { isEditted });
         }
 
         //public IActionResult MdOnCall()
@@ -1184,22 +1184,27 @@ namespace Hallodocweb.Controllers
             return PartialView("_ShiftForReview", schedulingCm);
         }
 
-        //public IActionResult ApproveShift(int[] shiftDetailsId)
-        //{
-        //    var Aspid = HttpContext.Session.GetInt32("AspNetUserID");
+        public IActionResult ApproveShift(int[] shiftDetailsId)
+        {
+            var Aspid = GetLoginId();
+            bool isApproved = _adminService.ApproveSelectedShift(shiftDetailsId, Aspid);
 
-        //    _adminService.ApproveSelectedShift(shiftDetailsId, (int)Aspid);
+            return Json(new { isApproved });
+        }
 
-        //    return Ok();
-        //}
+        public IActionResult DeleteSelectedShift(int[] shiftDetailsId)
+        {
+            var Aspid = GetLoginId();
 
-        //public IActionResult DeleteSelectedShift(int[] shiftDetailsId)
-        //{
-        //    var Aspid = HttpContext.Session.GetInt32("AspNetUserID");
+            bool isDeleted = _adminService.DeleteShiftReview(shiftDetailsId, Aspid);
 
-        //    _adminService.DeleteShiftReview(shiftDetailsId, (int)Aspid);
+            return Json(new { isDeleted });
+        }
+        public IActionResult FilterRegion(FilterModel filterModel)
+        {
+            var list = _adminService.GetRequestByRegion(filterModel);
+            return PartialView("_NewRequest", list);
+        }
 
-        //    return Ok();
-        //}   
     }
 }

@@ -1867,8 +1867,6 @@ namespace BusinessLogic.Repository
                 aspnetuser.Phonenumber = obj.AdminPhone;
                 aspnetuser.Createddate = DateTime.Now;
 
-
-               
                 _db.Aspnetusers.Add(aspnetuser);
                 _db.SaveChanges();
 
@@ -2593,6 +2591,22 @@ namespace BusinessLogic.Repository
             return requestList;
         }
 
+        public DashboardModel GetRequestByRegion(FilterModel filterModel)
+        {
+            DashboardModel model = new DashboardModel();
+            model = GetRequestsByStatus(filterModel.tabNo, 1);
+            if (filterModel.regionId != 0)
+            {
+                model.adminDashboardList = model.adminDashboardList.Where(x => x.regionId == filterModel.regionId).ToList();
+            }
+            if (filterModel.searchWord != null)
+            {
+                model.adminDashboardList = model.adminDashboardList.Where(r => r.firstName.Trim().ToLower().Contains(filterModel.searchWord.Trim().ToLower())).ToList();
+            }
+
+            return model;
+        }
+
         //public void DeleteRecords(int reqId)
         //{
         //    var reqClient = _context.Requests.Where(r => r.Requestid == reqId).Select(r => r).First();
@@ -2726,7 +2740,7 @@ namespace BusinessLogic.Repository
                 physician = _db.Physicians.ToList();
             }
 
-
+            BitArray deletedBit = new BitArray(new[] { false });
             DayWiseScheduling day = new DayWiseScheduling
             {
                 date = currentDate,
@@ -2734,21 +2748,21 @@ namespace BusinessLogic.Repository
             };
             if (regionid != 0 && status != 0)
             {
-                day.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid && m.Status == status).ToList();
+                day.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid && (m.Status == status && m.Isdeleted.Equals(deletedBit))).ToList();
             }
             else if (regionid != 0)
             {
-                day.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid).ToList();
+                day.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid && m.Isdeleted.Equals(deletedBit)).ToList();
 
             }
             else if (status != 0)
             {
-                day.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Status == status).ToList();
+                day.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Status == status && m.Isdeleted.Equals(deletedBit)).ToList();
 
             }
             else
             {
-                day.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).ToList();
+                day.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(x => x.Isdeleted.Equals(deletedBit)).ToList();
             }
 
             return day;
@@ -2763,6 +2777,7 @@ namespace BusinessLogic.Repository
             {
                 physician = _db.Physicians.ToList();
             }
+            BitArray deletedBit = new BitArray(new[] { false });
             WeekWiseScheduling week = new WeekWiseScheduling
             {
                 date = currentDate,
@@ -2771,21 +2786,21 @@ namespace BusinessLogic.Repository
             };
             if (regionid != 0 && status != 0)
             {
-                week.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid && m.Status == status).ToList();
+                week.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid && (m.Status == status && m.Isdeleted.Equals(deletedBit))).ToList();
             }
             else if (regionid != 0)
             {
-                week.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid).ToList();
+                week.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid && m.Isdeleted.Equals(deletedBit)).ToList();
 
             }
             else if (status != 0)
             {
-                week.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Status == status).ToList();
+                week.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Status == status && m.Isdeleted.Equals(deletedBit)).ToList();
 
             }
             else
             {
-                week.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).ToList();
+                week.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(x => x.Isdeleted.Equals(deletedBit)).ToList();
             }
 
             return week;
@@ -2799,6 +2814,7 @@ namespace BusinessLogic.Repository
             {
                 physician = _db.Physicians.ToList();
             }
+            BitArray deletedBit = new BitArray(new[] { false });
             MonthWiseScheduling month = new MonthWiseScheduling
             {
                 date = currentDate,
@@ -2806,21 +2822,21 @@ namespace BusinessLogic.Repository
             };
             if (regionid != 0 && status != 0)
             {
-                month.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid && m.Status == status).ToList();
+                month.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid && (m.Status == status && m.Isdeleted.Equals(deletedBit))).ToList();
             }
             else if (regionid != 0)
             {
-                month.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid).ToList();
+                month.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Regionid == regionid && m.Isdeleted.Equals(deletedBit)).ToList();
 
             }
             else if (status != 0)
             {
-                month.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Status == status).ToList();
+                month.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(m => m.Status == status && m.Isdeleted.Equals(deletedBit)).ToList();
 
             }
             else
             {
-                month.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).ToList();
+                month.shiftdetails = _db.Shiftdetails.Include(u => u.Shift).Where(x => x.Isdeleted.Equals(deletedBit)).ToList();
             }
             return month;
         }
@@ -3235,7 +3251,7 @@ namespace BusinessLogic.Repository
             if (shiftDetails != null)
 
             {
-                shiftDetails.Isdeleted = new BitArray(new[] { true });
+                shiftDetails.Isdeleted[0] = true;
                 shiftDetails.Modifieddate = DateTime.Now;
                 shiftDetails.Modifiedby = aspNetUser.Id;
                 _db.Shiftdetails.Update(shiftDetails);
@@ -3336,30 +3352,32 @@ namespace BusinessLogic.Repository
             }).ToList();
             return reviewList;
         }
-        public void ApproveSelectedShift(int[] shiftDetailsId, int Aspid)
+        public bool ApproveSelectedShift(int[] shiftDetailsId, string Aspid)
         {
             foreach (var shiftId in shiftDetailsId)
             {
                 var shift = _db.Shiftdetails.FirstOrDefault(i => i.Shiftdetailid == shiftId);
                 shift.Status = 2;
                 shift.Modifieddate = DateTime.Now;
-                shift.Modifiedby = "Admin";
+                shift.Modifiedby = Aspid;
             }
             _db.SaveChanges();
+            return true;
         }
 
-        public void DeleteShiftReview(int[] shiftDetailsId, int Aspid)
+        public bool DeleteShiftReview(int[] shiftDetailsId, string Aspid)
         {
             foreach (var shiftId in shiftDetailsId)
             {
                 var shift = _db.Shiftdetails.FirstOrDefault(i => i.Shiftdetailid == shiftId);
 
-                shift.Isdeleted = new BitArray(1, true);
+                shift.Isdeleted[0] = true;
                 shift.Modifieddate = DateTime.Now;
-                shift.Modifiedby = "Admin";
+                shift.Modifiedby = Aspid;
 
             }
             _db.SaveChanges();
+            return true;
         }
 
     }
