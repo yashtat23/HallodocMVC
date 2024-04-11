@@ -15,7 +15,7 @@
 
 <div class="container">
     <div class="navbar navbar-light justify-content-between">
-        <h3>Submit Information</h3>
+        <h3 class="dark-mode1">Submit Information</h3>
         <a asp-controller="patient" asp-action="patientdashboard">
             <button class="back btn btn-outline-info m-2" onclick="location.href='@Url.Action("patientsubreq", "Patient")'">
                 <span class="h6 p-0 m-0 text-center" style="color: #10bce9;">&#60; Back</span>
@@ -24,9 +24,9 @@
     </div>
 </div>
 
-<div class="container bg-light">
+<div class="container dark-mode1 bg-white">
     <form method="post">
-        <h3>Patient Information</h3>
+        <h3 class="dark-mode1">Patient Information</h3>
         <div class="form-floating col-12 ">
             <textarea asp-for="symptoms" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
                       style="height: 100px"></textarea>
@@ -83,7 +83,7 @@
                 <label for="floatingInput" class="email">Room # / Suite (optional)</label>
             </div>
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12 mt-2">
-                <button type="button" class="btn btn-outline-primary" style="height:3.3rem ; width:6rem"> <i class="bi bi-geo-alt"></i> Map</button>
+                <button type="button" class="btn btn-outline-primary dark-mode1" style="height:3.3rem ; width:6rem"> <i class="bi bi-geo-alt"></i> Map</button>
             </div>
         </div>
 
@@ -99,7 +99,7 @@
 
         <div class="d-flex justify-content-end gap-2  mb-3">
             <button type="submit" class="btn btn-primary">submit</button>
-            <button type="reset" class="btn btn-outline-primary">cancel</button>
+            <button type="reset" class="btn btn-outline-primary dark-mode1">cancel</button>
         </div>
     </form>
 </div>

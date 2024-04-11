@@ -148,11 +148,12 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
-        public IActionResult FilterRegion(int regionId, int tabNo)
-        {
-            var list = _adminService.GetRequestByRegion(regionId, tabNo);
-            return PartialView("_NewRequest", list);
-        }
+        //public IActionResult FilterRegion(FilterModel filterModel)
+        //{
+        //    var list = _adminService.GetRequestByRegion(filterModel);
+        //    return PartialView("_NewRequest", list);
+        //}
+
 
         [CustomAuthorize("Admin")]
         public IActionResult AdminDashboard()
@@ -166,9 +167,9 @@ namespace Hallodocweb.Controllers
             return RedirectToAction("AdminLogin");
         }
 
-        public IActionResult ViewCase(int Requestclientid, int RequestTypeId)
+        public IActionResult ViewCase(int Requestclientid, int RequestTypeId,int ReqId)
         {
-            var obj = _adminService.ViewCaseViewModel(Requestclientid, RequestTypeId);
+            var obj = _adminService.ViewCase(Requestclientid, RequestTypeId,ReqId);
 
             return View(obj);
 
@@ -882,36 +883,53 @@ namespace Hallodocweb.Controllers
                 }
         }
 
+        //public IActionResult CreateProviderAccount()
+        //{
+        //    var obj = _adminService.GetProviderList();
+        //    return PartialView("_CreateProviderAccount", obj);
+        //}
+
         public IActionResult CreateProviderAccount()
         {
-            var obj = _adminService.GetProviderList();
-            return PartialView("_CreateProviderAccount", obj);
+            AdminEditPhysicianProfile data = new AdminEditPhysicianProfile();
+            data.regions = _adminService.RegionTable();
+            data.roles = _adminService.physicainRole();
+            return PartialView("_CreateProviderAccount",data);
         }
+
+        [HttpPost]
+        public IActionResult createprovideraccount(AdminEditPhysicianProfile obj, List<int> physicianregions)
+        {
+            AdminEditPhysicianProfile data = new AdminEditPhysicianProfile();
+            var createprovideraccount = _adminService.createProviderAccount(obj, physicianregions);
+            return Json(new { indicate = createprovideraccount.indicate });
+        }
+
 
         //public IActionResult CreateProviderAccount()
         //{
         //    return View("ProviderMenu/CreateProviderAccount", obj);
         //}
 
-        [HttpPost]
-        public IActionResult CreateProviderAccount(CreateProviderAccount model)
-        {
-            if (ModelState.IsValid)
-            {
-                var loginId = GetLoginId();
-                if (loginId == "")
-                {
-                    return RedirectToAction("AdminLogin");
-                }
-                _adminService.CreateProviderAccount(model, loginId);
-                return RedirectToAction("AdminDashboard");
+        //[HttpPost]
+        //public IActionResult CreateProviderAccount(CreateProviderAccount model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var loginId = GetLoginId();
+        //        if (loginId == "")
+        //        {
+        //            return RedirectToAction("AdminLogin");
+        //        }
+        //        _adminService.CreateProviderAccount(model, loginId);
+        //        return RedirectToAction("AdminDashboard");
 
-            }
-            else
-            {
-                return PartialView("_CreateProviderAccount");
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        return PartialView("_CreateProviderAccount");
+        //    }
+        //}
 
         public IActionResult CreateShift()
         {
@@ -1203,7 +1221,15 @@ namespace Hallodocweb.Controllers
         public IActionResult FilterRegion(FilterModel filterModel)
         {
             var list = _adminService.GetRequestByRegion(filterModel);
-            return PartialView("_NewRequest", list);
+            return PartialView("_NewRequests", list);
+        }
+
+        public IActionResult GetPatientRecordExplore(int userId)
+        {
+
+            var _data = _adminService.GetPatientRecordExplore(userId);
+
+            return PartialView("_PatientRecordExplore", _data);
         }
 
     }

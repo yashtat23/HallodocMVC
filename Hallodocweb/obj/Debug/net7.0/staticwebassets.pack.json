@@ -41,6 +41,30 @@
       "PackagePath": "staticwebassets\\PhysicianImages\\16\\ProfilePhoto.jpg"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\24\\Independent_Contractor.pdf",
+      "PackagePath": "staticwebassets\\PhysicianImages\\24\\Independent_Contractor.pdf"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\24\\ProfilePhoto.png",
+      "PackagePath": "staticwebassets\\PhysicianImages\\24\\ProfilePhoto.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\25\\Independent_Contractor.pdf",
+      "PackagePath": "staticwebassets\\PhysicianImages\\25\\Independent_Contractor.pdf"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\25\\ProfilePhoto.jfif",
+      "PackagePath": "staticwebassets\\PhysicianImages\\25\\ProfilePhoto.jfif"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\26\\Independent_Contractor.pdf",
+      "PackagePath": "staticwebassets\\PhysicianImages\\26\\Independent_Contractor.pdf"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\26\\ProfilePhoto.jfif",
+      "PackagePath": "staticwebassets\\PhysicianImages\\26\\ProfilePhoto.jfif"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg",
       "PackagePath": "staticwebassets\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg"
     },

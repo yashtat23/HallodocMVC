@@ -92,18 +92,21 @@ namespace DataAccess.CustomModel
 
     public class ViewCaseViewModel
     {
+        public int RequestId { get; set; }
         public int Requestclientid { get; set; }
-        public int? RequestTypeId { get; set; }
-        public int? Requestid { get; set; }
+        public int RequestTypeId { get; set; }
+        public string? Requesttype { get; set; }
         public string Firstname { get; set; } = null!;
         public string? Lastname { get; set; }
-        public DateTime? DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string? Phonenumber { get; set; }
         public string? Address { get; set; }
-        public int? Regionid { get; set; }
+        public string? RegionName { get; set; }
         public string? Notes { get; set; }
         public string? Email { get; set; }
-        public string? Strmonth { get; set; }
+        public string? StrMonth { get; set; }
+        public int? IntYear { get; set; }
+        public int? IntDate { get; set; }
         public string? Street { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
@@ -485,42 +488,147 @@ namespace DataAccess.CustomModel
         public int[] RegionArray { get; set; }
     }
 
-    public class CreateProviderAccount
+    //public class CreateProviderAccount
+    //{
+    //    [Required(ErrorMessage = "User Name is required")]
+    //    public string UserName { get; set; }
+    //    [Required(ErrorMessage = "Password is required")]
+    //    public string Password { get; set; }
+    //    [Required(ErrorMessage = "Role is required")]
+    //    public List<Role> RolesList { get; set; }
+    //    public int Role { get; set; }
+    //    [Required(ErrorMessage = "First Name is required")]
+    //    public string FirstName { get; set; }
+    //    [Required(ErrorMessage = "Last Name is required")]
+    //    public string LastName { get; set; }
+    //    [Required(ErrorMessage = "Email Name is required")]
+    //    public string Email { get; set; }
+    //    public string PhoneNumber { get; set; }
+    //    public string MedicalLicenseNumber { get; set; }
+    //    public string NPINumber { get; set; }
+    //    [Required(ErrorMessage = "Region is required")]
+    //    public List<Region> RegionList { get; set; }
+    //    public List<int> ProviderRegion { get; set; }
+    //    public string Address1 { get; set; }
+    //    public string Address2 { get; set; }
+    //    public string City { get; set; }
+    //    public string State { get; set; }
+    //    public string Zip { get; set; }
+    //    public string Phone { get; set; }
+    //    public string BusinessName { get; set; }
+    //    public string BusinessWebsite { get; set; }
+    //    public string AdminNote { get; set; }
+    //    public IFormFile Photo { get; set; }
+    //    public IFormFile ICA { get; set; }
+    //    public IFormFile BGCheck { get; set; }
+    //    public IFormFile HIPAACompliance { get; set; }
+    //    public IFormFile NDA { get; set; }
+    //}
+
+    public class AdminEditPhysicianProfile
     {
-        [Required(ErrorMessage = "User Name is required")]
-        public string UserName { get; set; }
-        [Required(ErrorMessage = "Password is required")]
-        public string Password { get; set; }
-        [Required(ErrorMessage = "Role is required")]
-        public List<Role> RolesList { get; set; }
-        public int Role { get; set; }
-        [Required(ErrorMessage = "First Name is required")]
-        public string FirstName { get; set; }
-        [Required(ErrorMessage = "Last Name is required")]
-        public string LastName { get; set; }
-        [Required(ErrorMessage = "Email Name is required")]
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string MedicalLicenseNumber { get; set; }
-        public string NPINumber { get; set; }
-        [Required(ErrorMessage = "Region is required")]
-        public List<Region> RegionList { get; set; }
-        public List<int> ProviderRegion { get; set; }
-        public string Address1 { get; set; }
-        public string Address2 { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string Zip { get; set; }
-        public string Phone { get; set; }
-        public string BusinessName { get; set; }
-        public string BusinessWebsite { get; set; }
-        public string AdminNote { get; set; }
-        public IFormFile Photo { get; set; }
-        public IFormFile ICA { get; set; }
-        public IFormFile BGCheck { get; set; }
-        public IFormFile HIPAACompliance { get; set; }
-        public IFormFile NDA { get; set; }
+
+        public string? username { get; set; }
+
+        public string? password { get; set; }
+
+        public string? Email { get; set; }
+        public string? Con_Email { get; set; }
+
+        public string? PhoneNumber { get; set; }
+
+        public string? Status { get; set; }
+
+
+        public string? city { get; set; }
+
+        public string? country { get; set; }
+
+        public string? zipcode { get; set; }
+
+        public string? Firstname { get; set; }
+
+        public string? Lastname { get; set; }
+
+        public int? Regionid { get; set; }
+
+        public int? Roleid { get; set; }
+
+        public string? MedicalLicesnse { get; set; }
+
+        public string? NPInumber { get; set; }
+
+        public string? SycnEmail { get; set; }
+
+        public string? Businessname { get; set; }
+
+        public string? BusinessWebsite { get; set; }
+
+        public string? Adminnotes { get; set; }
+
+        public string? Address1 { get; set; }
+        public string? Address2 { get; set; }
+
+        public int PhyID { get; set; }
+        public int statusId { get; set; }
+        public int adminId { get; set; }
+        public int aspnetUserId { get; set; }
+
+        public List<Region> regions { get; set; }
+
+        //public List<Physicianregion> physicianregions { get; set; }
+
+        public string? altPhone { get; set; }
+        public string? State { get; set; }
+        public int? StateId { get; set; }
+        public string? flag { get; set; }
+
+        public IFormFile? Photo { get; set; }
+
+        public string? PhotoValue { get; set; }
+
+        public IFormFile? Signature { get; set; }
+
+        public string? SignatureValue { get; set; }
+
+        public IFormFile? ContractorAgreement { get; set; }
+
+        public bool IsContractorAgreement { get; set; }
+
+        public IFormFile? BackgroundCheck { get; set; }
+
+        public bool IsBackgroundCheck { get; set; }
+
+        public IFormFile? HIPAA { get; set; }
+
+        public bool IsHIPAA { get; set; }
+
+        public IFormFile? NonDisclosure { get; set; }
+
+        public bool IsNonDisclosure { get; set; }
+
+        public IFormFile? LicenseDocument { get; set; }
+
+        public bool IsLicenseDocument { get; set; }
+
+        public List<Role> roles { get; set; }
+
+        public bool? indicate { get; set; }
+        public string? indicateTwo { get; set; }
+
+        public decimal? longitude { get; set; }
+
+        public decimal? latitude { get; set; }
+
+        public DateTime? created_date { get; set; }
+
+        public int? createdBy { get; set; }
+
+        public DateTime? modified_date { get; set; }
+
+        public int? modifiedBy { get; set; }
     }
+
 
     public class CreateShift
     {
@@ -949,12 +1057,28 @@ namespace DataAccess.CustomModel
     public class FilterModel
     {
         public string? searchWord { get; set; }
-        public int? requestType { get; set; }
+        public int? requestTypeId { get; set; }
         public int? regionId { get; set; }
         public int tabNo { get; set; }
         public int? TotalPage { get; set; }
 
         public int CurrentPage { get; set; }
+
+    }
+
+    public class GetRecordExplore
+    {
+        public string? fullname { get; set; }
+        public string? confirmationnumber { get; set; }
+        public string? providername { get; set; }
+        public string? createddate { get; set; }
+        public string? concludedate { get; set; }
+        public int? status { get; set; }
+        public int? requestid { get; set; }
+        public int? requestclientid { get; set; }
+        public int? requesttypeid { get; set; }
+
+
 
     }
 

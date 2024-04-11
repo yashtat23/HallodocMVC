@@ -27,7 +27,7 @@
 <link rel="stylesheet" href="~/css/patientdashboard.css">
 <br />
 
-<nav class="navbr navbar navbar-expand w-100 shadow">
+<nav class="navbr navbar navbar-expand w-100 shadow dark-mode1">
 
     <div class="container-fluid">
         <div class="d-flex align-items-center">
@@ -54,13 +54,17 @@
         </div>
         <li class="nav-item">
             <a asp-controller="patient" asp-action="patientreg">
-                <button id="logout" class="px-3">
-                    <span class=" d-none d-md-block">Logout</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
+                <button id="logout" class="px-3 btn btn-outline-info mx-2 float-end dark-mode1">
+                    <span class="d-none d-md-block">Logout</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
                 </button>
             </a>
         </li>
         <li class="nav-item">
-            <img onclick="toggleDarkMode()" class="light" src="~/img/dark.png" alt="">
+            <button type="button" class="btn shadow border-info ms-2"
+                    style="border-radius: 10px; border-color: aqua" id="colorButton">
+                <i id="moon" class="bi bi-moon text-info fs-5"></i>
+                <i id="sun" class="bi bi-sun text-info fs-5 d-none"></i>
+            </button>
         </li>
         </ul>
     </div>
@@ -68,10 +72,10 @@
 </nav>
 
 <hr class="m-0 hr_line d-none d-lg-block">
-<nav class="navbr navbar navbar-expand-lg py-0 pt-2 bg-body" style="z-index: 10;">
+<nav class="navbr navbar navbar-expand-lg py-0 pt-2 bg-body dark-mode1" style="z-index: 10;">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class=" bg-white ps-5 nav nav-underline" id="myTab" role="tablist">
+            <ul class=" bg-white ps-5 nav nav-underline dark-mode1" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
                             type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
@@ -91,14 +95,14 @@
     </div>
 </nav>
 
-<div class="container my-5 bg-light">
+<div class="container my-5 bg-light dark-mode1">
 
-    <div class="container bg-white p-4 ">
+    <div class="container bg-white p-4 dark-mode1">
         <div class="d-flex justify-content-between mb-4">
             <h2>Documents</h2>
             <a asp-controller="patient" asp-action="patientdashboard">
-                <button id="logout" class="px-3" onclick="swapDivs()" id="backview">
-                    <span class=" d-none d-md-block">&lt; Back</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
+                <button id="logout" class="px-3 dark-mode1" onclick="swapDivs()" id="backview">
+                    <span class="d-none d-md-block">&lt; Back</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
                 </button>
             </a>
         </div>
@@ -128,7 +132,7 @@
     <div class="col-12 d-flex justify-content-between">
 
         <h3>Documents</h3>
-        <button class="px-3" id="downloadSelected" onclick="downloadSelectedFiles()">Download All</button>
+        <button class="px-3 dark-mode1" id="downloadSelected" onclick="downloadSelectedFiles()">Download All</button>
     </div>
 </div>
 <div class="table-responsive">

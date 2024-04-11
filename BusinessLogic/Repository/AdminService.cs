@@ -220,12 +220,91 @@ namespace BusinessLogic.Repository
             //return dashboard;
         }
 
-        public DashboardModel GetRequestByRegion(int regionId, int tabNo)
+        public DashboardModel GetRequestByRegion(FilterModel filterModel)
         {
-            DashboardModel model = new DashboardModel();
-            model = GetRequestsByStatus(tabNo, 1);
-            model.adminDashboardList = model.adminDashboardList.Where(x => x.regionId == regionId).ToList();
-            return model;
+
+            var query = from r in _db.Requests
+                        join rc in _db.Requestclients on r.Requestid equals rc.Requestid
+                        //where r.Status == status
+                        select new AdminDashTableModel
+                        {
+                            firstName = rc.Firstname,
+                            lastName = rc.Lastname,
+                            intDate = rc.Intdate,
+                            intYear = rc.Intyear,
+                            strMonth = rc.Strmonth,
+                            requestorFname = r.Firstname,
+                            requestorLname = r.Lastname,
+                            createdDate = r.Createddate,
+                            mobileNo = rc.Phonenumber,
+                            city = rc.City,
+                            state = rc.State,
+                            street = rc.Street,
+                            zipCode = rc.Zipcode,
+                            requestTypeId = r.Requesttypeid,
+                            status = r.Status,
+                            Requestclientid = rc.Requestclientid,
+                            reqId = r.Requestid,
+                            regionId = rc.Regionid
+                        };
+
+
+            if (filterModel.tabNo == 1)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.Unassigned);
+            }
+
+            else if (filterModel.tabNo == 2)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.Accepted);
+            }
+            else if (filterModel.tabNo == 3)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.MDEnRoute || x.status == (int)StatusEnum.MDOnSite);
+            }
+            else if (filterModel.tabNo == 4)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.Conclude);
+            }
+            else if (filterModel.tabNo == 5)
+            {
+
+                query = query.Where(x => (x.status == (int)StatusEnum.Cancelled || x.status == (int)StatusEnum.CancelledByPatient) || x.status == (int)StatusEnum.Closed);
+            }
+            else if (filterModel.tabNo == 6)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.Unpaid);
+            }
+
+            if (filterModel.regionId != null)
+            {
+                query = query.Where(x => x.regionId == filterModel.regionId);
+            }
+            if (filterModel.searchWord != null)
+            {
+                query = query.Where(x => x.firstName.Trim().ToLower().Contains(filterModel.searchWord.Trim().ToLower()));
+            }
+            if (filterModel.requestTypeId != null)
+            {
+                query = query.Where(x => x.requestTypeId == filterModel.requestTypeId);
+            }
+
+            var result = query.ToList();
+            int count = result.Count();
+            int TotalPage = (int)Math.Ceiling(count / (double)5);
+            result = result.Skip((filterModel.CurrentPage - 1) * 5).Take(5).ToList();
+
+            DashboardModel dashboardModel = new DashboardModel();
+            dashboardModel.adminDashboardList = result;
+            dashboardModel.regionList = _db.Regions.ToList();
+            dashboardModel.TotalPage = TotalPage;
+            dashboardModel.CurrentPage = filterModel.CurrentPage;
+            return dashboardModel;
         }
 
         public bool UpdateAdminNotes(string additionalNotes, int reqId)
@@ -284,27 +363,35 @@ namespace BusinessLogic.Repository
             return statusCount;
         }
 
-        public ViewCaseViewModel ViewCaseViewModel(int Requestclientid, int RequestTypeId)
+        public ViewCaseViewModel ViewCase(int reqClientId, int RequestTypeId, int ReqId)
         {
-            Requestclient obj = _db.Requestclients.FirstOrDefault(x => x.Requestclientid == Requestclientid);
-            Request req = _db.Requests.FirstOrDefault(x => x.Requestid == obj.Requestid);
-            ViewCaseViewModel viewCaseViewModel = new()
+            var data = _db.Requestclients.FirstOrDefault(x => x.Requestclientid == reqClientId);
+            var requestData = _db.Requests.FirstOrDefault(x => x.Requestid == data.Requestid);
+            var userData = _db.Users.FirstOrDefault(x => x.Userid == requestData.Userid);
+            var regionData = _db.Regions.FirstOrDefault(x => x.Regionid == data.Regionid);
+            var reqtypeData = _db.Requesttypes.FirstOrDefault(x => x.Requesttypeid == requestData.Requesttypeid);
+
+            var viewdata = new ViewCaseViewModel
             {
-                Requestclientid = obj.Requestclientid,
-                Firstname = obj.Firstname,
-                Lastname = obj.Lastname,
-                Email = obj.Email,
-                Phonenumber = obj.Phonenumber,
-                City = obj.City,
-                Street = obj.Street,
-                State = obj.State,
-                Zipcode = obj.Zipcode,
-                Room = obj.Address,
-                Notes = obj.Notes,
+                RequestId = ReqId,
+                Requestclientid = reqClientId,
+                Firstname = data.Firstname,
+                Lastname = data.Lastname,
+                ConfirmationNumber = requestData.Confirmationnumber,
+                Notes = data.Notes,
+                Address = data.Street + data.City + data.State + data.Zipcode,
+                Email = data.Email,
+                Phonenumber = data.Phonenumber,
+                City = data.City,
+                State = data.State,
                 RequestTypeId = RequestTypeId,
-                ConfirmationNumber = req.Confirmationnumber,
+                Street = data.Street,
+                Zipcode = data.Zipcode,
+                RegionName = regionData.Name,
+                Requesttype = reqtypeData.Name,
+
             };
-            return viewCaseViewModel;
+            return viewdata;
         }
 
         public ViewNotesViewModel ViewNotes(int ReqId)
@@ -412,7 +499,7 @@ namespace BusinessLogic.Repository
                 Status = 2
 
             };
-            reqData.Status = 2;
+                reqData.Status = 2;
             reqData.Physicianid = assignCaseModel.physicanNo;
 
             _db.Add(reqstatusData);
@@ -1938,131 +2025,325 @@ namespace BusinessLogic.Repository
             using FileStream stream = new(fullPath, FileMode.Create);
             file.CopyTo(stream);
         }
-        public CreateProviderAccount GetProviderList()
+
+        //public CreateProviderAccount GetProviderList()
+        //{
+        //    CreateProviderAccount obj = new()
+        //    {
+        //        RolesList = _db.Roles.ToList(),
+        //        RegionList = _db.Regions.ToList(),
+        //    };
+        //    return obj;
+        //}
+
+        //public void CreateProviderAccount(CreateProviderAccount model, string loginId)
+        //{
+        //    List<string> validProfileExtensions = new() { ".jpeg", ".png", ".jpg" };
+        //    List<string> validDocumentExtensions = new() { ".pdf" };
+
+        //    try
+        //    {
+        //        Guid generatedId = Guid.NewGuid();
+
+        //        Aspnetuser aspUser = new()
+        //        {
+        //            Id = generatedId.ToString(),
+        //            Username = model.UserName,
+        //            Passwordhash = GenerateSHA256(model.Password),
+        //            Email = model.Email,
+        //            Phonenumber = model.Phone,
+        //            Createddate = DateTime.Now,
+        //        };
+        //        _db.Aspnetusers.Add(aspUser);
+        //        _db.SaveChanges();
+
+
+        //        Physician phy = new()
+        //        {
+        //            Aspnetuserid = generatedId.ToString(),
+        //            Firstname = model.FirstName,
+        //            Lastname = model.LastName,
+        //            Email = model.Email,
+        //            Mobile = model.Phone,
+        //            Medicallicense = model.MedicalLicenseNumber,
+        //            Adminnotes = model.AdminNote,
+        //            Address1 = model.Address1,
+        //            Address2 = model.Address2,
+        //            City = model.City,
+        //            //Regionid = model.RegionId,
+        //            Zip = model.Zip,
+        //            Altphone = model.PhoneNumber,
+        //            Createdby = loginId,
+        //            Createddate = DateTime.Now,
+        //            Roleid = model.Role,
+        //            Npinumber = model.NPINumber,
+        //            Businessname = model.BusinessName,
+        //            Businesswebsite = model.BusinessWebsite,
+        //        };
+
+        //        _db.Physicians.Add(phy);
+        //        _db.SaveChanges();
+
+
+        //        Physiciannotification physiciannotification = new()
+        //        {
+        //            Pysicianid = phy.Physicianid,
+        //            Isnotificationstopped = new BitArray(1, false),
+        //        };
+        //        _db.Physiciannotifications.Add(physiciannotification);
+        //        _db.SaveChanges();
+
+
+        //        string path = Path.Combine(_environment.WebRootPath, "PhysicianImages", phy.Physicianid.ToString());
+
+        //        if (model.Photo != null)
+        //        {
+        //            string fileExtension = Path.GetExtension(model.Photo.FileName);
+        //            if (validProfileExtensions.Contains(fileExtension))
+        //            {
+        //                InsertFileAfterRename(model.Photo, path, "ProfilePhoto");
+        //                phy.Photo = Path.GetFileName(model.Photo.FileName);
+
+        //            }
+        //        }
+        //        if (model.ICA != null)
+        //        {
+        //            string fileExtension = Path.GetExtension(model.ICA.FileName);
+        //            if (validDocumentExtensions.Contains(fileExtension))
+        //            {
+        //                phy.Isagreementdoc = new BitArray(1, true);
+        //                InsertFileAfterRename(model.ICA, path, "ICA");
+        //            }
+        //        }
+        //        if (model.BGCheck != null)
+        //        {
+        //            string fileExtension = Path.GetExtension(model.BGCheck.FileName);
+        //            if (validDocumentExtensions.Contains(fileExtension))
+        //            {
+        //                phy.Isbackgrounddoc = new BitArray(1, true);
+        //                InsertFileAfterRename(model.BGCheck, path, "BackgroundCheck");
+        //            }
+        //        }
+        //        if (model.HIPAACompliance != null)
+        //        {
+        //            string fileExtension = Path.GetExtension(model.HIPAACompliance.FileName);
+        //            if (validDocumentExtensions.Contains(fileExtension))
+        //            {
+        //                phy.Isnondisclosuredoc = new BitArray(1, true);
+        //                InsertFileAfterRename(model.HIPAACompliance, path, "HipaaCompliance");
+        //            }
+        //        }
+        //        if (model.NDA != null)
+        //        {
+        //            string fileExtension = Path.GetExtension(model.NDA.FileName);
+        //            if (validDocumentExtensions.Contains(fileExtension))
+        //            {
+        //                phy.Isnondisclosuredoc = new BitArray(1, true);
+        //                InsertFileAfterRename(model.NDA, path, "NDA");
+        //            }
+        //        }
+        //        _db.Physicians.Update(phy);
+        //        _db.SaveChanges();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //    };
+
+        //}
+
+        public List<Role> physicainRole()
         {
-            CreateProviderAccount obj = new()
-            {
-                RolesList = _db.Roles.ToList(),
-                RegionList = _db.Regions.ToList(),
-            };
-            return obj;
+            BitArray deletedBit = new BitArray(new[] { false });
+
+            var role = _db.Roles.Where(i => i.Isdeleted.Equals(deletedBit)).ToList();
+
+            return role;
         }
 
-        public void CreateProviderAccount(CreateProviderAccount model, string loginId)
+        public AdminEditPhysicianProfile createProviderAccount(AdminEditPhysicianProfile obj, List<int> physicianRegions)
         {
-            List<string> validProfileExtensions = new() { ".jpeg", ".png", ".jpg" };
-            List<string> validDocumentExtensions = new() { ".pdf" };
+            AdminEditPhysicianProfile flag = new AdminEditPhysicianProfile();
 
-            try
+            var aspUser = _db.Aspnetusers.FirstOrDefault(r => r.Email == obj.Email);
+
+
+            if (aspUser == null && obj.latitude != null)
             {
-                Guid generatedId = Guid.NewGuid();
 
-                Aspnetuser aspUser = new()
-                {
-                    Id = generatedId.ToString(),
-                    Username = model.UserName,
-                    Passwordhash = GenerateSHA256(model.Password),
-                    Email = model.Email,
-                    Phonenumber = model.Phone,
-                    Createddate = DateTime.Now,
-                };
-                _db.Aspnetusers.Add(aspUser);
+                
+                Aspnetuser _user = new Aspnetuser();
+                Physician phy = new Physician();
+                Guid id = Guid.NewGuid();
+                _user.Id = id.ToString();
+                _user.Username = obj.username;
+                _user.Passwordhash = obj.password;
+                _user.Email = obj.Email;
+                _user.Phonenumber = obj.PhoneNumber;
+                _user.Createddate = DateTime.Now;
+                
+                _db.Aspnetusers.Add(_user);
                 _db.SaveChanges();
 
 
-                Physician phy = new()
-                {
-                    Aspnetuserid = generatedId.ToString(),
-                    Firstname = model.FirstName,
-                    Lastname = model.LastName,
-                    Email = model.Email,
-                    Mobile = model.Phone,
-                    Medicallicense = model.MedicalLicenseNumber,
-                    Adminnotes = model.AdminNote,
-                    Address1 = model.Address1,
-                    Address2 = model.Address2,
-                    City = model.City,
-                    //Regionid = model.RegionId,
-                    Zip = model.Zip,
-                    Altphone = model.PhoneNumber,
-                    Createdby = loginId,
-                    Createddate = DateTime.Now,
-                    Roleid = model.Role,
-                    Npinumber = model.NPINumber,
-                    Businessname = model.BusinessName,
-                    Businesswebsite = model.BusinessWebsite,
-                };
+
+                phy.Aspnetuserid = _user.Id;
+                phy.Firstname = obj.Firstname;
+                phy.Lastname = obj.Lastname;
+                phy.Email = obj.Email;
+                phy.Mobile = obj.PhoneNumber;
+                phy.Medicallicense = obj.MedicalLicesnse;
+                phy.Adminnotes = obj.Adminnotes;
+                phy.Address1 = obj.Address1;
+                phy.Address2 = obj.Address2;
+                phy.City = obj.city;
+                phy.Regionid = obj.Regionid;
+                phy.Zip = obj.zipcode;
+                phy.Altphone = obj.altPhone;
+                phy.Createdby = _user.Id;
+                phy.Createddate = _user.Createddate;
+                phy.Status = 1;
+                phy.Businessname = obj.Businessname;
+                phy.Businesswebsite = obj.BusinessWebsite;
+                phy.Roleid = obj.Roleid;
+                phy.Syncemailaddress = obj.SycnEmail;
 
                 _db.Physicians.Add(phy);
                 _db.SaveChanges();
 
 
-                Physiciannotification physiciannotification = new()
+
+                foreach (var item in physicianRegions)
                 {
-                    Pysicianid = phy.Physicianid,
-                    Isnotificationstopped = new BitArray(1, false),
-                };
-                _db.Physiciannotifications.Add(physiciannotification);
+                    var region = _db.Regions.FirstOrDefault(x => x.Regionid == item);
+
+                    _db.Physicianregions.Add(new Physicianregion
+                    {
+                        Physicianid = phy.Physicianid,
+                        Regionid = region.Regionid,
+                    });
+                }
+                _db.SaveChanges();
+
+                Physiciannotification notification = new Physiciannotification();
+                notification.Pysicianid = phy.Physicianid;
+                notification.Isnotificationstopped = new BitArray(1, false);
+                _db.Physiciannotifications.Add(notification);
+                _db.SaveChanges();
+
+                //Aspnetuserrole _userRole = new Aspnetuserrole();
+                //_userRole.Userid = "10";
+                //_userRole.Roleid = 3;
+
+                //_db.Aspnetuserroles.Add(_userRole);
+                //_db.SaveChanges();
+
+
+                Physicianlocation _phyLoc = new Physicianlocation();
+                _phyLoc.Physicianid = phy.Physicianid;
+                _phyLoc.Latitude = obj.latitude;
+                _phyLoc.Longitude = obj.longitude;
+                _phyLoc.Createddate = DateTime.Now;
+                _phyLoc.Physicianname = phy.Firstname;
+                _phyLoc.Address = phy.Address1;
+
+                _db.Physicianlocations.Add(_phyLoc);
                 _db.SaveChanges();
 
 
-                string path = Path.Combine(_environment.WebRootPath, "PhysicianImages", phy.Physicianid.ToString());
+                AddProviderDocuments(phy.Physicianid, obj.Photo, obj.ContractorAgreement, obj.BackgroundCheck, obj.HIPAA, obj.NonDisclosure);
 
-                if (model.Photo != null)
-                {
-                    string fileExtension = Path.GetExtension(model.Photo.FileName);
-                    if (validProfileExtensions.Contains(fileExtension))
-                    {
-                        InsertFileAfterRename(model.Photo, path, "ProfilePhoto");
-                        phy.Photo = Path.GetFileName(model.Photo.FileName);
-
-                    }
-                }
-                if (model.ICA != null)
-                {
-                    string fileExtension = Path.GetExtension(model.ICA.FileName);
-                    if (validDocumentExtensions.Contains(fileExtension))
-                    {
-                        phy.Isagreementdoc = new BitArray(1, true);
-                        InsertFileAfterRename(model.ICA, path, "ICA");
-                    }
-                }
-                if (model.BGCheck != null)
-                {
-                    string fileExtension = Path.GetExtension(model.BGCheck.FileName);
-                    if (validDocumentExtensions.Contains(fileExtension))
-                    {
-                        phy.Isbackgrounddoc = new BitArray(1, true);
-                        InsertFileAfterRename(model.BGCheck, path, "BackgroundCheck");
-                    }
-                }
-                if (model.HIPAACompliance != null)
-                {
-                    string fileExtension = Path.GetExtension(model.HIPAACompliance.FileName);
-                    if (validDocumentExtensions.Contains(fileExtension))
-                    {
-                        phy.Isnondisclosuredoc = new BitArray(1, true);
-                        InsertFileAfterRename(model.HIPAACompliance, path, "HipaaCompliance");
-                    }
-                }
-                if (model.NDA != null)
-                {
-                    string fileExtension = Path.GetExtension(model.NDA.FileName);
-                    if (validDocumentExtensions.Contains(fileExtension))
-                    {
-                        phy.Isnondisclosuredoc = new BitArray(1, true);
-                        InsertFileAfterRename(model.NDA, path, "NDA");
-                    }
-                }
-                _db.Physicians.Update(phy);
-                _db.SaveChanges();
+                flag.indicateTwo = "done";
+                return flag;
             }
-            catch (Exception e)
+            else if (aspUser != null)
             {
-            };
+                flag.indicateTwo = "email";
+            }
+            else
+            {
+                flag.indicateTwo = "zip";
+            }
 
-
+            return flag;
         }
+
+        public void AddProviderDocuments(int Physicianid, IFormFile Photo, IFormFile ContractorAgreement, IFormFile BackgroundCheck, IFormFile HIPAA, IFormFile NonDisclosure)
+        {
+            var physicianData = _db.Physicians.FirstOrDefault(x => x.Physicianid == Physicianid);
+
+            string directory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "PhysicianImages", Physicianid.ToString());
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            if (Photo != null)
+            {
+                string path = Path.Combine(directory, "ProfilePhoto" + Path.GetExtension(Photo.FileName));
+                //string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Documents", Photo.FileName);
+
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    Photo.CopyTo(fileStream);
+                }
+
+                physicianData.Photo = Photo.FileName;
+            }
+
+
+            if (ContractorAgreement != null)
+            {
+                string path = Path.Combine(directory, "Independent_Contractor" + Path.GetExtension(ContractorAgreement.FileName));
+
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    ContractorAgreement.CopyTo(fileStream);
+                }
+
+                physicianData.Isagreementdoc = new BitArray(1, true);
+            }
+
+            if (BackgroundCheck != null)
+            {
+                string path = Path.Combine(directory, "Background" + Path.GetExtension(BackgroundCheck.FileName));
+
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    BackgroundCheck.CopyTo(fileStream);
+                }
+
+                physicianData.Isbackgrounddoc = new BitArray(1, true);
+            }
+
+            if (HIPAA != null)
+            {
+                string path = Path.Combine(directory, "HIPAA" + Path.GetExtension(HIPAA.FileName));
+
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    HIPAA.CopyTo(fileStream);
+                }
+
+                physicianData.Istrainingdoc = new BitArray(1, true);
+            }
+
+            if (NonDisclosure != null)
+            {
+                string path = Path.Combine(directory, "Non_Disclosure" + Path.GetExtension(NonDisclosure.FileName));
+
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    NonDisclosure.CopyTo(fileStream);
+                }
+
+                physicianData.Isnondisclosuredoc = new BitArray(1, true);
+            }
+
+            _db.SaveChanges();
+        }
+
+
 
         public CreateShift GetCreateShift()
         {
@@ -2591,21 +2872,7 @@ namespace BusinessLogic.Repository
             return requestList;
         }
 
-        public DashboardModel GetRequestByRegion(FilterModel filterModel)
-        {
-            DashboardModel model = new DashboardModel();
-            model = GetRequestsByStatus(filterModel.tabNo, 1);
-            if (filterModel.regionId != 0)
-            {
-                model.adminDashboardList = model.adminDashboardList.Where(x => x.regionId == filterModel.regionId).ToList();
-            }
-            if (filterModel.searchWord != null)
-            {
-                model.adminDashboardList = model.adminDashboardList.Where(r => r.firstName.Trim().ToLower().Contains(filterModel.searchWord.Trim().ToLower())).ToList();
-            }
-
-            return model;
-        }
+        
 
         //public void DeleteRecords(int reqId)
         //{
@@ -3378,6 +3645,43 @@ namespace BusinessLogic.Repository
             }
             _db.SaveChanges();
             return true;
+        }
+
+        public List<GetRecordExplore> GetPatientRecordExplore(int userId)
+        {
+
+            var dataMain = _db.Requests.Where(r => r.Userid == userId).Select(r => new GetRecordExplore()
+            {
+                requestid = r.Requestid,
+                requesttypeid = r.Requesttypeid,
+                requestclientid = _db.Requestclients.Where(x => x.Requestid == r.Requestid).Select(x => x.Requestclientid).First(),
+
+                createddate = r.Createddate.ToString("yyyy-MM-dd"),
+                confirmationnumber = r.Confirmationnumber,
+                providername = _db.Physicians.Where(x => x.Physicianid == r.Physicianid).Select(x => x.Firstname).First(),
+                status = r.Status,
+                fullname = r.Requestclients.Where(x => x.Requestid == r.Requestid).Select(r => r.Firstname).First() + " " + r.Requestclients.Where(x => x.Requestid == r.Requestid).Select(r => r.Lastname).First(),
+                concludedate = r.Status == 6 ? Convert.ToDateTime(r.Modifieddate).ToString("yyyy-MM-dd") : null, // Add this condition to check if the status is equal to 6,
+            }).ToList();
+
+            //var list = from t0 in _db.Users
+            //           join t1 in _db.Requests on t0.Userid equals t1.Userid
+            //           join t2 in _db.Requestclients on t1.Requestid equals t2.Requestid
+            //           join t3 in _db.Requestwisefiles on t1.Requestid equals t3.Requestid
+            //           where t0.Userid == userId
+            //           select new GetRecordExplore()
+            //           {
+            //               fullname = t0.Firstname + " " + t0.Lastname,
+            //               createddate= t1.Createddate,
+            //               confirmationnumber= t1.Confirmationnumber,
+            //               providername= _db.Physicians.FirstOrDefault(x => x.Physicianid == t1.Physicianid).Firstname ?? "-",
+            //               requestclientid= t2.Requestclientid,
+            //               requestid= t1.Requestid,
+            //               //DocumentCount = _context.Requestwisefiles.Where(x => x.Requestid == t2.Requestid).ToList().Count,
+            //           };
+
+
+            return dataMain;
         }
 
     }

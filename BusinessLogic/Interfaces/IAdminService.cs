@@ -17,11 +17,11 @@ namespace BusinessLogic.Interfaces
 
        DashboardModel GetRequestsByStatus(int status,int CurrentPage);
 
-        DashboardModel GetRequestByRegion(int regionId, int tabNo);
+        //DashboardModel GetRequestByRegion(int regionId, int tabNo);
 
         StatusCountModel GetStatusCount();
 
-        ViewCaseViewModel ViewCaseViewModel(int Requestclientid, int RequestTypeId);
+        ViewCaseViewModel ViewCase(int reqClientId, int RequestTypeId, int ReqId);
 
         ViewNotesViewModel ViewNotes(int ReqId);
 
@@ -122,12 +122,15 @@ namespace BusinessLogic.Interfaces
         bool RoleExists(string roleName, short accountType);
         CreateAdminAccount RegionList();
 
-        CreateProviderAccount GetProviderList();
+        //CreateProviderAccount GetProviderList();
         bool CreateAdminAccount(CreateAdminAccount obj, string email);
         //void SendRegistrationproviderContactEmail(string provider, string msg, string sessionEmail, int phyIdMain);
 
         void InsertFileAfterRename(IFormFile file, string path, string updateName);
-        void CreateProviderAccount(CreateProviderAccount model,string loginId);
+        //void CreateProviderAccount(CreateProviderAccount model,string loginId);
+        List<Role> physicainRole();
+        AdminEditPhysicianProfile createProviderAccount(AdminEditPhysicianProfile obj, List<int> physicianRegions);
+        void AddProviderDocuments(int Physicianid, IFormFile Photo, IFormFile ContractorAgreement, IFormFile BackgroundCheck, IFormFile HIPAA, IFormFile NonDisclosure);
 
         void CreateNewShiftSubmit(string selectedDays, CreateShift obj, int adminId);
 
@@ -177,5 +180,8 @@ namespace BusinessLogic.Interfaces
         bool DeleteShiftReview(int[] shiftDetailsId, string Aspid);
         bool ApproveSelectedShift(int[] shiftDetailsId, string Aspid);
         DashboardModel GetRequestByRegion(FilterModel filterModel);
+
+        List<GetRecordExplore> GetPatientRecordExplore(int userId);
+
     }
 }
