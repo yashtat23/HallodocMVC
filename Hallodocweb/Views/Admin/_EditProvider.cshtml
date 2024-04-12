@@ -1,6 +1,8 @@
 ﻿@using DataAccess.CustomModel;
 @model EditProviderModel2;
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
 @functions {
     public string editStatusName(short status)
     {
@@ -25,6 +27,8 @@
         }
     }
 }
+
+<style src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"></style>
 
 <style>
 
@@ -72,7 +76,7 @@
 
     </div>
     @*  <form action="" class="shadow border rounded my-3" method="post"> *@
-    <div class="shadow border rounded my-3 bg-white">
+    <div class="shadow border rounded my-3 bg-white dark-mode1">
         <div class="mx-3 my-4 ">
             <form action=" " method="post" id="ResetPasswordForm">
                 <input type="hidden" id="providerEditOne" asp-for="editPro.PhyID" value="@Model.editPro.PhyID" />

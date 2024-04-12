@@ -21,6 +21,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using HalloDoc.mvc.Auth;
 using NuGet.Protocol;
+using DataAccess.Enums;
 //using System.Web.Mvc;
 
 namespace Hallodocweb.Controllers
@@ -77,36 +78,56 @@ namespace Hallodocweb.Controllers
         [HttpPost]
 
         public IActionResult patientreg(LoginVm loginvm)
+        
         {
-
+            loginvm.Password = GenerateSHA256(loginvm.Password);
             if (ModelState.IsValid)
             {
-                string passwordhash = GenerateSHA256(loginvm.Password);
-                loginvm.Password = passwordhash;
-                var user = _Auth.Login(loginvm);
-
-                //var userId = user.Userid;
-                HttpContext.Session.SetInt32("UserId", user.Userid);
-
-                if (user != null)
+                LoginResponseViewModel? result = _patientService.PatientLogin(loginvm);
+                if (result.Status == ResponseStatus.Success)
                 {
-                    //var jwtToken = _jwtService.GetJwtToken();
-                 //Response.Cookies.Append("jwt", );
-                    _notyf.Success("Logged In Successfully !!");
-                    return RedirectToAction("patientdashboard","Patient");
+                    HttpContext.Session.SetString("Email", loginvm.Email);
+                    Response.Cookies.Append("jwt", result.Token);
+                    TempData["Success"] = "Login Successfully";
+                    return RedirectToAction("PatientDashboard", "Patient");
                 }
                 else
                 {
-                    _notyf.Error("Invalid Credentials");
-
-                    //ViewBag.AuthFailedMessage = "Please enter valid username and password !!";
+                    ModelState.AddModelError("", result.Message);
+                    TempData["Error"] = result.Message;
+                    return View();
                 }
-                return View();
             }
-            else
-            {
-                return View(loginvm);
-            }
+            return View();
+
+            //if (ModelState.IsValid)
+            //{
+            //    string passwordhash = GenerateSHA256(loginvm.Password);
+            //    loginvm.Password = passwordhash;
+            //    var user = _Auth.Login(loginvm);
+
+            //    //var userId = user.Userid;
+            //    HttpContext.Session.SetInt32("UserId", user.Userid);
+
+            //    if (user != null)
+            //    {
+            //        var jwtToken = _jwtService.GetJwtToken();
+            //        Response.Cookies.Append("jwt", jwtToken);
+            //        _notyf.Success("Logged In Successfully !!");
+            //        return RedirectToAction("patientdashboard","Patient");
+            //    }
+            //    else
+            //    {
+            //        _notyf.Error("Invalid Credentials");
+
+            //        //ViewBag.AuthFailedMessage = "Please enter valid username and password !!";
+            //    }
+            //    return View();
+            //}
+            //else
+            //{
+            //    return View(loginvm);
+            //}
         }
 
         public IActionResult patientreg()
@@ -248,7 +269,7 @@ namespace Hallodocweb.Controllers
         //    var y = _patientService.subinformation(patientInfo);
         //    return View(y);
         //}
-
+        [CustomAuthorize("User")]
         public IActionResult patientsomeoneelse()
         {
             return View();
@@ -259,21 +280,24 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
+        [CustomAuthorize("User")]
         public IActionResult patientdashboard()
         {
-            int? userid = HttpContext.Session.GetInt32("UserId");
+            string? Email = HttpContext.Session.GetString("Email");
+            var user = _context.Users.Where(x=>x.Email == Email).FirstOrDefault();
 
-            var infos = _patientService.GetMedicalHistory((int)userid);
+            var infos = _patientService.GetMedicalHistory(user.Userid);
 
             return View(infos);
         }
 
-        
+        [CustomAuthorize("User")]
         public IActionResult SubmitMeInfo()
         {
             return View();
         }
 
+        [CustomAuthorize("User")]
         public IActionResult _DocumentList(int Rid)
         {
             HttpContext.Session.SetInt32("rid", Rid);
@@ -299,6 +323,7 @@ namespace Hallodocweb.Controllers
 
         //sending email
 
+        [CustomAuthorize("User")]
         public IActionResult ShowProfile(int userid)
         {
             HttpContext.Session.SetInt32("EditUserId", userid);
@@ -323,17 +348,18 @@ namespace Hallodocweb.Controllers
             }
         }
 
+        [CustomAuthorize("User")]
         public IActionResult _Profile()
         {
             return View();
         }
 
-
+        [CustomAuthorize("User")]
         //me & someoneelse page
         public IActionResult patientsubinformation()
         {
-            int userid = (int)_htttpcontext.HttpContext.Session.GetInt32("UserId");
-            PatientInfoModel Reqobj = _patientService.FetchData(userid);
+            string Email = _htttpcontext.HttpContext.Session.GetString("Email");
+            PatientInfoModel Reqobj = _patientService.FetchData(Email);
             return View(Reqobj);
 
         }

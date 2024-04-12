@@ -25,6 +25,8 @@ using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Hosting;
 using System.Text.Json;
+using OfficeOpenXml;
+using Org.BouncyCastle.Ocsp;
 
 namespace BusinessLogic.Repository
 {
@@ -1119,6 +1121,7 @@ namespace BusinessLogic.Repository
 
                     if (existUser == null)
                     {
+                        _asp.Id = Guid.NewGuid().ToString();
                         _asp.Username = model.firstname + "_" + model.lastname;
                         _asp.Email = model.email;
                         _asp.Phonenumber = model.phone;
@@ -1157,20 +1160,22 @@ namespace BusinessLogic.Repository
                     }
 
                     _req.Requesttypeid = 1;
-                    _req.Userid = Convert.ToInt32(admin.Aspnetuserid);
+                    _req.Userid = _user.Userid;
                     _req.Firstname = admin.Firstname;
                     _req.Lastname = admin.Lastname;
                     _req.Phonenumber = admin.Mobile;
                     _req.Email = admin.Email;
-                    _req.Status = 1;
+                    _req.Status = 1 ;
                     _req.Confirmationnumber = admin.Firstname.Substring(0, 1) + DateTime.Now.ToString().Substring(0, 19);
                     _req.Createddate = DateTime.Now;
+                    _req.Isurgentemailsent = new BitArray(1);
+                    _req.Isurgentemailsent[0] = false;
 
                     _db.Requests.Add(_req);
                     _db.SaveChanges();
 
 
-
+                        
                     _reqClient.Requestid = _req.Requestid;
                     _reqClient.Firstname = model.firstname;
                     _reqClient.Lastname = model.lastname;
@@ -1282,11 +1287,14 @@ namespace BusinessLogic.Repository
         }
 
         public List<ProviderModel> GetProvider()
-        {
+        { 
+            BitArray deletebit = new BitArray(new[] {true});
+                
             var provider = from phy in _db.Physicians
                            join role in _db.Roles on phy.Roleid equals role.Roleid
                            join phynoti in _db.Physiciannotifications on phy.Physicianid equals phynoti.Pysicianid
                            orderby phy.Physicianid
+                           where phy.Isdeleted != deletebit
                            select new ProviderModel
                            {
                                phyId = phy.Physicianid,
@@ -1510,6 +1518,8 @@ namespace BusinessLogic.Repository
                 zip = x.Zip,
                 state = _db.Regions.Where(r => r.Regionid == x.Regionid).Select(r => r.Name).First(),
                 roles = _db.Aspnetroles.ToList(),
+                regions = _db.Regions.ToList(),
+                regionId = _db.Regions.FirstOrDefault().Regionid,
             }).ToList().FirstOrDefault();
 
             var aspnetuser = _db.Aspnetusers.Where(r => r.Email == sessionEmail).First();
@@ -1937,68 +1947,78 @@ namespace BusinessLogic.Repository
 
         public bool CreateAdminAccount(CreateAdminAccount obj, string email)
         {
-            var emailExists = _db.Aspnetusers.Where(x => x.Email == obj.Email).Any();
-            if (emailExists)
+            try
             {
-                return false;
-            }
-            else
-            {
-                Guid id = Guid.NewGuid();
-                Aspnetuser aspnetuser = new();
-
-                aspnetuser.Id = id.ToString();
-                aspnetuser.Username = obj.UserName;
-                aspnetuser.Passwordhash = obj.AdminPassword;
-                aspnetuser.Email = obj.Email;
-                aspnetuser.Phonenumber = obj.AdminPhone;
-                aspnetuser.Createddate = DateTime.Now;
-
-                _db.Aspnetusers.Add(aspnetuser);
-                _db.SaveChanges();
-
-                var aspnetId = _db.Aspnetusers.Where(x => x.Email == email).Select(x => x.Id).First();
-                Admin admin = new Admin();
-
-
-                admin.Aspnetuserid = aspnetuser.Id;
-                admin.Firstname = obj.FirstName;
-                admin.Lastname = obj.LastName;
-                admin.Email = obj.Email;
-
-                admin.Mobile = obj.AdminPhone;
-                admin.Address1 = obj.Address1;
-
-                admin.Address2 = obj.Address2;
-                admin.Zip = obj.Zip;
-                admin.Altphone = obj.BillingPhone;
-                admin.Createdby = aspnetId;
-                admin.Createddate = DateTime.Now;
-                admin.Isdeleted = new BitArray(1, false);
-
-
-                _db.Admins.Add(admin);
-                _db.SaveChanges();
-
-
-
-
-                var AdminRegions = obj.AdminRegion.ToList();
-                for (int i = 0; i < AdminRegions.Count; i++)
+                var emailExists = _db.Aspnetusers.Where(x => x.Email == obj.Email).Any();
+                if (emailExists)
                 {
-                    Adminregion adminregion = new()
-                    {
-                        Adminid = admin.Adminid,
-                        Regionid = _db.Regions.First(x => x.Regionid == AdminRegions[i]).Regionid,
-                    };
+                    return false;
+                }
+                else
+                {
+                    Guid id = Guid.NewGuid();
+                    Aspnetuser aspnetuser = new();
 
-                    _db.Adminregions.Add(adminregion);
+                    aspnetuser.Id = id.ToString();
+                    aspnetuser.Username = obj.UserName;
+                    aspnetuser.Passwordhash = obj.AdminPassword;
+                    aspnetuser.Email = obj.Email;
+                    aspnetuser.Phonenumber = obj.AdminPhone;
+                    aspnetuser.Createddate = DateTime.Now;
+
+                    _db.Aspnetusers.Add(aspnetuser);
                     _db.SaveChanges();
+
+                    var aspnetId = _db.Aspnetusers.Where(x => x.Email == email).Select(x => x.Id).First();
+                    Admin admin = new Admin();
+
+
+                    admin.Aspnetuserid = aspnetuser.Id;
+                    admin.Firstname = obj.FirstName;
+                    admin.Lastname = obj.LastName;
+                    admin.Email = obj.Email;
+
+                    admin.Mobile = obj.AdminPhone;
+                    admin.Address1 = obj.Address1;
+
+                    admin.Address2 = obj.Address2;
+                    admin.Zip = obj.Zip;
+                    admin.Altphone = obj.BillingPhone;
+                    admin.Createdby = aspnetId;
+                    admin.Createddate = DateTime.Now;
+                    admin.Isdeleted = new BitArray(1, false);
+
+
+                    _db.Admins.Add(admin);
+                    _db.SaveChanges();
+
+
+
+
+                    var AdminRegions = obj.AdminRegion.ToList();
+                    for (int i = 0; i < AdminRegions.Count; i++)
+                    {
+                        Adminregion adminregion = new()
+                        {
+                            Adminid = admin.Adminid,
+                            Regionid = _db.Regions.First(x => x.Regionid == AdminRegions[i]).Regionid,
+                        };
+
+                        _db.Adminregions.Add(adminregion);
+                        _db.SaveChanges();
+                    }
+
+                    //return true;
+
                 }
 
                 return true;
-
             }
+            catch
+            {
+                return false;
+            }
+           
 
 
         }
@@ -2162,6 +2182,8 @@ namespace BusinessLogic.Repository
 
         public AdminEditPhysicianProfile createProviderAccount(AdminEditPhysicianProfile obj, List<int> physicianRegions)
         {
+            AdminEditPhysicianProfile model = new AdminEditPhysicianProfile();
+
             AdminEditPhysicianProfile flag = new AdminEditPhysicianProfile();
 
             var aspUser = _db.Aspnetusers.FirstOrDefault(r => r.Email == obj.Email);
@@ -2252,19 +2274,22 @@ namespace BusinessLogic.Repository
 
                 AddProviderDocuments(phy.Physicianid, obj.Photo, obj.ContractorAgreement, obj.BackgroundCheck, obj.HIPAA, obj.NonDisclosure);
 
-                flag.indicateTwo = "done";
-                return flag;
+                model.flag = "done";
+                //flag.indicateTwo = "done";
+                return model;
             }
             else if (aspUser != null)
             {
-                flag.indicateTwo = "email";
+                //flag.indicateTwo = "email";
+                model.flag = "email";
             }
             else
             {
-                flag.indicateTwo = "zip";
+                model.flag = "zip";
+                //flag.indicateTwo = "zip";
             }
 
-            return flag;
+            return model;
         }
 
         public void AddProviderDocuments(int Physicianid, IFormFile Photo, IFormFile ContractorAgreement, IFormFile BackgroundCheck, IFormFile HIPAA, IFormFile NonDisclosure)
@@ -2272,6 +2297,11 @@ namespace BusinessLogic.Repository
             var physicianData = _db.Physicians.FirstOrDefault(x => x.Physicianid == Physicianid);
 
             string directory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "PhysicianImages", Physicianid.ToString());
+
+            if (!Directory.Exists(directory))
+            {   
+                Directory.CreateDirectory(directory);
+            }
 
             if (!Directory.Exists(directory))
             {
@@ -2871,8 +2901,59 @@ namespace BusinessLogic.Repository
 
             return requestList;
         }
+        public void DeleteRecords(int reqId)
+        {
+            var reqClient = _db.Requests.Where(r => r.Requestid == reqId).Select(r => r).First();
 
-        
+            if (reqClient.Isdeleted == null)
+            {
+                reqClient.Isdeleted = new BitArray(1, true);
+                _db.SaveChanges();
+            }
+        }
+
+        public byte[] GenerateExcelFile(List<RequestsRecordModel> recordsModel)
+        {
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial; using (var excelPackage = new ExcelPackage())
+            {
+                var worksheet = excelPackage.Workbook.Worksheets.Add("Requests");
+
+                // Add headers
+                worksheet.Cells[1, 1].Value = "Patient Name";
+                worksheet.Cells[1, 2].Value = "Requestor";
+                worksheet.Cells[1, 3].Value = "Date Of Service";
+                worksheet.Cells[1, 4].Value = "Close Case Date";
+                worksheet.Cells[1, 5].Value = "Email";
+                worksheet.Cells[1, 6].Value = "Phone Number";
+                worksheet.Cells[1, 7].Value = "Address";
+                worksheet.Cells[1, 8].Value = "Zip";
+                worksheet.Cells[1, 9].Value = "Physician";
+                worksheet.Cells[1, 10].Value = "Physician Notes";
+                worksheet.Cells[1, 11].Value = "Admin Note";
+                worksheet.Cells[1, 12].Value = "Patient Notes";
+
+                // Populate data
+                for (int i = 0; i < recordsModel.Count; i++)
+                {
+                    var rowData = recordsModel[i];
+                    worksheet.Cells[i + 2, 1].Value = rowData.patientname;
+                    worksheet.Cells[i + 2, 2].Value = rowData.requestor;
+                    worksheet.Cells[i + 2, 3].Value = rowData.dateOfService;
+                    worksheet.Cells[i + 2, 4].Value = rowData.closeCaseDate;
+                    worksheet.Cells[i + 2, 5].Value = rowData.email;
+                    worksheet.Cells[i + 2, 6].Value = rowData.contact;
+                    worksheet.Cells[i + 2, 7].Value = rowData.address;
+                    worksheet.Cells[i + 2, 8].Value = rowData.zip;
+                    worksheet.Cells[i + 2, 9].Value = rowData.physician;
+                    worksheet.Cells[i + 2, 10].Value = rowData.physicianNote;
+                    worksheet.Cells[i + 2, 11].Value = rowData.AdminNote;
+                    worksheet.Cells[i + 2, 12].Value = rowData.pateintNote;
+                }
+
+                // Convert package to bytes for download
+                return excelPackage.GetAsByteArray();
+            }
+        }
 
         //public void DeleteRecords(int reqId)
         //{
@@ -3252,6 +3333,7 @@ namespace BusinessLogic.Repository
                 PhysicianName = physicians.Firstname + " " + physicians.Lastname,
                 RegionId = region.Regionid,
                 RegionName = region.Name,
+                
                 ShiftDate = shiftDetails.Shiftdate,
                 Start = shiftDetails.Starttime,
                 End = shiftDetails.Endtime,

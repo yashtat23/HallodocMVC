@@ -153,6 +153,8 @@ namespace BusinessLogic.Interfaces
         void EditBusiness(EditBusinessModel obj);
 
         List<RequestsRecordModel> SearchRecords(RecordsModel recordsModel);
+        public void DeleteRecords(int reqId);
+        byte[] GenerateExcelFile(List<RequestsRecordModel> recordsModel);
         public List<User> PatientRecords(PatientRecordsModel patientRecordsModel);
 
         List<UserAccess> FetchAccess(short selectedValue);

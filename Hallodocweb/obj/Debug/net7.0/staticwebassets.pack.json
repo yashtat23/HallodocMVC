@@ -65,6 +65,18 @@
       "PackagePath": "staticwebassets\\PhysicianImages\\26\\ProfilePhoto.jfif"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\27\\ProfilePhoto.png",
+      "PackagePath": "staticwebassets\\PhysicianImages\\27\\ProfilePhoto.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\28\\ProfilePhoto.png",
+      "PackagePath": "staticwebassets\\PhysicianImages\\28\\ProfilePhoto.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\29\\ProfilePhoto.jpg",
+      "PackagePath": "staticwebassets\\PhysicianImages\\29\\ProfilePhoto.jpg"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg",
       "PackagePath": "staticwebassets\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg"
     },

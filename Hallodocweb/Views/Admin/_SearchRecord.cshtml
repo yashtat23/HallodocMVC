@@ -187,7 +187,7 @@
 
     function recordDltBtn(reqId) {
         $.ajax({
-            url: "/adminDashboard/recordDltBtn",
+            url: "/Admin/recordDltBtn",
             data: { reqId: reqId },
             type: 'POST',
             success: function (result) {
@@ -223,7 +223,7 @@
         event.preventDefault();
 
         $.ajax({
-            url: "/adminDashboard/ScheduleExportAll",
+            url: "/Admin/ScheduleExportAll",
             data: arrayMain,
             type: 'POST',
             xhrFields: {

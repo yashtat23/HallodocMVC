@@ -222,9 +222,6 @@ D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\ru\Microsoft.CodeAnalysis
 D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
-D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
-D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
-D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
 D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
@@ -257,3 +254,9 @@ D:\Final Project\Hallodoc\Hallodocweb\obj\Debug\net7.0\refint\Hallodocweb.dll
 D:\Final Project\Hallodoc\Hallodocweb\obj\Debug\net7.0\Hallodocweb.pdb
 D:\Final Project\Hallodoc\Hallodocweb\obj\Debug\net7.0\Hallodocweb.genruntimeconfig.cache
 D:\Final Project\Hallodoc\Hallodocweb\obj\Debug\net7.0\ref\Hallodocweb.dll
+D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\EPPlus.dll
+D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\EPPlus.Interfaces.dll
+D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\EPPlus.System.Drawing.dll
+D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\Microsoft.IO.RecyclableMemoryStream.dll
+D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\runtimes\win\lib\net7.0\Microsoft.Win32.SystemEvents.dll
+D:\Final Project\Hallodoc\Hallodocweb\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll

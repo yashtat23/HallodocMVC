@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Globalization;
+using BusinessLogic.Services;
+using DataAccess.Enums;
 
 namespace BusinessLogic.Repository
 {
@@ -21,11 +23,31 @@ namespace BusinessLogic.Repository
     {
         private readonly ApplicationDbContext _db;
         private readonly IHttpContextAccessor _http;
+        private readonly IJwtService _jwtService;
 
-        public PatientService(ApplicationDbContext db,IHttpContextAccessor http)
+        public PatientService(ApplicationDbContext db,IHttpContextAccessor http,IJwtService jwtService)
         {
             _db = db;
             _http = http;
+            _jwtService = jwtService;
+        }
+
+        public LoginResponseViewModel PatientLogin(LoginVm model)
+        {
+            var user = _db.Aspnetusers.Include(u=>u.Aspnetuserroles).Where(u => u.Email == model.Email).FirstOrDefault();
+
+            if (user == null)
+                return new LoginResponseViewModel() { Status = ResponseStatus.Failed, Message = "User Not Found" };
+            if (user.Passwordhash == null)
+                return new LoginResponseViewModel() { Status = ResponseStatus.Failed, Message = "There is no Password with this Account" };
+            if (user.Passwordhash == model.Password)
+            {
+                var jwtToken = _jwtService.GetJwtToken(user);
+
+                return new LoginResponseViewModel() { Status = ResponseStatus.Success, Token = jwtToken };
+            }
+
+            return new LoginResponseViewModel() { Status = ResponseStatus.Failed, Message = "Password does not match" };
         }
 
         public void AddPatientInfo(PatientInfoModel patientInfoModel)
@@ -337,7 +359,6 @@ namespace BusinessLogic.Repository
         {
             var user = _db.Users.FirstOrDefault(x => x.Userid == userid);
 
-
             var medicalhistory = (from request in _db.Requests
                                   join requestfile in _db.Requestwisefiles
                                   on request.Requestid equals requestfile.Requestid
@@ -510,9 +531,9 @@ namespace BusinessLogic.Repository
         }
 
         //me & someoneelse page
-        public PatientInfoModel FetchData(int userid)
+        public PatientInfoModel FetchData(string email)
         {
-            User? user = _db.Users.FirstOrDefault(i => i.Userid == userid);
+            User? user = _db.Users.FirstOrDefault(i => i.Email == email);
             var BirthDay = Convert.ToInt32(user.Intdate);
             var BirthMonth = user.Strmonth;
             var BirthYear = Convert.ToInt32(user.Intyear);

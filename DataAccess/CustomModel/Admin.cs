@@ -335,7 +335,7 @@ namespace DataAccess.CustomModel
         [Required(ErrorMessage = "Please Enter Your City")]
         public string? city { get; set; }
         public int regionId { get; set; }
-
+        public List<Region> regions { get; set; }
         [Required(ErrorMessage = "Please Enter Your Zipcode")]
         public string zip { get; set; }
         public string? altphone { get; set; }

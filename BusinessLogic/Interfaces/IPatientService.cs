@@ -1,4 +1,5 @@
-﻿using DataAccess.CustomModels;
+﻿using DataAccess.CustomModel;
+using DataAccess.CustomModels;
 using DataAccess.DataModels;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -12,6 +13,8 @@ namespace BusinessLogic.Interfaces
 {
     public interface IPatientService
     {
+
+        LoginResponseViewModel PatientLogin(LoginVm model);
         void AddPatientInfo(PatientInfoModel patientInfoModel);
 
         void AddFamilyReq(FamilyReqModel familyReqModel);
@@ -37,7 +40,7 @@ namespace BusinessLogic.Interfaces
 
         void StoreData(PatientInfoModel patientRequestModel, int reqTypeid, int userid);
 
-        PatientInfoModel FetchData(int userid);
+        PatientInfoModel FetchData(string email);
 
         void ReqforSomeoneElse(FamilyReqModel familyFriendRequestForm, int userid);
     }

@@ -481,7 +481,8 @@ namespace Hallodocweb.Controllers
                 return Json("ok");
             }
             var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
-
+            MyProfileModel myProfile = new MyProfileModel();
+            //var region = _adminService.GetRegion();
             var model = _adminService.MyProfile(emailClaim.Value);
             return PartialView("MyProfile", model);
 
@@ -543,6 +544,17 @@ namespace Hallodocweb.Controllers
         public IActionResult CreateReq()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult VerifyState(string stateMain)
+        {
+            if (stateMain == null || stateMain.Trim() == null)
+            {
+                return Json(new { isSend = false });
+            }
+            var isSend = _adminService.VerifyState(stateMain);
+            return Json(new { isSend = isSend });
         }
 
         [HttpPost]
@@ -878,8 +890,11 @@ namespace Hallodocweb.Controllers
                 
                 else
                 {
+                    //CreateAdminAccount();
+                    var obj = _adminService.RegionList();
+
                     _notyf.Error("Somethng Went Wrong!!");
-                    return CreateAdminAccount();
+                    return PartialView("_CreateAdminAccount",obj);
                 }
         }
 
@@ -900,9 +915,9 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult createprovideraccount(AdminEditPhysicianProfile obj, List<int> physicianregions)
         {
-            AdminEditPhysicianProfile data = new AdminEditPhysicianProfile();
+            AdminEditPhysicianProfile data = new ();
             var createprovideraccount = _adminService.createProviderAccount(obj, physicianregions);
-            return Json(new { indicate = createprovideraccount.indicate });
+            return Json(new { flag = createprovideraccount.flag });
         }
 
 
@@ -1055,6 +1070,19 @@ namespace Hallodocweb.Controllers
             }
 
             return PartialView("_PatientRecord", model);
+        }
+
+        public IActionResult recordDltBtn(int reqId)
+        {
+            _adminService.DeleteRecords(reqId);
+            _notyf.Success("Deleted Successfully!!");
+            return Ok();
+        }
+
+        public IActionResult ScheduleExportAll(RecordsModel recordsModel)
+        {
+            var exportAll = _adminService.GenerateExcelFile(_adminService.SearchRecords(recordsModel));
+            return File(exportAll, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Requests.xlsx");
         }
 
         [HttpGet]

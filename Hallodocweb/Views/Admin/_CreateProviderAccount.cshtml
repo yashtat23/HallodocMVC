@@ -28,7 +28,7 @@
 <div class="container">
     <div class=" mt-2 d-flex justify-content-between align-items-center">
         <h4>Create Provider Account</h4>
-        <button onclick="providers()"
+        <button onclick="Provider()" 
                 class="btn shadow  btn-outline-info px-3 ">
             &#60; Back
         </button>
@@ -439,13 +439,13 @@
                 contentType: false,
 
                 success: function (result) {
-                    if (result.indicate == "done") {
+                    if (result.flag == "done") {
                         createProviderAccount();
                         toastr.success("Account Created Successfully");
-                    } else if (result.indicate == "email") {
+                    } else if (result.flag == "email") {
                         toastr.error("Email Already Exists!!");
                     } else {
-                        toastr.error("Zipcode Not Valid!!");
+                        toastr.error("please enter a details!!");
                     }
                 },
                 error: function () {

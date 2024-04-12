@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Interfaces;
+using DataAccess.Data;
 using DataAccess.DataModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -15,14 +16,17 @@ namespace BusinessLogic.Services
     public class JwtService : IJwtService
     {
         private readonly IConfiguration _configuration;
-        public JwtService(IConfiguration configuration)
+        //private readonly ApplicationDbContext _db;
+        public JwtService(IConfiguration configuration/*,ApplicationDbContext db*/)
         {
             this._configuration = configuration;
+            //_db = db;
         }
 
         String[] Role = { "Admin", "User", "Physician" };
         public string GetJwtToken(Aspnetuser aspnetuser)
         {
+
             var role = aspnetuser.Aspnetuserroles.FirstOrDefault(x => x.Userid == aspnetuser.Id);
             var roleid = role.Roleid;
             var claims = new List<Claim>
