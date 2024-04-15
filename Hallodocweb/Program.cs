@@ -34,6 +34,7 @@ builder.Services.AddScoped<IAuth, Auth>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IProviderService, ProviderService>();
 
 
 //Jwt configuration starts here

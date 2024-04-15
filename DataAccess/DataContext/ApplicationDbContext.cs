@@ -90,7 +90,7 @@ public partial class ApplicationDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("User ID = postgres;Password=2376;Server=localhost;Database=Hallodoc;Integrated Security=true;Pooling=true;");
+        => optionsBuilder.UseNpgsql("User ID = postgres;Password=2376;Server=localhost;Port=5432;Database=Hallodoc;Integrated Security=true;Pooling=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -205,7 +205,7 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("aspnetroles");
 
             entity.Property(e => e.Id)
-                .HasMaxLength(128)
+                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Name)
                 .HasMaxLength(256)
@@ -246,21 +246,27 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Aspnetuserrole>(entity =>
         {
-            entity.HasKey(e => e.Roleid).HasName("pk_aspnetuserrole");
+            entity.HasKey(e => e.Aspnetuserroleid).HasName("pk_aspnetuserroles");
 
             entity.ToTable("aspnetuserroles");
 
-            entity.Property(e => e.Roleid)
-                .ValueGeneratedNever()
-                .HasColumnName("roleid");
+            entity.Property(e => e.Aspnetuserroleid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("aspnetuserroleid");
+            entity.Property(e => e.Roleid).HasColumnName("roleid");
             entity.Property(e => e.Userid)
                 .HasMaxLength(128)
                 .HasColumnName("userid");
 
+            entity.HasOne(d => d.Role).WithMany(p => p.Aspnetuserroles)
+                .HasForeignKey(d => d.Roleid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_aspnetuserroles2");
+
             entity.HasOne(d => d.User).WithMany(p => p.Aspnetuserroles)
                 .HasForeignKey(d => d.Userid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_aspnetuserrole");
+                .HasConstraintName("fk_aspnetuserroles1");
         });
 
         modelBuilder.Entity<Blockrequest>(entity =>

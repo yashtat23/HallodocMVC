@@ -44,9 +44,10 @@ namespace BusinessLogic.Repository
 
         public Aspnetuser GetAspnetuser(string email)
         {
-            var aspNetUser = _db.Aspnetusers.Include(x => x.Aspnetuserroles).FirstOrDefault(x => x.Email == email);
+            var aspNetUser = _db.Aspnetusers.Include(x=>x.Aspnetuserroles).FirstOrDefault(x => x.Email == email);
+            
             return aspNetUser;
-        }
+        }   
 
         //public bool AdminLogin(AdminLogin adminLogin)
         //{
@@ -3460,7 +3461,7 @@ namespace BusinessLogic.Repository
                             sentdate = item.Sentdate,
                             sent = item.Isemailsent[0] ? "Yes" : "No",
                             recipient = _db.Requestclients.Where(i => i.Requestid == item.Requestid).Select(i => i.Firstname).First(),
-                            rolename = _db.Aspnetroles.Where(i => i.Id == item.Roleid.ToString()).Select(i => i.Name).First(),
+                            rolename = _db.Aspnetroles.Where(i => i.Id == item.Roleid).Select(i => i.Name).First(),
                             senttries = item.Senttries,
                             confirmationNumber = item.Confirmationnumber,
                         };
@@ -3476,7 +3477,7 @@ namespace BusinessLogic.Repository
                             sentdate = item.Sentdate,
                             sent = item.Isemailsent[0] ? "Yes" : "No",
                             recipient = _db.Physicians.Where(i => i.Physicianid == item.Physicianid).Select(i => i.Firstname).FirstOrDefault(),
-                            rolename = _db.Aspnetroles.Where(i => i.Id == item.Roleid.ToString()).Select(i => i.Name).First(),
+                            rolename = _db.Aspnetroles.Where(i => i.Id == item.Roleid).Select(i => i.Name).First(),
                             senttries = item.Senttries,
                             confirmationNumber = item.Confirmationnumber,
                         };
@@ -3523,7 +3524,7 @@ namespace BusinessLogic.Repository
                         sentdate = item.Sentdate,
                         sent = item.Issmssent[0] ? "Yes" : "No",
                         recipient = _db.Requestclients.Where(i => i.Requestid == item.Requestid).Select(i => i.Firstname).FirstOrDefault(),
-                        rolename = _db.Aspnetroles.Where(i => i.Id == item.Roleid.ToString()).Select(i => i.Name).First(),
+                        rolename = _db.Aspnetroles.Where(i => i.Id == item.Roleid).Select(i => i.Name).First(),
                         senttries = item.Senttries,
                         confirmationNumber = item.Confirmationnumber,
                     };
@@ -3764,6 +3765,40 @@ namespace BusinessLogic.Repository
 
 
             return dataMain;
+        }
+
+        public AssignCaseModel AssignCase(int reqId)
+        {
+
+            var regionlist = _db.Regions.ToList();
+            AssignCaseModel assignCaseModel = new()
+            {
+                region = regionlist,
+
+            };
+            return assignCaseModel;
+        }
+
+        public List<Physician> GetPhysicianByRegion(int Regionid)
+        {
+
+            var physicianList = _db.Physicianregions.Where(x => x.Regionid == Regionid).Select(x => x.Physician).ToList();
+
+            return physicianList;
+
+        }
+
+        public Order FetchProfession()
+        {
+
+            var Healthprofessionaltype = _db.Healthprofessionaltypes.ToList();
+
+            Order order = new()
+            {
+                Profession = Healthprofessionaltype
+
+            };
+            return order;
         }
 
     }

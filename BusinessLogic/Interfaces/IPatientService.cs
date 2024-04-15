@@ -14,14 +14,18 @@ namespace BusinessLogic.Interfaces
     public interface IPatientService
     {
 
+        bool CreateAccount(CreateAccountModel model);
+
+        void SendRegistrationEmailCreateRequest(string email, string registrationLink);
+
         LoginResponseViewModel PatientLogin(LoginVm model);
-        void AddPatientInfo(PatientInfoModel patientInfoModel);
+        bool AddPatientInfo(PatientInfoModel patientInfoModel);
 
-        void AddFamilyReq(FamilyReqModel familyReqModel);
+        bool AddFamilyReq(FamilyReqModel familyReqModel, string createaccountLink);
 
-        void AddConciergeReq(ConciergeReqModel conciergeReqModel);
+        bool AddConciergeReq(ConciergeReqModel conciergeReqModel, string createAccountLink);
 
-        void AddBusinessReq(BusinessReqModel businessReqModel);
+        bool AddBusinessReq(BusinessReqModel businessReqModel, string createAccountLink);
 
         Task<bool> IsEmailExists(string email);
 

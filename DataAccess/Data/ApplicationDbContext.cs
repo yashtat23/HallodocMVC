@@ -36,6 +36,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Emaillog> Emaillogs { get; set; }
 
+    public virtual DbSet<Encounterform> Encounterforms { get; set; }
+
     public virtual DbSet<Healthprofessional> Healthprofessionals { get; set; }
 
     public virtual DbSet<Healthprofessionaltype> Healthprofessionaltypes { get; set; }
@@ -113,6 +115,9 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Aspnetuserid)
                 .HasMaxLength(128)
                 .HasColumnName("aspnetuserid");
+            entity.Property(e => e.City)
+                .HasMaxLength(50)
+                .HasColumnName("city");
             entity.Property(e => e.Createdby)
                 .HasMaxLength(128)
                 .HasColumnName("createdby");
@@ -141,9 +146,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("modifieddate");
             entity.Property(e => e.Regionid).HasColumnName("regionid");
-            entity.Property(e => e.Roleid)
-                .HasColumnType("character varying")
-                .HasColumnName("roleid");
+            entity.Property(e => e.Roleid).HasColumnName("roleid");
             entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.Zip)
                 .HasMaxLength(10)
@@ -166,6 +169,10 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.Region).WithMany(p => p.Admins)
                 .HasForeignKey(d => d.Regionid)
                 .HasConstraintName("fk_admin3");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Admins)
+                .HasForeignKey(d => d.Roleid)
+                .HasConstraintName("fk_admin4");
         });
 
         modelBuilder.Entity<Adminregion>(entity =>
@@ -198,7 +205,7 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("aspnetroles");
 
             entity.Property(e => e.Id)
-                .HasMaxLength(128)
+                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Name)
                 .HasMaxLength(256)
@@ -239,21 +246,27 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Aspnetuserrole>(entity =>
         {
-            entity.HasKey(e => e.Roleid).HasName("pk_aspnetuserrole");
+            entity.HasKey(e => e.Aspnetuserroleid).HasName("pk_aspnetuserroles");
 
             entity.ToTable("aspnetuserroles");
 
-            entity.Property(e => e.Roleid)
-                .ValueGeneratedNever()
-                .HasColumnName("roleid");
+            entity.Property(e => e.Aspnetuserroleid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("aspnetuserroleid");
+            entity.Property(e => e.Roleid).HasColumnName("roleid");
             entity.Property(e => e.Userid)
                 .HasMaxLength(128)
                 .HasColumnName("userid");
 
+            entity.HasOne(d => d.Role).WithMany(p => p.Aspnetuserroles)
+                .HasForeignKey(d => d.Roleid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_aspnetuserroles2");
+
             entity.HasOne(d => d.User).WithMany(p => p.Aspnetuserroles)
                 .HasForeignKey(d => d.Userid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_aspnetuserrole");
+                .HasConstraintName("fk_aspnetuserroles1");
         });
 
         modelBuilder.Entity<Blockrequest>(entity =>
@@ -463,6 +476,123 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.Request).WithMany(p => p.Emaillogs)
                 .HasForeignKey(d => d.Requestid)
                 .HasConstraintName("fk_emaillog1");
+        });
+
+        modelBuilder.Entity<Encounterform>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("encounterform_pkey");
+
+            entity.ToTable("encounterform");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Abdomen)
+                .HasMaxLength(500)
+                .HasColumnName("abdomen");
+            entity.Property(e => e.Allergies)
+                .HasMaxLength(500)
+                .HasColumnName("allergies");
+            entity.Property(e => e.Bloodpressurediastolic).HasColumnName("bloodpressurediastolic");
+            entity.Property(e => e.Bloodpressuresystolic).HasColumnName("bloodpressuresystolic");
+            entity.Property(e => e.Cardiovascular)
+                .HasMaxLength(500)
+                .HasColumnName("cardiovascular");
+            entity.Property(e => e.Chest)
+                .HasMaxLength(500)
+                .HasColumnName("chest");
+            entity.Property(e => e.Createddate)
+                .HasDefaultValueSql("LOCALTIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createddate");
+            entity.Property(e => e.Diagnosis)
+                .HasColumnType("character varying")
+                .HasColumnName("diagnosis");
+            entity.Property(e => e.Email)
+                .HasMaxLength(50)
+                .HasColumnName("email");
+            entity.Property(e => e.Extremities)
+                .HasMaxLength(500)
+                .HasColumnName("extremities");
+            entity.Property(e => e.Finalizeddate)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("finalizeddate");
+            entity.Property(e => e.Firstname)
+                .HasMaxLength(100)
+                .HasColumnName("firstname");
+            entity.Property(e => e.Followup)
+                .HasColumnType("character varying")
+                .HasColumnName("followup");
+            entity.Property(e => e.Heartrate)
+                .HasPrecision(10, 2)
+                .HasColumnName("heartrate");
+            entity.Property(e => e.Heent)
+                .HasMaxLength(500)
+                .HasColumnName("heent");
+            entity.Property(e => e.Illnesshistory)
+                .HasMaxLength(500)
+                .HasColumnName("illnesshistory");
+            entity.Property(e => e.Intdate).HasColumnName("intdate");
+            entity.Property(e => e.Intyear).HasColumnName("intyear");
+            entity.Property(e => e.Isfinalized).HasColumnName("isfinalized");
+            entity.Property(e => e.Lastname)
+                .HasMaxLength(100)
+                .HasColumnName("lastname");
+            entity.Property(e => e.Location)
+                .HasMaxLength(200)
+                .HasColumnName("location");
+            entity.Property(e => e.Medicalhistory)
+                .HasMaxLength(500)
+                .HasColumnName("medicalhistory");
+            entity.Property(e => e.Medications)
+                .HasMaxLength(500)
+                .HasColumnName("medications");
+            entity.Property(e => e.Medicationsdispensed)
+                .HasColumnType("character varying")
+                .HasColumnName("medicationsdispensed");
+            entity.Property(e => e.Modifieddate)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("modifieddate");
+            entity.Property(e => e.Neuro)
+                .HasMaxLength(500)
+                .HasColumnName("neuro");
+            entity.Property(e => e.Other)
+                .HasMaxLength(500)
+                .HasColumnName("other");
+            entity.Property(e => e.Oxygenlevel)
+                .HasPrecision(10, 2)
+                .HasColumnName("oxygenlevel");
+            entity.Property(e => e.Pain)
+                .HasMaxLength(50)
+                .HasColumnName("pain");
+            entity.Property(e => e.Phonenumber)
+                .HasMaxLength(50)
+                .HasColumnName("phonenumber");
+            entity.Property(e => e.Procedures)
+                .HasColumnType("character varying")
+                .HasColumnName("procedures");
+            entity.Property(e => e.Requestid).HasColumnName("requestid");
+            entity.Property(e => e.Respirationrate)
+                .HasPrecision(10, 2)
+                .HasColumnName("respirationrate");
+            entity.Property(e => e.Servicedate)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("servicedate");
+            entity.Property(e => e.Skin)
+                .HasMaxLength(500)
+                .HasColumnName("skin");
+            entity.Property(e => e.Strmonth)
+                .HasMaxLength(20)
+                .HasColumnName("strmonth");
+            entity.Property(e => e.Temperature)
+                .HasPrecision(10, 2)
+                .HasColumnName("temperature");
+            entity.Property(e => e.Treatmentplan)
+                .HasColumnType("character varying")
+                .HasColumnName("treatmentplan");
+
+            entity.HasOne(d => d.Request).WithMany(p => p.Encounterforms)
+                .HasForeignKey(d => d.Requestid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_ecounterform");
         });
 
         modelBuilder.Entity<Healthprofessional>(entity =>
@@ -723,6 +853,10 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.Region).WithMany(p => p.Physicians)
                 .HasForeignKey(d => d.Regionid)
                 .HasConstraintName("fk_physician1");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Physicians)
+                .HasForeignKey(d => d.Roleid)
+                .HasConstraintName("fk_physician4");
         });
 
         modelBuilder.Entity<Physicianlocation>(entity =>
@@ -1334,9 +1468,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Shiftdetailid)
                 .UseIdentityAlwaysColumn()
                 .HasColumnName("shiftdetailid");
-            entity.Property(e => e.Endtime)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("endtime");
+            entity.Property(e => e.Endtime).HasColumnName("endtime");
             entity.Property(e => e.Eventid)
                 .HasMaxLength(100)
                 .HasColumnName("eventid");
@@ -1358,9 +1490,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Regionid).HasColumnName("regionid");
             entity.Property(e => e.Shiftdate).HasColumnName("shiftdate");
             entity.Property(e => e.Shiftid).HasColumnName("shiftid");
-            entity.Property(e => e.Starttime)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("starttime");
+            entity.Property(e => e.Starttime).HasColumnName("starttime");
             entity.Property(e => e.Status).HasColumnName("status");
 
             entity.HasOne(d => d.ModifiedbyNavigation).WithMany(p => p.Shiftdetails)

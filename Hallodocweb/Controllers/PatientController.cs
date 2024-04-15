@@ -22,6 +22,7 @@ using System.Security.Claims;
 using HalloDoc.mvc.Auth;
 using NuGet.Protocol;
 using DataAccess.Enums;
+using System.Net;
 //using System.Web.Mvc;
 
 namespace Hallodocweb.Controllers
@@ -161,14 +162,20 @@ namespace Hallodocweb.Controllers
                 {
                     patientInfoModel.password = GenerateSHA256(patientInfoModel.password);
                 }
-                _patientService.AddPatientInfo(patientInfoModel);
-                _notyf.Success("Submit Successfully !!");
-                return RedirectToAction("patientsubreq", "Patient");
+                bool isvalid = _patientService.AddPatientInfo(patientInfoModel);
+                if (isvalid == false)
+                {
+                    _notyf.Error("Service is not available in entered Region");
+                    return View(patientInfoModel);
+                }
+                //_patientService.AddPatientInfo(patientInfoModel);
             }
-            else
-            {
-                return View(patientInfoModel);
-            }
+            _notyf.Success("Submit Successfully !!");
+            return RedirectToAction("patientsubreq", "Patient");
+            //else
+            //{
+            //    return View(patientInfoModel);
+            //}
         }
 
         public IActionResult familyfriendreq()
@@ -179,15 +186,24 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult familyfriendreq(FamilyReqModel familyReqModel)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
+            //{
+            string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+            string createAccountLink = baseUrl + Url.Action("patientcreateacc", "Patient");
+            bool isValid = _patientService.AddFamilyReq(familyReqModel, createAccountLink);
+            if (!isValid)
             {
-                _patientService.AddFamilyReq(familyReqModel);
-                return RedirectToAction("patientsubreq", "Patient");
-            }
-            else
-            {
+                _notyf.Error("Service is not available in entered Region");
                 return View(familyReqModel);
             }
+            _notyf.Success("Submit Successfully!!");
+            //_patientService.AddFamilyReq(familyReqModel,createAccountLink);
+            return RedirectToAction("patientsubreq", "Patient");
+            //}
+            //else
+            //{
+            //    return View(familyReqModel);
+            //}
 
         }
 
@@ -198,17 +214,19 @@ namespace Hallodocweb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [HttpPost]
         public IActionResult businessInforeq(BusinessReqModel businessReqModel)
         {
-            if (ModelState.IsValid)
+            string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+            string createAccountLink = baseUrl + Url.Action("patientcreateacc", "Patient");
+            bool isValid = _patientService.AddBusinessReq(businessReqModel, createAccountLink);
+            if (!isValid)
             {
-                _patientService.AddBusinessReq(businessReqModel);
-                return RedirectToAction("patientsubreq", "Patient");
-            }
-            else
-            {
+                _notyf.Error("Service is not available in entered Region");
                 return View(businessReqModel);
             }
+            _notyf.Success("Submit Successfully !!");
+            return RedirectToAction("patientsubreq", "Patient");
         }
 
         public IActionResult conciergereq()
@@ -217,23 +235,78 @@ namespace Hallodocweb.Controllers
         }
 
         [HttpPost]
+        [HttpPost]
         public IActionResult conciergereq(ConciergeReqModel conciergeReqModel)
         {
-            if (ModelState.IsValid)
+            string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+            string createAccountLink = baseUrl + Url.Action("patientcreateacc", "Patient");
+            bool isValid = _patientService.AddConciergeReq(conciergeReqModel, createAccountLink);
+            if (!isValid)
             {
-                _patientService.AddConciergeReq(conciergeReqModel);
-                return RedirectToAction("patientsubreq", "Patient");
-            }
-            else
-            {
+                _notyf.Error("Service is not available in entered Region");
                 return View(conciergeReqModel);
             }
+            _notyf.Success("Submit Successfully !!");
+            return RedirectToAction("patientsubreq", "Patient");
         }
 
 
         public IActionResult patientfpassword()
         {
             return View();
+        }
+
+        private string GenerateResetPasswordUrl(string userId)
+        {
+            string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+            string resetPasswordPath = Url.Action("patientresetpass", new { id = userId });
+            return baseUrl + resetPasswordPath;
+        }
+        private Task SendEmail(string email, string subject, string message)
+        {
+            var mail = "mailto:tatva.dotnet.yashvariya@outlook.com";
+            var password = "Itzvariya@23";
+
+            var client = new SmtpClient("smtp.office365.com", 587)
+            {
+                EnableSsl = true,
+                Credentials = new NetworkCredential(mail, password)
+            };
+            return client.SendMailAsync(new MailMessage(from: mail, to: email, subject, message));
+        }
+
+        public IActionResult PatientResetPasswordEmail(forgotpassword user)
+        {
+            var usr = _context.Aspnetusers.FirstOrDefault(x => x.Email == user.forgotemail);
+            if (usr != null)
+            {
+                string Id = _context.Aspnetusers.FirstOrDefault(x => x.Email == user.forgotemail).Id;
+                string resetPasswordUrl = GenerateResetPasswordUrl(Id);
+                SendEmail(user.forgotemail, "Reset Your Password", $"Hello, reset your password using this link: {resetPasswordUrl}");
+            }
+            else
+            {
+                _notyf.Error("Email Id Not Registered");
+                return RedirectToAction("patientfpassword", "Patient");
+            }
+            _notyf.Success("Kindly Check your mail for Reset Password");
+            return RedirectToAction("patientreg");
+        }
+
+        public IActionResult patientresetpass(string id)
+        {
+            var aspuser = _context.Aspnetusers.FirstOrDefault(x => x.Id == id);
+            return View(aspuser);
+        }
+
+        [HttpPost]
+        public IActionResult patientresetpass(Aspnetuser aspnetuser)
+        {
+            var aspuser = _context.Aspnetusers.FirstOrDefault(x => x.Id == aspnetuser.Id);
+            aspuser.Passwordhash = aspnetuser.Passwordhash;
+            _context.Aspnetusers.Update(aspuser);
+            _context.SaveChanges();
+            return RedirectToAction("patientreg");
         }
 
         //[HttpPost]
@@ -278,6 +351,30 @@ namespace Hallodocweb.Controllers
         public IActionResult patientcreateacc()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult patientcreateacc(CreateAccountModel createAccountModel)
+        {
+            if (ModelState.IsValid)
+            {
+                bool isCreated = _patientService.CreateAccount(createAccountModel);
+                if (isCreated)
+                {
+                    _notyf.Success("Account Created Successfully !!");
+                    return RedirectToAction("patientreg", "Patient");
+                }
+                else
+                {
+                    _notyf.Error("Something went wrong !!");
+                    return RedirectToAction("patientcreateacc");
+                }
+
+            }
+            else
+            {
+                return View(createAccountModel);
+            }
         }
 
         [CustomAuthorize("User")]

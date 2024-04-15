@@ -1248,8 +1248,34 @@ namespace Hallodocweb.Controllers
         }
         public IActionResult FilterRegion(FilterModel filterModel)
         {
-            var list = _adminService.GetRequestByRegion(filterModel);
-            return PartialView("_NewRequests", list);
+            if (filterModel.tabNo == 1)
+            {
+                var list = _adminService.GetRequestByRegion(filterModel);
+                return PartialView("_NewRequests", list);
+            }
+            else if (filterModel.tabNo == 2) {
+                var list = _adminService.GetRequestByRegion(filterModel);
+                return PartialView("_PendingRequests", list);
+            }
+            else if (filterModel.tabNo == 3) {
+                var list = _adminService.GetRequestByRegion(filterModel);
+                return PartialView("_ActiveRequests", list);
+            }
+            else if (filterModel.tabNo == 4) {
+                var list = _adminService.GetRequestByRegion(filterModel);
+                return PartialView("_ConcludeRequests", list);
+            }
+            else if (filterModel.tabNo == 5) {
+                var list = _adminService.GetRequestByRegion(filterModel);
+                return PartialView("TocloseRequests", list);
+            }
+            else if(filterModel.tabNo == 6) {
+                var list = _adminService.GetRequestByRegion(filterModel);
+                return PartialView("_UnpaidRequests", list);
+            }
+            else {
+                return RedirectToAction("AdminDashboard");
+            }
         }
 
         public IActionResult GetPatientRecordExplore(int userId)

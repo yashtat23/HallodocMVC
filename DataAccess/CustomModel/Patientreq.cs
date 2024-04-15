@@ -72,7 +72,7 @@ namespace DataAccess.CustomModels
 
         public string? patientLastName { get; set; }
 
-        public DateTime? patientDob { get; set; }
+        public DateOnly patientDob { get; set; }
 
         public string? patientEmail { get; set; }
 
@@ -90,6 +90,8 @@ namespace DataAccess.CustomModels
         public int? roomNo { get; set; }
 
         public IFormFile? File { get; set; }
+
+        public string? relation { get; set; }
 
     }
 
@@ -113,7 +115,7 @@ namespace DataAccess.CustomModels
 
         public string? patientLastName { get; set; }
 
-        public DateTime? patientDob { get; set; }
+        public DateTime patientDob { get; set; }
 
         [Required(ErrorMessage = "Please Enter Your Email")]
         public string patientEmail { get; set; }
@@ -160,7 +162,7 @@ namespace DataAccess.CustomModels
         public string? patientLastName { get; set; }
 
 
-        public DateTime? patientDob { get; set; }
+        public DateTime patientDob { get; set; }
 
 
         public string? patientEmail { get; set; }

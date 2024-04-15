@@ -185,5 +185,11 @@ namespace BusinessLogic.Interfaces
 
         List<GetRecordExplore> GetPatientRecordExplore(int userId);
 
+        AssignCaseModel AssignCase(int reqId);
+
+        List<Physician> GetPhysicianByRegion(int Regionid);
+
+        Order FetchProfession();
+
     }
 }
