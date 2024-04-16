@@ -1,0 +1,142 @@
+﻿@* @model Services.Models.ConcludeCareViewModel *@
+@using DataAccess.CustomModel;
+@model ConcludeCareViewModel;
+@{
+    ViewData["Title"] = "ConcludeCare";
+    // Layout = "~/Views/Shared/_ProviderDashboardLayout.cshtml";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between pt-3">
+        <h4>Conclude Care</h4>
+        <a asp-area="" asp-action="ProviderDashboard" class="btn border-2 border-info text-info p-2 px-3 fw-bold">
+            &lt;  Back
+        </a>
+
+    </div>
+    <div class="shadow">
+        <div class="px-3 pt-4 Document-content mt-3" style="">
+
+            <div class="pr-3">
+                <div class="h6 text-secondary">Patient Name</div>
+                <div class="h5 text-info d-inline-block">@Model.PatientName</div>
+            </div>
+        </div>
+
+
+        <div class="py-3 px-3 h5 fw-bold d-flex justify-content-between">
+            <div>Encounter Forms</div>
+            <form asp-action="UploadEncounter" asp-controller="Provider" id="uploadForm" method="post" enctype="multipart/form-data">
+                <input asp-for="RequestId" value="@Model.RequestId" hidden />
+                <div class="file btn text-info border-info mr-3">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    Upload
+                    <input type="file" asp-for="Upload" id="BackgoundDoc" class="selectfile" onchange="submitForm()" accept=".pdf,.png" />
+                </div>
+            </form>
+
+        </div>
+        <div class="table-responsive mt-2 d-sm-block d-none">
+            <table class="table">
+                <thead>
+                    <tr class="table-secondary">
+                        <th scope="col" style="width:55%">Documents</th>
+                        <th class="text-center" scope="col" style="width:15%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Documents.Count() > 0)
+                    {
+                        @foreach (var item in Model.Documents!)
+                        {
+                            <tr>
+                                <td>@item</td>
+                                <td class="text-center">
+                                    <a href="~/uploads/@item" target="_blank" id="viewagreement" class="btn bg-info text-white h5 mb-0 view">View</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>No Documents Found</tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="d-sm-none d-block ps-3">
+            <hr />
+            @if (Model.Documents.Count() > 0)
+            {
+                @foreach (var item in Model.Documents!)
+                {
+                    <div>
+                        <span>@item</span>
+                    </div>
+                    <div class="my-3">
+                        <a href="~/uploads/@item" target="_blank" id="viewagreement" class="btn bg-info text-white h5 mb-0 view">View</a>
+                    </div>
+                }
+            }
+        </div>
+        <hr />
+        <div class="h5 ps-3">Provider Notes</div>
+        <div class="col-12">
+            <div class="form-floating mb-3">
+                <textarea class="form-control" placeholder="Provider Notes"
+                          id="provider" style="height: 100px"></textarea>
+                <label for="provider" class="">
+                    Provider Notes
+                </label>
+            </div>
+        </div>
+        <div class="text-end">
+            <button type="button" onclick="conclude()" id="conclude" class="btn bg-info text-white rounded-3 mr-3 fw-bold px-4 h5 modify">Conclude Care</button>
+        </div>
+
+        <br />
+        <br />
+        <br />
+    </div>
+
+
+    <br />
+    <br />
+</div>
+
+<br />
+<br />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script>
+
+    function conclude() {
+        var filterdata = {
+            RequestId: @Model.RequestId,
+            ProviderNotes: $('#provider').val(),
+        }
+        if (@Model.IsFinalize == 0) {
+            toastr.error('Please First finalize the encounter form');
+        }
+        else {
+            $.ajax({
+                url: "/Provider/ConcludeCase/",
+                type: "POST",
+                data: filterdata,
+                dataType: "html",
+                success: function (data) {
+                },
+                error: function () {
+                    alert("No Projects Found");
+                    $("#housecall").html('An error has occurred');
+                }
+            });
+        }
+
+    };
+
+    function submitForm() {
+        document.getElementById("uploadForm").submit();
+    }
+</script>

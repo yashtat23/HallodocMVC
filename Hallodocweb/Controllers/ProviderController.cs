@@ -10,6 +10,8 @@ using DataAccess.CustomModel;
 using DataAccess.DataModels;
 using Hallodocweb.Controllers;
 using System.IdentityModel.Tokens.Jwt;
+using BusinessLogic.Repository;
+using System.Security.Claims;
 
 namespace HalloDoc.mvc.Controllers
 {
@@ -34,7 +36,7 @@ namespace HalloDoc.mvc.Controllers
             _providerService = providerService;
         }
 
-       
+
 
         public ActionResult Index()
         {
@@ -43,7 +45,7 @@ namespace HalloDoc.mvc.Controllers
 
         public IActionResult ProviderDashboard()
         {
-            
+
             return View();
         }
         [HttpGet]
@@ -132,7 +134,7 @@ namespace HalloDoc.mvc.Controllers
         }
 
         [HttpGet]
-        public IActionResult SendLink()
+        public IActionResult PSendLink()
         {
             return PartialView("_SendLink");
         }
@@ -174,7 +176,7 @@ namespace HalloDoc.mvc.Controllers
 
         public IActionResult ViewCase(int Requestclientid, int RequestTypeId, int ReqId)
         {
-            var model = _adminService.ViewCase(Requestclientid, RequestTypeId,ReqId);
+            var model = _adminService.ViewCase(Requestclientid, RequestTypeId, ReqId);
 
             return View("_PViewCase", model);
         }
@@ -375,7 +377,7 @@ namespace HalloDoc.mvc.Controllers
         public IActionResult AcceptCase(int requestId)
         {
             var loginUserId = GetLoginId();
-            _providerService.acceptCase(requestId,loginUserId);
+            _providerService.acceptCase(requestId, loginUserId);
             return Ok();
         }
 
@@ -392,7 +394,7 @@ namespace HalloDoc.mvc.Controllers
 
             TransferRequest model = new();
             model.ReqId = reqId;
-            return PartialView("_PTransferRequest", model); 
+            return PartialView("_PTransferRequest", model);
         }
 
         [HttpPost]
@@ -411,11 +413,99 @@ namespace HalloDoc.mvc.Controllers
 
 
         [HttpGet]
-        public IActionResult Order(int reqId)
+        public IActionResult POrder(int reqId)
         {
             var order = _adminService.FetchProfession();
             order.ReqId = reqId;
-            return RedirectToAction("Order",order);
+            return View(order);
+        }
+
+        public IActionResult PEncounterForm(int reqId)
+        {
+            ViewBag.reqId=reqId;
+            var form = _adminService.EncounterForm(reqId);
+            return View(form);
+        }
+
+        [HttpPost]
+        public IActionResult PEncounterForm(EncounterFormModel model)
+        {
+            bool isSaved = _adminService.SubmitEncounterForm(model);
+            if (isSaved)
+            {
+                _notyf.Success("Saved!!");
+            }
+            else
+            {
+                _notyf.Error("Failed");
+            }
+            return RedirectToAction("PEncounterForm", new { ReqId = model.reqid });
+        }
+
+        public IActionResult pcaremodal(int reqId)
+        {
+            ViewBag.reqid = reqId;
+            return PartialView("_PCareModal");
+        }
+        [HttpPost]
+        public IActionResult EncounterTypeModalSubmit(int requestId, short encounterType)
+        {
+            _providerService.CallType(requestId, encounterType);
+            return RedirectToAction("ProviderDashboard");
+        }
+
+        public IActionResult HouseCallSubmit(int requestId)
+        {
+            _providerService.housecall(requestId);
+            return RedirectToAction("ProviderDashboard");
+        }
+        [HttpPost]
+        public IActionResult EncounterFormSubmit(EncounterFormModel model, string finalizeBtn)
+        {
+            if (!string.IsNullOrEmpty(finalizeBtn))
+            {
+                model.IsFinalized = true;
+            }
+            _providerService.PSubmitEncounterForm(model);
+            _notyf.Success("Successfully Finalize!!");
+            return RedirectToAction("ProviderDashboard");
+        }
+
+        public IActionResult DownloadEncounterPopUp(int requestClientId)
+        {
+            return PartialView("_PDownloadModal");
+        }
+
+        public async Task<IActionResult> ConcludeCare(int request_id)
+        {
+            var data = await _providerService.ConcludeCare(request_id);
+            return View(data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> uploadencounter(ConcludeCareViewModel model, int RequestId)
+        {
+            await _providerService.UploadDocuments(model, RequestId);
+            return RedirectToAction("concludecare", new { request_id = RequestId });
+        }
+
+        public async Task<IActionResult> concludecase(ConcludeCareViewModel model)
+        {
+            var email = GetTokenEmail();
+            await _providerService.ConcludeCase(model, email);
+            //tempdata["success"] = "case concluded successfully";
+            return RedirectToAction("ProviderDashboard");
+        }
+
+        public string GetTokenEmail()
+        {
+            var token = HttpContext.Request.Cookies["jwt"];
+            if (token == null || !_jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
+            {
+                return "";
+            }
+            var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+            return emailClaim.Value;
         }
 
     }

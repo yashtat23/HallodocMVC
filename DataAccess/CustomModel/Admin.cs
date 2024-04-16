@@ -89,6 +89,9 @@ namespace DataAccess.CustomModel
 
         public int? regionId { get; set; }
 
+        public short calltype { get; set; }
+        public bool? isFinalized { get; set; }   
+
     }
 
     public class DashboardModel
@@ -97,6 +100,7 @@ namespace DataAccess.CustomModel
         public int? TotalPage { get; set; }
         public int? CurrentPage { get; set; }
         public List<Region>? regionList { get; set; }
+
 
     }
 
@@ -270,7 +274,7 @@ namespace DataAccess.CustomModel
         public string? MedicationDispensed { get; set; }
         public string? Procedures { get; set; }
         public string? FollowUp { get; set; }
-
+        public bool IsFinalized { get; set; }
         public bool? indicate { get; set; }
     }
 
@@ -1098,6 +1102,22 @@ namespace DataAccess.CustomModel
     {
         public int? ReqId { get; set; }
         public string? description { get; set; }
+    }
+
+    public class ConcludeCareViewModel
+    {
+        public string PatientName { get; set; }
+
+        public int RequestId { get; set; }
+
+        public int IsFinalize { get; set; }
+
+        public string ProviderNotes { get; set; }
+
+        public List<string> Documents = new List<string>();
+
+        public IEnumerable<IFormFile> Upload { get; set; }
+
     }
 
 }

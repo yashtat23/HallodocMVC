@@ -156,7 +156,9 @@ namespace BusinessLogic.Repository
                             status = r.Status,
                             Requestclientid = rc.Requestclientid,
                             reqId = r.Requestid,
-                            regionId = rc.Regionid
+                            regionId = rc.Regionid,
+                            calltype = (short)r.Calltype,
+                            isFinalized = _db.Encounterforms.Where(x=>x.Requestid == r.Requestid).Select(x=>x.Isfinalized).First()??null
                         };
 
 
@@ -3800,6 +3802,8 @@ namespace BusinessLogic.Repository
             };
             return order;
         }
+
+
 
     }
 }

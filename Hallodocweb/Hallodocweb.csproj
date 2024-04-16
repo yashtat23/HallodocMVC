@@ -37,6 +37,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Documents\" />
+    <Folder Include="wwwroot\provideruploads\" />
     <Folder Include="wwwroot\UploadedFiles\" />
   </ItemGroup>
 

@@ -1,0 +1,36 @@
+﻿@{
+    var requestClientId = ViewBag.RequestClientId;
+}
+
+<div class="modal" id="downloadEncounterModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#00B7FF">
+                <h5 class="modal-title">Encounter Form</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-block justify-content-center align-items-center" style="height: auto;">
+                <div class="d-block text-center">
+                    <h5>Encounter Form is finalized successfully!</h5>
+                </div>
+                <div class="d-block text-center">
+                    <a type="button" class="btn btn-info mx-2" href="@Url.Action("DownloadEncounterPDF","Provider",new{reqClientId=requestClientId})">Download</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function downloadEncounterForm(reqClientId) {
+        $.ajax({
+            url: "/Provider/DownloadEncounterPDF",
+            data: { reqClientId: reqClientId },
+            type: 'POST',
+            success: function () { },
+            error: function (error) {
+                console.log(error);
+                alert('Error Fetching Request')
+            },
+        })
+    }
+</script>

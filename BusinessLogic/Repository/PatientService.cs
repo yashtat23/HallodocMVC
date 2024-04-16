@@ -94,7 +94,7 @@ namespace BusinessLogic.Repository
 
         public void SendRegistrationEmailCreateRequest(string email, string registrationLink)
         {
-            string senderEmail = "mailto:tatva.dotnet.yashvariya@outlook.com";
+            string senderEmail = "tatva.dotnet.yashvariya@outlook.com";
             string senderPassword = "Itzvariya@23";
             SmtpClient client = new SmtpClient("smtp.office365.com")
             {
@@ -112,6 +112,8 @@ namespace BusinessLogic.Repository
                 IsBodyHtml = true,
                 Body = $"Click the following link to Create Account: <a href='{registrationLink}'>{registrationLink}</a>"
             };
+
+
 
             mailMessage.To.Add(email);
 

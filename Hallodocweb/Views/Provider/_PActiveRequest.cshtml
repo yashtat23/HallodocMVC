@@ -18,17 +18,17 @@
             <button class="action-btn">
                 <i class="bi bi-journal-text"></i> <span class="d-none d-md-block">Create Requests</span>
             </button>
-           @*  <button class="action-btn" id="exportActiveReq">
-                <i class="bi bi-reply"></i> <span class="d-none d-md-block">Export</span>
+            @*  <button class="action-btn" id="exportActiveReq">
+            <i class="bi bi-reply"></i> <span class="d-none d-md-block">Export</span>
             </button>
             <button class="action-btn" onclick="ExportAll()">
-                <i class="bi bi-reply-all"></i> <span class="d-none d-md-block">Export All</span>
+            <i class="bi bi-reply-all"></i> <span class="d-none d-md-block">Export All</span>
             </button>
             <button class="action-btn">
-                <i class="bi bi-person"></i> <span class="d-none d-md-block">
-                    Request
-                    DTY Support
-                </span>
+            <i class="bi bi-person"></i> <span class="d-none d-md-block">
+            Request
+            DTY Support
+            </span>
             </button> *@
         </span>
     </div>
@@ -40,17 +40,17 @@
             </div>
         </div>
         <div class="col-12 col-md-2 pt-2">
-            <div class="form-floating">
-                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                    <option disabled selected>Regions</option>
-                    @foreach (var item in Model.regionList)
-                    {
-                        <option value=@item.Regionid>@item.Name</option>
+            @* <div class="form-floating">
+            <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+            <option disabled selected>Regions</option>
+            @foreach (var item in Model.regionList)
+            {
+            <option value=@item.Regionid>@item.Name</option>
 
-                    }
-                </select>
-                <label for="floatingSelect"><i class="bi bi-search"></i> All Regions</label>
-            </div>
+            }
+            </select>
+            <label for="floatingSelect"><i class="bi bi-search"></i> All Regions</label>
+            </div> *@
         </div>
         <div class="col-md-4">
         </div>
@@ -63,7 +63,7 @@
             <div class="d-flex align-items-center" style="cursor:pointer" onclick="familyFriendElements()"><div class="family_circle"></div><span>Friend/Family</span></div>
             <div class="d-flex align-items-center" style="cursor:pointer" onclick="businessElements()"><div class="business_circle"></div><span> Business</span></div>
             <div class="d-flex align-items-center" style="cursor:pointer" onclick="conciergeElements()"><div class="concierge_circle"></div><span> Concierge</span></div>
-            <div class="d-flex align-items-center" style="cursor:pointer"><div class="vip_circle"></div><span> VIP</span></div>
+            @* <div class="d-flex align-items-center" style="cursor:pointer"><div class="vip_circle"></div><span> VIP</span></div> *@
 
         </div>
     </div>
@@ -76,13 +76,11 @@
         <thead class="table-secondary">
             <tr>
                 <th scope="col">Name</th>
-                <th scope="col">Date Of Birth</th>
-                <th scope="col">Requestor</th>
-                <th scope="col">Requested Date</th>
+
                 <th scope="col">Phone</th>
                 <th scope="col">Address</th>
-                <th scope="col">Notes</th>
-                <th scope="col">Chats With</th>
+
+                <th scope="col">Status</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -132,13 +130,7 @@
                                     </a>
                                 </div>
                             </td>
-                            @*2*@
-                            <td style="background:@bgColor">Jun 16, 2023(0)</td>
-                            @*3*@
-                            <td style="background:@bgColor">@item.requestorFname @item.requestorLname</td>
-                            @*4*@
-                            <td style="background:@bgColor">Nov 20, 2023 335h 1m 01m</td>
-                            @*@item.strMonth @item.intDate , @item.intYear*@
+
                             @*5*@
                             <td style="background:@bgColor">
                                 <div class="table_phone">
@@ -161,38 +153,34 @@
 
                             }
 
-                            @*7*@
-                            <td style="background:@bgColor">-</td>
+
                             @*8*@
                             <td style="background:@bgColor">
 
-                                <div class="d-flex">
-                                    <div class="dropdown mb-1 w-75">
-                                        <button class="btn text-white border border-white py-1"
-                                                type="button" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                            <i class="bi bi-person-fill"></i>
-                                            <span>
-                                                Patient
-                                            </span>
-                                        </button>
+                                @if (item.calltype == 0)
+                                {
+                                    @* <a class="dropdown-item" onclick="encounterType(@item.reqId)">Encounter</a> *@
+                                    <p>-</p>
+                                }
+
+                                else
+                                {
+                                    <div class="d-flex">
+                                        <div class="dropdown mb-1 w-75">
+                                            <button class="btn text-white border bg-primary py-1"
+                                                    type="button" data-bs-toggle="dropdown"
+                                                    aria-expanded="false" onclick="housecall(@item.reqId)">
+                                                <span>
+                                                    House Call
+                                                </span>
+                                            </button>
+
+                                        </div>
 
                                     </div>
+                                }
 
-                                </div>
-                                <div>
-                                    <div class="dropdown w-75">
-                                        <button class="btn text-white border border-white py-1"
-                                                type="button" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                            <i class="bi bi-person-badge-fill"></i>
-                                            <span>
-                                                Provider
-                                            </span>
-                                        </button>
 
-                                    </div>
-                                </div>
                             </td>
                             @*9*@
                             <td style="background:@bgColor">
@@ -213,34 +201,52 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" href="#">
+                                                <a class="dropdown-item" asp-controller="Provider" asp-action="PViewDocument" asp-route-reqId=@item.reqId>
                                                     <i class="bi bi-file-earmark-text"></i>
-                                                    ViewUploads
+                                                    View Uploads
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" href="#">
+                                                <button class="dropdown-item" onclick="pShowViewNotes(@item.reqId)">
                                                     <i class="bi bi-file-earmark-text"></i>
                                                     ViewNotes
-                                                </a>
+                                                </button>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" href="@Url.Action("Order","Admin", new {reqId = item.reqId})">
+                                                <a class="dropdown-item" href="@Url.Action("POrder","Provider", new {reqId = item.reqId})">
                                                     <i class="bi bi-file-earmark-text"></i>
                                                     Orders
                                                 </a>
                                             </li>
-                                         @*    <li>
-                                                <a class="dropdown-item" href="#">
-                                                    <i class="bi bi-file-earmark-text"></i>
-                                                    Doctors Notes
-                                                </a>
-                                            </li> *@
+                                            @*    <li>
+                                <a class="dropdown-item" href="#">
+                                <i class="bi bi-file-earmark-text"></i>
+                                Doctors Notes
+                                </a>
+                                </li> *@
+                                            @* <li>
+                                <button class="dropdown-item" onclick="pcaremodal(@item.reqId)">
+                                <i class="bi bi-file-earmark-text"></i>
+                                Encounter
+                                </button>
+                                </li> *@
                                             <li>
-                                                <a class="dropdown-item" href="#">
+                                                @if (item.calltype == 0)
+                                                {
+                                                <li>
+                                                    <button class="dropdown-item" onclick="pcaremodal(@item.reqId)">
+                                                        <i class="bi bi-file-earmark-text"></i>
+                                                        Encounter
+                                                    </button>
+                                                </li>
+                                                }
+                                                else
+                                                {
+                                                <a class="dropdown-item" href="@Url.Action("PEncounterForm", new {ReqId = item.reqId})">
                                                     <i class="bi bi-file-earmark-text"></i>
                                                     Encounter
                                                 </a>
+                                                }
                                             </li>
                                         </ul>
                                     </div>
@@ -287,6 +293,9 @@ else
 <!-- accordions -->
 <div class="accordion accordion-flush d-block d-md-none" id="accordionFlushExample">
 </div>
+
+<div id="modelContentcare"></div>
+
 <script>
     $("#exportActiveReq").click(function () {
         //alert("exportbtn was clicked.");
@@ -294,4 +303,43 @@ else
 
         Export(request);
     });
+
+    function pcaremodal(requestid) {
+        event.preventDefault();
+        console.log(requestid);
+        $.ajax({
+            method: "GET",
+            url: "/Provider/pcaremodal",
+            async: false,
+            data: { reqId: requestid },
+
+            success: function (result) {
+                $('#modelContentcare').html(result);
+                $('#pcaremodal').modal('show');
+            },
+            error: function () {
+                alert('Error loading partial view');
+            }
+        })
+    }
+
+    function housecall(reqId) {
+        $.ajax({
+            url: "/Provider/HouseCallSubmit",
+            data: {
+                requestId: reqId,
+
+            },
+            type: 'POST',
+            success: function () {
+                $('#encountertypeModal').modal('toggle');
+                location.reload();
+            },
+            error: function (error) {
+                console.log(error);
+                alert('Error Fetching Request')
+            },
+        });
+    }
+
 </script>

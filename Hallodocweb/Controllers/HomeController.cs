@@ -110,7 +110,7 @@ namespace Hallodocweb.Controllers
                     adminLoginModel.password = GenerateSHA256(adminLoginModel.password);
                     if (aspnetuser.Passwordhash == adminLoginModel.password)
                     {
-                        var jwtToken = _jwtService.GetJwtToken(aspnetuser);
+                         var jwtToken = _jwtService.GetJwtToken(aspnetuser);
                         Response.Cookies.Append("jwt", jwtToken);
                         //string Aspid = HttpContext.Session.SetString("UserId");
                         int role = aspnetuser.Aspnetuserroles.Where(x => x.Userid == aspnetuser.Id).Select(x => x.Roleid).First();

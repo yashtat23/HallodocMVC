@@ -637,6 +637,10 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\provideruploads\\Updated-Training-Plan-20March24_fae562.pdf",
+      "PackagePath": "staticwebassets\\provideruploads\\Updated-Training-Plan-20March24_fae562.pdf"
+    },
+    {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.Hallodocweb.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

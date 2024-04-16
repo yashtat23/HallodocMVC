@@ -264,7 +264,7 @@ namespace Hallodocweb.Controllers
         }
         private Task SendEmail(string email, string subject, string message)
         {
-            var mail = "mailto:tatva.dotnet.yashvariya@outlook.com";
+            var mail = "tatva.dotnet.yashvariya@outlook.com";
             var password = "Itzvariya@23";
 
             var client = new SmtpClient("smtp.office365.com", 587)

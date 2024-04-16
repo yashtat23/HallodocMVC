@@ -12,5 +12,11 @@ namespace BusinessLogic.Interfaces
         void acceptCase(int requestId,string loginUserId);
 
         bool TransferRequest(TransferRequest model);
+        void CallType(int requestId, short callType);
+        void housecall(int requestId);
+        bool PSubmitEncounterForm(EncounterFormModel model);
+        Task<ConcludeCareViewModel> ConcludeCare(int request_id);
+        Task UploadDocuments(ConcludeCareViewModel model, int request_id);
+        Task ConcludeCase(ConcludeCareViewModel model, string email);
     }
 }

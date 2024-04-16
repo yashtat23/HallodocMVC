@@ -18,9 +18,9 @@
             <button class="action-btn">
                 <i class="bi bi-journal-text"></i> <span class="d-none d-md-block">Create Requests</span>
             </button>
-            <button class="action-btn" id="exportConcludeReq">
+            @* <button class="action-btn" id="exportConcludeReq">
                 <i class="bi bi-reply"></i> <span class="d-none d-md-block">Export</span>
-            </button>
+            </button> *@
             @* <button class="action-btn" onclick="ExportAll()">
                 <i class="bi bi-reply-all"></i> <span class="d-none d-md-block">Export All</span>
             </button>
@@ -41,7 +41,7 @@
         </div>
         <div class="col-12 col-md-2 pt-2">
             <div class="form-floating">
-                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                @* <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
                     <option disabled selected>Regions</option>
                     @foreach (var item in Model.regionList)
                     {
@@ -49,7 +49,7 @@
 
                     }
                 </select>
-                <label for="floatingSelect"><i class="bi bi-search"></i> All Regions</label>
+                <label for="floatingSelect"><i class="bi bi-search"></i> All Regions</label> *@
             </div>
         </div>
         <div class="col-md-4">
@@ -63,7 +63,7 @@
             <div class="d-flex align-items-center" style="cursor:pointer" onclick="familyFriendElements()"><div class="family_circle"></div><span>Friend/Family</span></div>
             <div class="d-flex align-items-center" style="cursor:pointer" onclick="businessElements()"><div class="business_circle"></div><span> Business</span></div>
             <div class="d-flex align-items-center" style="cursor:pointer" onclick="conciergeElements()"><div class="concierge_circle"></div><span> Concierge</span></div>
-            <div class="d-flex align-items-center" style="cursor:pointer"><div class="vip_circle"></div><span> VIP</span></div>
+            @* <div class="d-flex align-items-center" style="cursor:pointer"><div class="vip_circle"></div><span> VIP</span></div> *@
 
         </div>
     </div>
@@ -76,13 +76,10 @@
         <thead class="table-secondary">
             <tr>
                 <th scope="col">Name</th>
-                <th scope="col">Date Of Birth</th>
-                <th scope="col">Requestor</th>
-                <th scope="col">Requested Date</th>
+                
                 <th scope="col">Phone</th>
                 <th scope="col">Address</th>
-                <th scope="col">Notes</th>
-                <th scope="col">Chats With</th>
+                
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -131,13 +128,7 @@
                                     </a>
                                 </div>
                             </td>
-                            @*2*@
-                            <td style="background:@bgColor">Jun 16, 2023(0)</td>
-                            @*3*@
-                            <td style="background:@bgColor">@item.requestorFname @item.requestorLname</td>
-                            @*4*@
-                            <td style="background:@bgColor">Nov 20, 2023 335h 1m 01m</td>
-                            @*@item.strMonth @item.intDate , @item.intYear*@
+                           
                             @*5*@
                             <td style="background:@bgColor">
                                 <div class="table_phone">
@@ -160,39 +151,6 @@
 
                             }
 
-                            @*7*@
-                            <td style="background:@bgColor">-</td>
-                            @*8*@
-                            <td style="background:@bgColor">
-
-                                <div class="d-flex">
-                                    <div class="dropdown mb-1 w-75">
-                                        <button class="btn text-white border border-white py-1"
-                                                type="button" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                            <i class="bi bi-person-fill"></i>
-                                            <span>
-                                                Patient
-                                            </span>
-                                        </button>
-
-                                    </div>
-
-                                </div>
-                                <div>
-                                    <div class="dropdown w-75">
-                                        <button class="btn text-white border border-white py-1"
-                                                type="button" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                            <i class="bi bi-person-badge-fill"></i>
-                                            <span>
-                                                Provider
-                                            </span>
-                                        </button>
-
-                                    </div>
-                                </div>
-                            </td>
                             @*9*@
                             <td style="background:@bgColor">
                                 <div>
@@ -206,40 +164,41 @@
                                         </button>
                                         <ul class="dropdown-menu table_dropdowns">
                                             <li>
+                                                <a class="dropdown-item" asp-controller="Provider" asp-action="ConcludeCare" asp-route-request_id="@item.reqId">
+                                                    <i class="bi bi-heart-pulse"></i>
+                                                    Conclude Case
+                                                </a>
                                                 <a class="dropdown-item" href="@Url.Action("ViewCase", new {Requestclientid = item.Requestclientid , RequestTypeId = item.requestTypeId})">
                                                     <i class="bi bi-file-earmark-text"></i>
                                                     ViewCase
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" href="#">
+                                                <a class="dropdown-item" asp-controller="Provider" asp-action="PViewDocument" asp-route-reqId=@item.reqId>
                                                     <i class="bi bi-file-earmark-text"></i>
-                                                    ViewUploads
+                                                    View Uploads
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" href="#">
+                                                <button class="dropdown-item" onclick="pShowViewNotes(@item.reqId)">
                                                     <i class="bi bi-file-earmark-text"></i>
                                                     ViewNotes
-                                                </a>
+                                                </button>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" href="#">
-                                                    <i class="bi bi-file-earmark-text"></i>
-                                                    Orders
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="#">
-                                                    <i class="bi bi-file-earmark-text"></i>
-                                                    Doctor Notes
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="#">
-                                                    <i class="bi bi-file-earmark-text"></i>
-                                                    Encounter
-                                                </a>
+                                                @if(item.isFinalized == false || item.isFinalized == null){
+                                                    <a class="dropdown-item" href="@Url.Action("PEncounterForm", new {ReqId = item.reqId})">
+                                                        <i class="bi bi-file-earmark-text"></i>
+                                                        Encounter
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a class="dropdown-item" onclick="downloadEncounter(@item.Requestclientid)">
+                                                        Encounter
+                                                    </a>
+                                                }
+                                                
                                             </li>
                                         </ul>
 
@@ -287,6 +246,9 @@ else
 <!-- accordions -->
 <div class="accordion accordion-flush d-block d-md-none" id="accordionFlushExample">
 </div>
+
+<div id="displayModals"></div>
+
 <script>
     $("#exportConcludeReq").click(function () {
         //alert("exportbtn was clicked.");
@@ -294,4 +256,53 @@ else
 
         Export(request);
     });
+
+    function activeEncounter(reqid) {
+        console.log(reqid)
+        $.ajax({
+            url: "/Provider/concludeEncounter",
+            data: { data: reqid },
+            type: 'GET',
+            success: function (result) {
+                $("#content").html(result);
+            },
+            error: function () {
+                alert('Error loading partial view');
+            }
+        });
+    }
+
+    function activeOrders(reqid) {
+        console.log(reqid)
+        $.ajax({
+            url: "/Provider/activeOrders", 
+            data: { data: reqid },
+            type: 'GET',
+            success: function (result) {
+                $("#content").html(result);
+            },
+            error: function () {
+                alert('Error loading partial view');
+            }
+        });
+    }
+
+
+        function downloadEncounter(reqClientId) {
+            $.ajax({
+                url: "/Provider/DownloadEncounterPopUp",
+                data: { requestClientId: reqClientId },
+                type: 'GET',
+                success: function (result) {
+                    $('#displayModals').html(result);
+                    $('#downloadEncounterModal').modal('toggle');
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert('Error Fetching Request')
+                },
+            });
+        }
+
+
 </script>

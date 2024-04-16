@@ -539,17 +539,15 @@
 
         function sendLink() {
             $.ajax({
-                url: '/Provider/SendLink',
+                url: '/Provider/PSendLink',
                 type: 'GET',
                 success: function (response) {
-                    $('#modelContent').html(response);
-                    $('#sendLinkPopUpOne').modal('show');
+
+                    $('#modelContentSendLink').html(response);
+                    $('#SendLinkModal').modal('show');
                 }
             })
-        }
-
-
-
+        } 
 
         function ProviderShowScheduling() {
             $.ajax({
