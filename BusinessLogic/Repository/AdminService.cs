@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Text.Json;
 using OfficeOpenXml;
 using Org.BouncyCastle.Ocsp;
+using DataAccess.Enums;
 
 namespace BusinessLogic.Repository
 {
@@ -1098,181 +1099,144 @@ namespace BusinessLogic.Repository
 
         }
 
-        public bool CreateRequest(CreateRequestModel model, string sessionEmail)
+        public void SendRegistrationEmailCreateRequest(string email, string registrationLink)
         {
-            try
+            string senderEmail = "tatva.dotnet.yashvariya@outlook.com";
+            string senderPassword = "Itzvariya@23";
+            SmtpClient client = new SmtpClient("smtp.office365.com")
             {
-                CreateRequestModel _create = new CreateRequestModel();
+                Port = 587,
+                Credentials = new NetworkCredential(senderEmail, senderPassword),
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false
+            };
 
-                var stateMain = _db.Regions.Where(r => r.Name.ToLower() == model.state.ToLower().Trim()).FirstOrDefault();
-
-                if (stateMain == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    Request _req = new Request();
-                    Requestclient _reqClient = new Requestclient();
-                    User _user = new User();
-                    Aspnetuser _asp = new Aspnetuser();
-                    Requestnote _note = new Requestnote();
-
-                    var admin = _db.Admins.Where(r => r.Email == sessionEmail).Select(r => r).First();
-
-                    var existUser = _db.Aspnetusers.FirstOrDefault(r => r.Email == model.email);
-
-                    if (existUser == null)
-                    {
-                        _asp.Id = Guid.NewGuid().ToString();
-                        _asp.Username = model.firstname + "_" + model.lastname;
-                        _asp.Email = model.email;
-                        _asp.Phonenumber = model.phone;
-                        _asp.Createddate = DateTime.Now;
-                        _db.Aspnetusers.Add(_asp);
-                        _db.SaveChanges();
-
-                        _user.Aspnetuserid = _asp.Id;
-                        _user.Firstname = model.firstname;
-                        _user.Lastname = model.lastname;
-                        _user.Email = model.email;
-                        _user.Mobile = model.phone;
-                        _user.City = model.city;
-                        _user.State = model.state;
-                        _user.Street = model.street;
-                        _user.Zipcode = model.zipcode;
-                        _user.Strmonth = model.dateofbirth.Substring(5, 2);
-                        _user.Intdate = Convert.ToInt16(model.dateofbirth.Substring(0, 4));
-                        _user.Intyear = Convert.ToInt16(model.dateofbirth.Substring(8, 2));
-                        _user.Createdby = _asp.Id;
-                        _user.Createddate = DateTime.Now;
-                        _user.Regionid = _db.Regions.Where(r => r.Name.ToLower() == model.state.ToLower()).Select(r => r.Regionid).FirstOrDefault();
-                        _db.Users.Add(_user);
-                        _db.SaveChanges();
-
-                        string registrationLink = "http://localhost:5145/Home/CreateAccount?aspuserId=" + _asp.Id;
-
-                        try
-                        {
-                            //SendRegistrationEmailCreateRequest(data.email, registrationLink);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                        }
-                    }
-
-                    _req.Requesttypeid = 1;
-                    _req.Userid = _user.Userid;
-                    _req.Firstname = admin.Firstname;
-                    _req.Lastname = admin.Lastname;
-                    _req.Phonenumber = admin.Mobile;
-                    _req.Email = admin.Email;
-                    _req.Status = 1 ;
-                    _req.Confirmationnumber = admin.Firstname.Substring(0, 1) + DateTime.Now.ToString().Substring(0, 19);
-                    _req.Createddate = DateTime.Now;
-                    _req.Isurgentemailsent = new BitArray(1);
-                    _req.Isurgentemailsent[0] = false;
-
-                    _db.Requests.Add(_req);
-                    _db.SaveChanges();
+            MailMessage mailMessage = new MailMessage
+            {
+                From = new MailAddress(senderEmail, "HalloDoc"),
+                Subject = "Create Account",
+                IsBodyHtml = true,
+                Body = $"Click the following link to Create Account: <a href='{registrationLink}'>{registrationLink}</a>"
+            };
 
 
-                        
-                    _reqClient.Requestid = _req.Requestid;
-                    _reqClient.Firstname = model.firstname;
-                    _reqClient.Lastname = model.lastname;
-                    _reqClient.Phonenumber = model.phone;
-                    _reqClient.Strmonth = model.dateofbirth.Substring(5, 2);
-                    _reqClient.Intdate = Convert.ToInt16(model.dateofbirth.Substring(8, 2));
-                    _reqClient.Intyear = Convert.ToInt16(model.dateofbirth.Substring(0, 4));
-                    _reqClient.Street = model.street;
-                    _reqClient.City = model.city;
-                    _reqClient.State = model.state;
-                    _reqClient.Zipcode = model.zipcode;
-                    _reqClient.Regionid = _db.Regions.Where(r => r.Name.ToLower() == model.state.ToLower()).Select(r => r.Regionid).FirstOrDefault();
-                    _reqClient.Email = model.email;
 
-                    _db.Requestclients.Add(_reqClient);
-                    _db.SaveChanges();
+            mailMessage.To.Add(email);
 
-                    _note.Requestid = _req.Requestid;
-                    _note.Adminnotes = model.admin_notes;
-                    _note.Createdby = _db.Aspnetusers.Where(r => r.Email == model.email).Select(r => r.Id).FirstOrDefault();
-                    _note.Createddate = DateTime.Now;
-                    _db.Requestnotes.Add(_note);
-                    _db.SaveChanges();
+            client.Send(mailMessage);
+        }
+        public bool CreateRequest(CreateRequestModel model, string sessionEmail, string createAccountLink)
+        {
+            CreateRequestModel _create = new CreateRequestModel();
 
+            var stateMain = _db.Regions.Where(r => r.Name.ToLower() == model.state.ToLower().Trim()).FirstOrDefault();
 
-                }
-                return true;
-            }
-            catch
+            if (stateMain == null)
             {
                 return false;
             }
+            else
+            {
+                Request req = new();
+                Requestclient reqClient = new();
+                User user = new User();
+                Aspnetuser asp = new Aspnetuser();
+                Requestnote note = new Requestnote();
+
+                var admin = _db.Admins.Where(r => r.Email == sessionEmail).Select(r => r).First();
+
+                var existUser = _db.Aspnetusers.FirstOrDefault(r => r.Email == model.email);
+
+                if (existUser == null)
+                {
+                    asp.Id = Guid.NewGuid().ToString();
+                    asp.Username = model.firstname + "_" + model.lastname;
+                    asp.Email = model.email;
+                    asp.Phonenumber = model.phone;
+                    asp.Createddate = DateTime.Now;
+                    _db.Aspnetusers.Add(asp);
+                    _db.SaveChanges();
+
+                    user.Aspnetuserid = asp.Id;
+                    user.Firstname = model.firstname;
+                    user.Lastname = model.lastname;
+                    user.Email = model.email;
+                    user.Mobile = model.phone;
+                    user.City = model.city;
+                    user.State = model.state;
+                    user.Street = model.street;
+                    user.Zipcode = model.zipcode;
+                    user.Strmonth = model.dateofbirth.Substring(5, 2);
+                    user.Intdate = Convert.ToInt16(model.dateofbirth.Substring(8, 2));
+                    user.Intyear = Convert.ToInt16(model.dateofbirth.Substring(0, 4));
+                    user.Createdby = admin.Adminid.ToString();
+                    user.Createddate = DateTime.Now;
+                    user.Regionid = stateMain.Regionid;
+                    _db.Users.Add(user);
+                    _db.SaveChanges();
+
+
+
+
+                    try
+                    {
+                        SendRegistrationEmailCreateRequest(model.email, createAccountLink);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+
+                req.Requesttypeid = (int)RequestTypeEnum.Patient;
+                req.Userid = _db.Users.Where(x => x.Email == sessionEmail).Select(x => x.Userid).First();
+                req.Firstname = admin.Firstname;
+                req.Lastname = admin.Lastname;
+                req.Phonenumber = admin.Mobile;
+                req.Email = admin.Email;
+                req.Status = (int)StatusEnum.Unassigned;
+                req.Confirmationnumber = admin.Firstname.Substring(0, 1) + DateTime.Now.ToString().Substring(0, 19);
+                req.Createddate = DateTime.Now;
+                req.Isurgentemailsent = new BitArray(1);
+                req.Isurgentemailsent[0] = false;
+                _db.Requests.Add(req);
+
+                _db.SaveChanges();
+
+
+
+                reqClient.Requestid = req.Requestid;
+                reqClient.Firstname = model.firstname;
+                reqClient.Lastname = model.lastname;
+                reqClient.Phonenumber = model.phone;
+                reqClient.Strmonth = model.dateofbirth.Substring(5, 2);
+                reqClient.Intdate = Convert.ToInt16(model.dateofbirth.Substring(8, 2));
+                reqClient.Intyear = Convert.ToInt16(model.dateofbirth.Substring(0, 4));
+                reqClient.Street = model.street;
+                reqClient.City = model.city;
+                reqClient.State = model.state;
+                reqClient.Zipcode = model.zipcode;
+                reqClient.Regionid = stateMain.Regionid;
+                reqClient.Email = model.email;
+
+                _db.Requestclients.Add(reqClient);
+                _db.SaveChanges();
+
+                note.Requestid = req.Requestid;
+                note.Adminnotes = model.admin_notes;
+                note.Createdby = _db.Aspnetusers.Where(r => r.Email == sessionEmail).Select(r => r.Id).First();
+                note.Createddate = DateTime.Now;
+                _db.Requestnotes.Add(note);
+                _db.SaveChanges();
+
+                return true;
+            }
+
 
 
 
         }
-
-        //public AdminProfile ProfileInfo(int adminId)
-        //{
-        //    Admin? obj = _db.Admins.FirstOrDefault(x => x.Adminid == adminId);
-
-        //    var region = _db.Regions.FirstOrDefault(x => x.Regionid == obj.Regionid).Name;
-        //    var regionList = _db.Regions.ToList();
-
-        //    AdminProfile profile = new()
-        //    {
-        //        UserName = obj.Firstname + obj.Lastname,
-        //        AdminId = adminId.ToString(),
-        //        //AdminPassword=obj.,
-        //        Status = obj.Status,
-        //        Role = obj.Roleid.ToString() ?? "",
-        //        FirstName = obj.Firstname,
-        //        LastName = obj.Lastname,
-        //        AdminPhone = obj.Mobile,
-        //        Email = obj.Email,
-        //        ConfirmEmail = obj.Email,
-        //        Address1 = obj.Address1,
-        //        Address2 = obj.Address2,
-        //        City = region,
-        //        State = region,
-        //        Zip = obj.Zip,
-        //        BillingPhone = obj.Altphone,
-        //        RegionList = regionList,
-        //    };
-
-        //    return profile;
-        //}
-
-        //public MyProfileModel MyProfile(string sessionEmail)
-        //{
-        //    var myProfileMain = _db.Admins.Where(x => x.Email == sessionEmail).Select(x => new MyProfileModel()
-        //    {
-        //        fname = x.Firstname,
-        //        lname = x.Lastname,
-        //        email = x.Email,
-        //        confirm_email = x.Email,
-        //        mobile_no = x.Mobile,
-        //        addr1 = x.Address1,
-        //        addr2 = x.Address2,
-        //        city = x.City,
-        //        zip = x.Zip,
-        //        state = _db.Regions.Where(r => r.Regionid == x.Regionid).Select(r => r.Name).First(),
-        //        roles = _db.Aspnetroles.ToList(),
-        //    }).ToList().FirstOrDefault();
-
-        //    var aspnetuser = _db.Aspnetusers.Where(r => r.Email == sessionEmail).First();
-
-
-
-        //    myProfileMain.username = aspnetuser.Username;
-        //    myProfileMain.password = aspnetuser.Passwordhash;
-
-        //    return myProfileMain;
-        //}
 
         public bool VerifyState(string state)
         {
@@ -1795,6 +1759,92 @@ namespace BusinessLogic.Repository
                 return false;
             }
         }
+
+        public List<AccountMenu> GetAccountMenu(int accounttype, int roleid)
+        {
+
+            var menu = _db.Menus.Where(r => r.Accounttype == accounttype).ToList();
+
+
+            var rolemenu = _db.Rolemenus.ToList();
+
+            var checkedMenu = menu.Select(r1 => new AccountMenu
+            {
+                menuid = r1.Menuid,
+                name = r1.Name,
+                ExistsInTable = rolemenu.Any(r2 => r2.Roleid == roleid && r2.Menuid == r1.Menuid),
+
+            }).ToList();
+
+            return checkedMenu;
+
+        }
+
+        public AccountAccess GetEditAccessData(int roleid)
+        {
+            var role = _db.Roles.FirstOrDefault(i => i.Roleid == roleid);
+            if (role != null)
+            {
+                var roledata = new AccountAccess()
+                {
+                    Name = role.Name,
+                    RoleId = roleid,
+                    AccountType = role.Accounttype,
+                };
+                return roledata;
+            }
+            return null;
+        }
+        public bool SetEditAccessAccount(AccountAccess accountAccess, List<int> AccountMenu, string sessionEmail)
+        {
+            try
+            {
+                var user = _db.Aspnetusers.Where(r => r.Email == sessionEmail).Select(r => r).First();
+
+                var role = _db.Roles.FirstOrDefault(x => x.Roleid == accountAccess.RoleId);
+                if (role != null)
+                {
+                    role.Name = accountAccess.Name;
+                    role.Accounttype = (short)accountAccess.AccountType;
+                    role.Modifiedby = user.Id;
+                    role.Modifieddate = DateTime.Now;
+
+                    _db.SaveChanges();
+
+                    var rolemenu = _db.Rolemenus.Where(i => i.Roleid == accountAccess.RoleId).ToList();
+                    if (rolemenu != null)
+                    {
+                        _db.Rolemenus.RemoveRange(rolemenu);
+                    }
+
+                    if (AccountMenu != null)
+                    {
+                        foreach (int menuid in AccountMenu)
+                        {
+                            _db.Rolemenus.Add(new Rolemenu
+                            {
+                                Roleid = role.Roleid,
+                                Menuid = menuid,
+                            });
+                        }
+                        _db.SaveChanges();
+                    }
+                }
+                return true;
+
+            }
+            catch
+            {
+                return false;
+
+            }
+        }
+        public List<Aspnetrole> GetAccountType()
+        {
+            var role = _db.Aspnetroles.ToList();
+            return role;
+        }
+
 
         public CreateAccess FetchRole(short selectedValue)
         {
@@ -2734,10 +2784,10 @@ namespace BusinessLogic.Repository
             }
         }
 
-        public List<BusinessTable> BusinessTable()
+        public List<BusinessTable> BusinessTable(string vendor, string profession)
         {
-            BitArray deletedBit = new BitArray(1,false); 
-            
+            BitArray deletedBit = new BitArray(1, false);
+
             var obj = (from t1 in _db.Healthprofessionals
                        join t2 in _db.Healthprofessionaltypes on t1.Profession equals t2.Healthprofessionalid
                        where t1.Isdeleted == deletedBit
@@ -2752,7 +2802,16 @@ namespace BusinessLogic.Repository
                            FaxNumber = t1.Faxnumber,
                            BusinessContact = t1.Businesscontact
                        });
-            return obj.ToList();
+            var objList = obj.ToList();
+            if (vendor != null)
+            {
+                objList = objList.Where(x => x.BusinessName.Trim().ToLower().Contains(vendor.Trim().ToLower())).Select(x => x).ToList();
+            }
+            if (profession != null)
+            {
+                objList = objList.Where(x => x.ProfessionName.Trim().ToLower().Contains(profession.Trim().ToLower())).Select(x => x).ToList();
+            }
+            return objList;
         }
 
         public void AddBusiness(AddBusinessModel obj)
@@ -2888,7 +2947,7 @@ namespace BusinessLogic.Repository
 
                 if (recordsModel.searchRecordSix != null)
                 {
-                    requestList = requestList.Where(r => r.requestor.Trim().ToLower().Contains(recordsModel.searchRecordSix.Trim().ToLower())).Select(r => r).ToList();
+                    requestList = requestList.Where(r => r.physician.Trim().ToLower().Contains(recordsModel.searchRecordSix.Trim().ToLower())).Select(r => r).ToList();
                 }
 
                 if (recordsModel.searchRecordSeven != null)

@@ -22,6 +22,7 @@ using DataAccess.Data;
 using DataAccess.Enums;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Drawing;
+using Rotativa.AspNetCore;
 
 namespace Hallodocweb.Controllers
 {
@@ -164,7 +165,7 @@ namespace Hallodocweb.Controllers
         public IActionResult Logout()
         {
             Response.Cookies.Delete("jwt");
-            return RedirectToAction("AdminLogin");
+            return RedirectToAction("AdminLogin","Home");
         }
 
         public IActionResult ViewCase(int Requestclientid, int RequestTypeId,int ReqId)
@@ -564,15 +565,17 @@ namespace Hallodocweb.Controllers
             var token = request.Cookies["jwt"];
             if (token == null || !_jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
             {
-                _notyf.Error("Token Expired");
+                _notyf.Error("Token Expired,Login Again");
                 return View(model);
             }
-            var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
-            var isSaved = _adminService.CreateRequest(model, emailClaim.Value);
+            string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+            string createAccountLink = baseUrl + Url.Action("CreateAccount", "Patient");
+            var email = GetTokenEmail();
+            var isSaved = _adminService.CreateRequest(model, email, createAccountLink);
             if (isSaved)
             {
                 _notyf.Success("Request Created");
-                return RedirectToAction("AdminDashboard", "Admin");
+                return RedirectToAction("AdminDashboard");
             }
             else
             {
@@ -836,6 +839,38 @@ namespace Hallodocweb.Controllers
             return Json(new { isDeleted = isDeleted });
         }
 
+        public IActionResult GetEditAccess(int accounttypeid, int roleid)
+        {
+            var roledata = _adminService.GetEditAccessData(roleid);
+            var Accounttype = _adminService.GetAccountType();
+            var menu = _adminService.GetAccountMenu(accounttypeid, roleid);
+            accessModel adminAccessCm = new accessModel
+            {
+                Aspnetroles = Accounttype,
+                AccountMenu = menu,
+                CreateAccountAccess = roledata,
+            };
+            return PartialView("_EditAccessRole", adminAccessCm);
+        }
+        public IActionResult FilterEditRolesMenu(int accounttypeid, int roleid)
+        {
+            var menu = _adminService.GetAccountMenu(accounttypeid, roleid);
+            var htmlcontent = "";
+            foreach (var obj in menu)
+            {
+                htmlcontent += $"<div class='form-check form-check-inline px-2 mx-3'><input class='form-check-input d2class' {(obj.ExistsInTable ? "checked" : "")} name='AccountMenu' type='checkbox' id='{obj.menuid}' value='{obj.menuid}'/><label class='form-check-label' for='{obj.menuid}'>{obj.name}</label></div>";
+            }
+            return Content(htmlcontent);
+        }
+
+        [HttpPost]
+        public IActionResult SetEditAccessAccount(accessModel adminAccessCm, List<int> AccountMenu)
+        {
+            var sessionEmail = GetTokenEmail();
+            bool isEdited = _adminService.SetEditAccessAccount(adminAccessCm.CreateAccountAccess, AccountMenu, sessionEmail);
+
+            return Json(new { isEdited });
+        }
 
         [HttpGet]
         public IActionResult CreateAccess()
@@ -975,9 +1010,9 @@ namespace Hallodocweb.Controllers
         {
             return PartialView("_Patners");
         }
-        public IActionResult BusinessTable()
+        public IActionResult BusinessTable(string vendor, string profession)
         {
-            var obj = _adminService.BusinessTable();
+            var obj = _adminService.BusinessTable(vendor, profession);
             return PartialView("_BusinessTable", obj);
         }
 
@@ -1019,6 +1054,13 @@ namespace Hallodocweb.Controllers
                 ProfessionList = _adminService.GetProfession()
             };
             return PartialView("_AddVendor", obj);
+        }
+
+        [HttpGet]
+        public IActionResult SearchVendor(string vendor, string profession)
+        {
+            var obj = _adminService.BusinessTable(vendor, profession);
+            return PartialView("_BusinessTable", obj);
         }
 
         public void DeleteBusiness(int VendorId)

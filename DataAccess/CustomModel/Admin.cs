@@ -469,6 +469,41 @@ namespace DataAccess.CustomModel
 
     }
 
+    public class AccountMenu
+    {
+        public int menuid { get; set; }
+
+        public int roleid { get; set; }
+
+        public string name { get; set; }
+
+        public int accounttype { get; set; }
+
+        public bool ExistsInTable { get; set; }
+
+    }
+
+    public class accessModel
+    {
+        public List<AccountAccess> AccountAccess { get; set; }
+
+        public AccountAccess CreateAccountAccess { get; set; }
+
+        public List<Aspnetrole> Aspnetroles { get; set; }
+
+        public List<Menu> Menus { get; set; }
+
+        public List<AccountMenu> AccountMenu { get; set; }
+
+        public List<UserAccess> UserAccess { get; set; }
+
+        public List<Aspnetrole> AspnetUserroles { get; set; }
+
+        public int Aspid { get; set; }
+
+        public int? flag { get; set; }
+    }
+
     public class CreateAccess
     {
         public List<Menu> Menu { get; set; }
@@ -1118,6 +1153,44 @@ namespace DataAccess.CustomModel
 
         public IEnumerable<IFormFile> Upload { get; set; }
 
+    }
+
+    public class viewUploads
+    {
+        public int reqid { get; set; }
+        public string? email { get; set; }
+
+        public List<DateTime> created_date { get; set; }
+
+        public string? docname { get; set; }
+
+        public string? cnf_number { get; set; }
+
+
+        [RegularExpression(@"^\s*[A-Za-z]+\s*$", ErrorMessage = "First Name must contain only letters")]
+        public string fname { get; set; }
+
+        [RegularExpression(@"^\s*[A-Za-z]+\s*$", ErrorMessage = "Last Name must contain only letters")]
+        public string lname { get; set; }
+
+        public int? user_id_param { get; set; }
+
+        public List<string> documentsname { get; set; }
+        public List<int> requestWiseFileId { get; set; }
+
+
+        [Required(ErrorMessage = "Please Enter Atleast One File")]
+        public IFormFile Upload { get; set; }
+
+        public bool dlt_data { get; set; }
+
+        public int? flagId { get; set; }
+
+
+        [Required(ErrorMessage = "Please Enter Note")]
+        public string? notes { get; set; }
+
+        public BitArray isFinalize { get; set; }
     }
 
 }

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "30/fiV2LNN3koPv4PBs41XXpOjj7Vd2hIn5SIbNkOnU=",
+  "Hash": "wR2VQgJWJ7cZPi0v5knPJH4xvwZntsu1k5q7skgNImA=",
   "Source": "Hallodocweb",
   "BasePath": "_content/Hallodocweb",
   "Mode": "Default",
@@ -1802,6 +1802,23 @@
       "OriginalItemSpec": "wwwroot\\PhysicianImages\\29\\ProfilePhoto.jpg"
     },
     {
+      "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\30\\ProfilePhoto.png",
+      "SourceId": "Hallodocweb",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\",
+      "BasePath": "_content/Hallodocweb",
+      "RelativePath": "PhysicianImages/30/ProfilePhoto.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\PhysicianImages\\30\\ProfilePhoto.png"
+    },
+    {
       "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\provideruploads\\Updated-Training-Plan-20March24_fae562.pdf",
       "SourceId": "Hallodocweb",
       "SourceType": "Discovered",
@@ -1817,6 +1834,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\provideruploads\\Updated-Training-Plan-20March24_fae562.pdf"
+    },
+    {
+      "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\Rotativa\\wkhtmltoimage.exe",
+      "SourceId": "Hallodocweb",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\",
+      "BasePath": "_content/Hallodocweb",
+      "RelativePath": "Rotativa/wkhtmltoimage.exe",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Rotativa\\wkhtmltoimage.exe"
+    },
+    {
+      "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\Rotativa\\wkhtmltopdf.exe",
+      "SourceId": "Hallodocweb",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\",
+      "BasePath": "_content/Hallodocweb",
+      "RelativePath": "Rotativa/wkhtmltopdf.exe",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Rotativa\\wkhtmltopdf.exe"
     },
     {
       "Identity": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg",

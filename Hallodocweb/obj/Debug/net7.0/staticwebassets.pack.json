@@ -77,6 +77,18 @@
       "PackagePath": "staticwebassets\\PhysicianImages\\29\\ProfilePhoto.jpg"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\30\\ProfilePhoto.png",
+      "PackagePath": "staticwebassets\\PhysicianImages\\30\\ProfilePhoto.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\Rotativa\\wkhtmltoimage.exe",
+      "PackagePath": "staticwebassets\\Rotativa\\wkhtmltoimage.exe"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\Rotativa\\wkhtmltopdf.exe",
+      "PackagePath": "staticwebassets\\Rotativa\\wkhtmltopdf.exe"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg",
       "PackagePath": "staticwebassets\\UploadedFiles\\7768657_3763028 - Copy - Copy.jpg"
     },

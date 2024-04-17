@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Rotativa.AspNetCore;
 using System.Text;
 using static BusinessLogic.Interfaces.IAuth;
 
@@ -99,6 +100,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 app.UseNotyf();
+app.UseRotativa();
 
 app.MapControllerRoute(
     name: "default",

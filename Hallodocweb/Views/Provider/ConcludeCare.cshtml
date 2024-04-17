@@ -1,142 +1,277 @@
-﻿@* @model Services.Models.ConcludeCareViewModel *@
-@using DataAccess.CustomModel;
-@model ConcludeCareViewModel;
-@{
-    ViewData["Title"] = "ConcludeCare";
-    // Layout = "~/Views/Shared/_ProviderDashboardLayout.cshtml";
-}
+﻿@using DataAccess.CustomModel;
+@model List<viewUploads>;
 
-<div class="container">
-    <div class="d-flex justify-content-between pt-3">
-        <h4>Conclude Care</h4>
-        <a asp-area="" asp-action="ProviderDashboard" class="btn border-2 border-info text-info p-2 px-3 fw-bold">
-            &lt;  Back
-        </a>
-
-    </div>
-    <div class="shadow">
-        <div class="px-3 pt-4 Document-content mt-3" style="">
-
-            <div class="pr-3">
-                <div class="h6 text-secondary">Patient Name</div>
-                <div class="h5 text-info d-inline-block">@Model.PatientName</div>
+<div class="container p-sm-2 p-md-3">
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+            tabindex="0">
+            <div class=" mt-2 d-flex justify-content-between align-items-center">
+                <h4>Conclude Care</h4>
+                <div id="resultDiv"></div>
+                <a onclick="DashboardMain()" class="btn shadow  btn-outline-secondary border-info text-info px-3 ">
+                    <i class="fa-solid fa-angle-left"></i> Back
+                </a>
             </div>
-        </div>
 
+            <div class="container-fluid shadow border rounded mt-3 px-4 mb-5 pb-5">
+                <div class="text-secondary pt-3 my-2 dark-mode2">Patient Name</div>
+                <span class="text-info fs-2 my-2">@Model[0].fname @Model[0].lname</span> <span class="my-2 fs-5 text-secondary dark-mode2">
+                    (@Model[0].cnf_number)
+                </span>
+                <form method="post" enctype="multipart/form-data" id="ProviderUploadForm">
+                    <input id="reqId" type="hidden" asp-for="@Model[0].reqid" value="@Model[0].reqid" />
+                    <div class="input-group mb-3  rounded my-4">
+                        <input asp-for="@Model[0].Upload" type="file" class="form-control  py-3" id="inputGroupFile" multiple accept=".pdf">
+                        <button type="button" onclick="ProviderUploadBtn()" class="input-group-text fw-bold bg-info upload">
+                            <i class="bi bi-cloud-arrow-up me-2 fw-bold text-white"></i>
+                            <span class="text-white">Upload</span>
+                        </button>
+                    </div>
+                    <span asp-validation-for="@Model[0].Upload" class="text-danger"></span>
+                </form>
 
-        <div class="py-3 px-3 h5 fw-bold d-flex justify-content-between">
-            <div>Encounter Forms</div>
-            <form asp-action="UploadEncounter" asp-controller="Provider" id="uploadForm" method="post" enctype="multipart/form-data">
-                <input asp-for="RequestId" value="@Model.RequestId" hidden />
-                <div class="file btn text-info border-info mr-3">
-                    <i class="bi bi-cloud-arrow-up"></i>
-                    Upload
-                    <input type="file" asp-for="Upload" id="BackgoundDoc" class="selectfile" onchange="submitForm()" accept=".pdf,.png" />
+                <div class="table-responsive">
+                    <table class="table ">
+                        <thead class="bg-body-tertiary ">
+                            <thead class="table-active">
+                                <tr>
+                                    <th>
+                                        <span class="ms-2">Documents</span>
+                                    </th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                        <tbody>                               
+                                @foreach (var obj in Model)
+                                {
+                                    for (int i = 0; i < obj.documentsname.Count(); i++)
+                                    {
+                                    <tr class="align-middle dark-mode2">
+                                        <td class="first-col">
+                                            <input id="reqWiseFileId" type="hidden" value="@obj.requestWiseFileId[i]" />
+                                            <input id="data" type="hidden" value="true" />
+                                            <input id="data" asp-for="@obj.email" type="hidden" value="@obj.email" />
+                                            <input id="inputMain" value="@obj.documentsname[i]" data-mailMain="@obj.email" data-reqid="@obj.reqid" data-reqwisefileid="@obj.requestWiseFileId[i]" type="checkbox" name="Mark" class="checkbox fileCheckbox" /><span class="document-combo ms-5">
+                                                <i class="fa-solid fa-file fa-sm" style="color: #005ca3;"></i>
+                                                <span class="document-name mx-2">@obj.documentsname[i]</span>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-outline-info" type="button" onclick="window.location.href='@Url.Action("DownloadFile","Provider",new {data = @obj.documentsname[i]})'"><i class="fa-solid fa-cloud-arrow-down"></i></button>
+                                            <button class="btn btn-outline-info delete-btn" onclick="ConcludeDeleteBtn('@obj.reqid','@obj.requestWiseFileId[i]')"> <i class="fa-solid fa-trash-can"></i></button>
+                                        </td>
+
+                                    </tr>
+                                    }
+
+                                }
+                        </tbody>
+                    </table>
                 </div>
-            </form>
 
-        </div>
-        <div class="table-responsive mt-2 d-sm-block d-none">
-            <table class="table">
-                <thead>
-                    <tr class="table-secondary">
-                        <th scope="col" style="width:55%">Documents</th>
-                        <th class="text-center" scope="col" style="width:15%">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Documents.Count() > 0)
+                <form  method="post" id="concludeCareForm">
+                    <h6 class="mt-3">Provider Notes</h6>
+                    <div class="form-floating">
+                        <input type="hidden" value="@Model[0].reqid" asp-for="@Model[0].reqid" />
+                        <input type="text" class="form-control" asp-for="@Model[0].notes" id="floatingPassword" style="height: 100px" placeholder=" ">
+                        <label class="floating-label" for="floatingInput" style="width: 100%;" >
+                            Provider Notes
+                        </label>
+                        <span asp-validation-for="@Model[0].notes" class="text-danger"></span>
+                    </div>
+
+                    @if (Model[0].isFinalize != null && Model[0].isFinalize[0] )
                     {
-                        @foreach (var item in Model.Documents!)
-                        {
-                            <tr>
-                                <td>@item</td>
-                                <td class="text-center">
-                                    <a href="~/uploads/@item" target="_blank" id="viewagreement" class="btn bg-info text-white h5 mb-0 view">View</a>
-                                </td>
-                            </tr>
-                        }
+                        <div class="d-flex justify-content-end mt-5">
+                            <button type="button" onclick="concludeCareBtn(@Model[0].reqid)" class="btn btn-info text-white">Conclude Care</button>
+                        </div>
                     }
                     else
                     {
-                        <tr>No Documents Found</tr>
+                    <div class="d-flex justify-content-end mt-5">
+                        <button type="button" onclick="FinalizePopup(@Model[0].reqid)" class="btn btn-info text-white">Conclude Care</button>
+                    </div>
                     }
-                </tbody>
-            </table>
-        </div>
-        <div class="d-sm-none d-block ps-3">
-            <hr />
-            @if (Model.Documents.Count() > 0)
-            {
-                @foreach (var item in Model.Documents!)
-                {
-                    <div>
-                        <span>@item</span>
-                    </div>
-                    <div class="my-3">
-                        <a href="~/uploads/@item" target="_blank" id="viewagreement" class="btn bg-info text-white h5 mb-0 view">View</a>
-                    </div>
-                }
-            }
-        </div>
-        <hr />
-        <div class="h5 ps-3">Provider Notes</div>
-        <div class="col-12">
-            <div class="form-floating mb-3">
-                <textarea class="form-control" placeholder="Provider Notes"
-                          id="provider" style="height: 100px"></textarea>
-                <label for="provider" class="">
-                    Provider Notes
-                </label>
+
+                </form>
+
             </div>
         </div>
-        <div class="text-end">
-            <button type="button" onclick="conclude()" id="conclude" class="btn bg-info text-white rounded-3 mr-3 fw-bold px-4 h5 modify">Conclude Care</button>
-        </div>
-
-        <br />
-        <br />
-        <br />
     </div>
 
+    <div class="modal fade" id="finalizeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body p-5">
+                    <form method="post" id="HousecallModalForm">
+                        <input type="hidden" value="" id="FinalizePopupReqId" />
+                        <div class="d-flex justify-content-center ">
+                            <i class="bi bi-info-circle-fill text-success d-flex justify-content-center display-4 mb-3 border border-2 border-success  rounded-circle  p-2" ></i>
+                        </div>
+                        <h5 class="d-flex justify-content-center mb-3">You Need To Finalize Before Conclude</h5>
+                        <p class="text-secondary fw-lighter text-center  mb-3">
+                            Are you sure you want to Finalize this request?
+                        </p>
 
-    <br />
-    <br />
+                        <div class="mt-4 d-flex justify-content-center">
+                            <button type="button" onclick="ProviderEncounterForm()" class="btn text-white continue-btn mx-2" style="background-color:purple;">Finalize</button>
+                            <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<br />
-<br />
+<partial name="_ValidationScriptsPartial" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 <script>
-
-    function conclude() {
-        var filterdata = {
-            RequestId: @Model.RequestId,
-            ProviderNotes: $('#provider').val(),
-        }
-        if (@Model.IsFinalize == 0) {
-            toastr.error('Please First finalize the encounter form');
-        }
-        else {
+    function ProviderUploadBtn() {
+        if ($("#ProviderUploadForm").valid()) {
             $.ajax({
-                url: "/Provider/ConcludeCase/",
-                type: "POST",
-                data: filterdata,
-                dataType: "html",
-                success: function (data) {
+                url: '/Provider/ConcludeViewUploadMain',
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                data: new FormData($('#ProviderUploadForm')[0]),
+                success: function (response) {
+                    console.log(response);
+                    ConcludeCare(response.data);
+                    toastr.success("Data Uploaded Successfully");
                 },
-                error: function () {
-                    alert("No Projects Found");
-                    $("#housecall").html('An error has occurred');
+                error: function (error) {
+                    toastr.error("Error");
                 }
             });
         }
 
-    };
-
-    function submitForm() {
-        document.getElementById("uploadForm").submit();
     }
+    
+
+    function ConcludeDeleteBtn(id, ReqWiseId) {
+        $.ajax({
+            url: '/Provider/DeleteFile',
+            type: 'POST',
+            data: { id: id, reqFileId: ReqWiseId },
+            success: function (response) {
+                ConcludeCare(response.data);
+                toastr.success("Data Deleted Successfully");
+            },
+            error: function (error) {
+                toastr.error("Error");
+            }
+        });
+    }
+    
+    
+    
+    function concludeCareBtn() {
+        if ($("#concludeCareForm").valid()) {
+            $.ajax({
+                url: '/Provider/ProviderConcludeCarePost',
+                type: 'POST',
+                data: $("#concludeCareForm").serialize(),
+                success: function (response) {
+                    DashboardMain();
+                    toastr.success("Conclude Care Successfully");
+                },
+                error: function (error) {
+                    toastr.error("Error");
+                },
+            });
+        }
+    }
+    
+
+    function FinalizePopup(reqid) {
+        $.ajax({
+            url: "/Provider/FinalizePopup",
+            data: { data: reqid },
+            type: 'GET',
+            success: function (result) {
+                $('#finalizeModal').modal('show');
+                $("#FinalizePopupReqId").val(result.isSend);
+            },
+            error: function (e) {
+                console.log(e);
+                toastr.error("Error");
+            },
+        });
+    }
+    
+    
+    function concludeCareBtnWithFinalize(reqId) {
+        $.ajax({
+            url: '/Provider/ProviderConcludeCarePost',
+            type: 'POST',
+            data: $("#concludeCareForm").serialize(),
+            success: function (response) {
+                DashboardMain();
+                toastr.success("Conclude Care Successfully");
+            },
+            error: function (error) {
+                toastr.error("Error");
+            },
+        });
+    }
+
+
+    function FinalizeBtn(reqId) {
+        let action = "/Provider/FinalizeEncounter";
+            $.ajax({
+                url: action,
+                type: 'GET',
+                data: { reqId: reqId },
+                success: function (result) {
+                    DashboardMain();
+                    toastr.success("Encounter Form Update Successfully");
+                },
+                error: function () {
+                    toastr.error("Error");
+                },
+            });
+    }
+    
+    
+    function finalizeModalBtn(reqId) {
+        $.ajax({
+            url: action,
+            type: 'GET',
+            data: { reqId: reqId },
+            success: function (result) {
+                $('#finalizeModal').modal('hide');
+                toastr.success("Request Finalize Successfully");
+            },
+            error: function () {
+                toastr.error("Error");
+            },
+        });
+    }
+
+
+    function ProviderEncounterForm() {
+       
+            var a = $("#FinalizePopupReqId").val();
+            alert(a);
+            $.ajax({
+                url: "/Provider/concludeEncounter",
+                data: { data: a },
+                type: 'GET',
+                success: function (result) {
+                    $("#finalizeModal").modal("hide");
+                    $("#content").html(result);
+                },
+                error: function () {
+                    alert('Error loading partial view');
+                }
+            });
+        
+    }
+
+
+
 </script>

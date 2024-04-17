@@ -12,6 +12,7 @@ using Hallodocweb.Controllers;
 using System.IdentityModel.Tokens.Jwt;
 using BusinessLogic.Repository;
 using System.Security.Claims;
+using Rotativa.AspNetCore;
 
 namespace HalloDoc.mvc.Controllers
 {
@@ -422,7 +423,7 @@ namespace HalloDoc.mvc.Controllers
 
         public IActionResult PEncounterForm(int reqId)
         {
-            ViewBag.reqId=reqId;
+            ViewBag.reqId = reqId;
             var form = _adminService.EncounterForm(reqId);
             return View(form);
         }
@@ -471,31 +472,69 @@ namespace HalloDoc.mvc.Controllers
             return RedirectToAction("ProviderDashboard");
         }
 
-        public IActionResult DownloadEncounterPopUp(int requestClientId)
+        public IActionResult DownloadEncounterPopUp(int reqId)
         {
+            ViewBag.reqId = reqId;
             return PartialView("_PDownloadModal");
         }
 
-        public async Task<IActionResult> ConcludeCare(int request_id)
+        public IActionResult DownloadEncounterPDF([FromQuery] int reqId)
         {
-            var data = await _providerService.ConcludeCare(request_id);
-            return View(data);
+            var data = _adminService.EncounterForm(reqId);
+            return new ViewAsPdf("PdfPartial", data)
+            {
+                FileName = "EncounterForm.pdf"
+            };
+            //return PartialView("_PConcludeRequest");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> uploadencounter(ConcludeCareViewModel model, int RequestId)
-        {
-            await _providerService.UploadDocuments(model, RequestId);
-            return RedirectToAction("concludecare", new { request_id = RequestId });
-        }
+        //public IActionResult concludeEncounter(int data)
+        //{
+        //    var model = _IAdminDash.concludeEncounter(data);
+        //    return PartialView("ConcludeCare", model);
+        //}
+        //[HttpPost]
+        //public IActionResult ConcludeViewUploadMain(adminDashData obj)
+        //{
+        //    adminDashData adminDashObj = new adminDashData();
+        //    _IAdminDash.viewUploadMain(obj);
+        //    return Json(new { data = obj._viewUpload[0].reqid });
+        //}
 
-        public async Task<IActionResult> concludecase(ConcludeCareViewModel model)
-        {
-            var email = GetTokenEmail();
-            await _providerService.ConcludeCase(model, email);
-            //tempdata["success"] = "case concluded successfully";
-            return RedirectToAction("ProviderDashboard");
-        }
+        //[HttpPost]
+        //public IActionResult DeleteFile(bool data, int id, int reqFileId)
+        //{
+        //    _IAdminDash.DeleteFile(data, reqFileId);
+        //    return Json(new { data = id });
+
+        //}
+
+
+        //[HttpPost]
+        //public IActionResult ProviderConcludeCarePost(adminDashData obj)
+        //{
+        //    adminDashData adminDashObj = new adminDashData();
+        //    var sessionEmail = HttpContext.Session.GetString("UserSession");
+        //    _IProviderDash.ProviderConcludeCarePost(obj, sessionEmail);
+        //    return Ok();
+        //}
+        //public IActionResult FinalizePopup(int data)
+        //{
+        //    var dataMain = _IProviderDash.ProviderEncounterFormDownload(data);
+        //    return Json(new { isSend = dataMain._ProviderEncounterPopUp.reqId });
+        //}
+        //public IActionResult FinalizeEncounter(int reqId)
+        //{
+        //    _IProviderDash.FinalizeEncounter(reqId);
+        //    return Ok();
+        //}
+        //public async Task<IActionResult> ConcludeCare(int request_id)
+        //{
+        //    var data = await _providerService.ConcludeCare(request_id);
+        //    return View(data);
+        //}
+
+
 
         public string GetTokenEmail()
         {
@@ -506,6 +545,54 @@ namespace HalloDoc.mvc.Controllers
             }
             var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
             return emailClaim.Value;
+        }
+
+      
+
+        [HttpGet]
+        public IActionResult MyProfile()
+        {
+            var userid = GetLoginId();
+            var tokenemail = GetTokenEmail();
+            int phyId = _providerService.GetPhysicianId(userid);
+            EditProviderModel2 model = new EditProviderModel2();
+            model.editPro = _adminService.EditProviderProfile(phyId, tokenemail);
+            model.regions = _adminService.RegionTable();
+            model.physicianregiontable = _adminService.PhyRegionTable(phyId);
+            model.roles = _adminService.GetRoles();
+            return PartialView("_PMyProfile", model);
+
+        }
+
+        public IActionResult Scheduling(SchedulingViewModel model)
+        {
+
+            model.regions = _adminService.RegionTable().ToList();
+            return PartialView("_MyScheduling", model);
+        }
+
+        public IActionResult LoadSchedulingPartial(string date, int regionid, int status)
+        {
+            var aspnetuserid = GetLoginId();
+            var month = _providerService.PhysicianMonthlySchedule(date, status, aspnetuserid);
+            return PartialView("_MonthlySchedule", month);
+
+        }
+
+        [HttpPost]
+        public IActionResult AddShift(SchedulingViewModel model, List<int> repeatdays)
+        {
+            var email = GetTokenEmail();
+
+            //var email = User.FindFirstValue(ClaimTypes.Email);
+            var isAdded = _adminService.CreateShift(model, email, repeatdays);
+            return Json(new { isAdded });
+        }
+
+        public IActionResult ViewShift(int ShiftDetailId)
+        {
+            var data = _adminService.ViewShift(ShiftDetailId);
+            return View("_PViewShift", data);
         }
 
     }

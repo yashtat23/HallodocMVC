@@ -78,7 +78,9 @@ namespace BusinessLogic.Interfaces
 
         bool SubmitEncounterForm(EncounterFormModel model);
 
-        bool CreateRequest(CreateRequestModel model, string sessionEmail);
+        void SendRegistrationEmailCreateRequest(string email, string registrationLink);
+        bool CreateRequest(CreateRequestModel model, string sessionEmail, string createAccountLink);
+        //bool CreateRequest(CreateRequestModel model, string sessionEmail);
 
         //AdminProfile ProfileInfo(int adminId);
         //MyProfileModel MyProfile(string sessionEmail);
@@ -109,6 +111,10 @@ namespace BusinessLogic.Interfaces
         List<AccountAccess> AccountAccess();
         bool DeleteRole(int roleId);
 
+        List<AccountMenu> GetAccountMenu(int accounttype, int roleid);
+        AccountAccess GetEditAccessData(int roleid);
+        bool SetEditAccessAccount(AccountAccess accountAccess, List<int> AccountMenu, string sessionEmail);
+        List<Aspnetrole> GetAccountType();
         List<Role> GetRoles();
 
         List<PhysicianRegionTable> PhyRegionTable(int phyId);
@@ -143,8 +149,7 @@ namespace BusinessLogic.Interfaces
         void AddProviderBusinessPhotos(IFormFile photo, IFormFile signature, int phyId);
         bool EditOnBoardingData(EditProviderModel2 dataMain);
         void editProviderDeleteAccount(int phyId);
-
-        List<BusinessTable> BusinessTable();
+        List<BusinessTable> BusinessTable(string vendor, string profession);
         void AddBusiness(AddBusinessModel obj);
         List<Healthprofessionaltype> GetProfession();
         void RemoveBusiness(int VendorId);

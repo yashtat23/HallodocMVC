@@ -14,6 +14,7 @@ using DataAccess.CustomModel;
 using DataAccess.Enum;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
+using System.Collections;
 
 namespace BusinessLogic.Repository
 {
@@ -327,6 +328,48 @@ namespace BusinessLogic.Repository
             }
         }
 
+        public int GetPhysicianId(string userid)
+        {
+            int phyid = _db.Physicians.Where(x => x.Aspnetuserid == userid).Select(x => x.Physicianid).First();
+            return phyid;
+        }
+
+        public MonthWiseScheduling PhysicianMonthlySchedule(string date, int status, string aspnetuserid)
+        {
+            var currentDate = DateTime.Parse(date);
+            int? phy = _db.Physicians.Where(x => x.Aspnetuserid == aspnetuserid).Select(x => x.Physicianid).FirstOrDefault();
+
+
+
+            BitArray deletedBit = new BitArray(new[] { false });
+            MonthWiseScheduling month = new MonthWiseScheduling
+            {
+                date = currentDate,
+
+            };
+
+            if (status != 0)
+            {
+                var shiftdetailList = from t1 in _db.Shiftdetails
+                                      join t2 in _db.Shifts
+                                      on t1.Shiftid equals t2.Shiftid
+                                      where t1.Status == status && t2.Physicianid == phy
+                                      orderby t1.Starttime ascending
+                                      select t1;
+                month.shiftdetails = shiftdetailList.ToList();
+            }
+            else
+            {
+                var shiftdetailList = from t1 in _db.Shiftdetails
+                                      join t2 in _db.Shifts
+                                      on t1.Shiftid equals t2.Shiftid
+                                      where t2.Physicianid == phy
+                                      orderby t1.Starttime ascending
+                                      select t1;
+                month.shiftdetails = shiftdetailList.ToList();
+            }
+            return month;
+        }
 
     }
 }

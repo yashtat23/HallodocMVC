@@ -158,7 +158,7 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
                                 data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
-                                aria-selected="false" onClick="ProviderShowMyProfile()">
+                                aria-selected="false" onClick="pMyProfile()">
                             My Profile
                         </button>
                     </li>
@@ -514,7 +514,6 @@
 
         }
 
-
         function ExportAll() {
             $.ajax({
                 url: '/Provider/GetRequestsByStatus',
@@ -559,10 +558,35 @@
             });
         }
 
+        function pMyProfile() {
 
+            $.ajax({
+                url: "/Provider/MyProfile",
+                type: 'GET',
 
+                success: function (result) {
 
+                    $('#profile-tab-pane').html(result);
+                },
+                error: function (xhr, status, error) {
+                    if (xhr.status === 401) {
 
+                        window.location.reload();
+                    }
+                    console.error(error);
+                }
+            });
+        }
+
+        function ProviderShowScheduling() {
+            $.ajax({
+                url: '/Provider/Scheduling',
+                type: 'GET',
+                success: function (response) {
+                    $("#provider-tab-pane").html(response);
+                }
+            });
+        }
 
     </script>
 

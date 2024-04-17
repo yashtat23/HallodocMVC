@@ -164,10 +164,10 @@
                                         </button>
                                         <ul class="dropdown-menu table_dropdowns">
                                             <li>
-                                                <a class="dropdown-item" asp-controller="Provider" asp-action="ConcludeCare" asp-route-request_id="@item.reqId">
-                                                    <i class="bi bi-heart-pulse"></i>
-                                                    Conclude Case
-                                                </a>
+                                                <button class="dropdown-item" onclick="concludecare(@item.reqId)">
+                                                    <i class="bi bi-file-earmark-text"></i>
+                                                    Conclude Care
+                                                </button>
                                                 <a class="dropdown-item" href="@Url.Action("ViewCase", new {Requestclientid = item.Requestclientid , RequestTypeId = item.requestTypeId})">
                                                     <i class="bi bi-file-earmark-text"></i>
                                                     ViewCase
@@ -194,9 +194,9 @@
                                                 }
                                                 else
                                                 {
-                                                    <a class="dropdown-item" onclick="downloadEncounter(@item.Requestclientid)">
+                                                    <button class="dropdown-item" onclick="encounterDownload(@item.reqId)">
                                                         Encounter
-                                                    </a>
+                                                    </button>
                                                 }
                                                 
                                             </li>
@@ -249,6 +249,24 @@ else
 
 <div id="displayModals"></div>
 
+
+<script>
+    function encounterDownload(reqId) {
+        $.ajax({
+            url: "/Provider/DownloadEncounterPopUp",
+            data: { reqId: reqId },
+            type: 'GET',
+            success: function (result) {
+                $('#displayModals').html(result);
+                $('#downloadEncounterModal').modal('toggle');
+            },
+            error: function (error) {
+                console.log(error);
+                alert('Error Fetching Request')
+            },
+        });
+    }
+</script>
 <script>
     $("#exportConcludeReq").click(function () {
         //alert("exportbtn was clicked.");
@@ -272,6 +290,7 @@ else
         });
     }
 
+ 
     function activeOrders(reqid) {
         console.log(reqid)
         $.ajax({
@@ -288,21 +307,15 @@ else
     }
 
 
-        function downloadEncounter(reqClientId) {
-            $.ajax({
-                url: "/Provider/DownloadEncounterPopUp",
-                data: { requestClientId: reqClientId },
-                type: 'GET',
-                success: function (result) {
-                    $('#displayModals').html(result);
-                    $('#downloadEncounterModal').modal('toggle');
-                },
-                error: function (error) {
-                    console.log(error);
-                    alert('Error Fetching Request')
-                },
-            });
-        }
-
+    function concludecare(reqId) {
+        $.ajax({
+            url: '/Provider/Cancludecare',
+            type: 'GET',
+            Data: {reqId : reqId}
+            success: function (response) {
+                $("#displayModalse").html(response);
+            }
+        });
+    }
 
 </script>

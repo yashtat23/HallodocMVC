@@ -18,5 +18,8 @@ namespace BusinessLogic.Interfaces
         Task<ConcludeCareViewModel> ConcludeCare(int request_id);
         Task UploadDocuments(ConcludeCareViewModel model, int request_id);
         Task ConcludeCase(ConcludeCareViewModel model, string email);
+        int GetPhysicianId(string userid);
+
+        MonthWiseScheduling PhysicianMonthlySchedule(string date, int status, string aspnetuserid);
     }
 }
