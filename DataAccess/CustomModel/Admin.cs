@@ -187,6 +187,8 @@ namespace DataAccess.CustomModel
 
         public List<IFormFile>? uploadedFiles { get; set; }
 
+        public string? ProviderNote { get; set; }
+
     }
 
     public class Order

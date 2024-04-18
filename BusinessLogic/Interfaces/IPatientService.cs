@@ -46,6 +46,6 @@ namespace BusinessLogic.Interfaces
 
         PatientInfoModel FetchData(string email);
 
-        void ReqforSomeoneElse(FamilyReqModel familyFriendRequestForm, int userid);
+        bool SomeElseReq(FamilyReqModel model, string createAccountLink, string loginid);
     }
 }

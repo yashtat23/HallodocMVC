@@ -15,9 +15,9 @@
                     Link
                 </span>
             </button>
-            <a class="action-btn my-3 d-flex gap-2 dark-mode1" asp-controller="Admin" asp-action="CreateReq">
-                <i class="bi bi-journal-text"></i> <span class="d-none d-md-block">Create Requests</span>
-            </a>
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="location.href='@Url.Action("CreateReq", "Admin")'">
+                <i class="bi bi-journal-text"></i> <span class="d-none d-md-block">Create Request</span>
+            </button>
             <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="ExpertSingleTab(2)">
                 <i class="bi bi-reply"></i> <span class="d-none d-md-block" id="penexportbtn">Export</span>
             </button>

@@ -34,16 +34,17 @@
             </h3>
             <form method="post">
                 <div class="input-div form-floating mt-2">
-                    <input asp-for="email" type="email" class="form-control shadow-none" id="myInput" placeholder="Email">
+                    <input asp-for="email" type="email" class="form-control shadow-none" id="" placeholder="Email">
                     <label class="FloatingInput" for="Name"> Email</label>
                     <i class="i2 bi bi-person-circle icon"></i>
-                    
+                    <span class="text-danger" asp-validation-for="email"></span>
                 </div>
 
                 <div class="input-div form-floating mt-3">
                     <input asp-for="password" type="password" class="form-control shadow-none" id="myInput" placeholder="Password">
                     <label class="FloatingInput" for="Name">Password</label>
                     <i class="i1 bi bi-eye icon" onclick="myPassword()" id="icon_1"></i>
+                    <span class="text-danger" asp-validation-for="password"></span>
                 </div>
 
                 <div class="input-div form-floating mt-3">

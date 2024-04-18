@@ -10,39 +10,41 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <link rel="stylesheet" href="~/css/patientreq.css" />
-<link rel="stylesheet" href="~/css/dark-mode.css" />
-@await Html.PartialAsync("nav")
 
 <div class="container">
     <div class="navbar navbar-light justify-content-between">
         <h3 class="dark-mode1">Submit Information</h3>
-        <a asp-controller="patient" asp-action="patientdashboard">
-            <button class="back btn btn-outline-info m-2" onclick="location.href='@Url.Action("patientsubreq", "Patient")'">
-                <span class="h6 p-0 m-0 text-center" style="color: #10bce9;">&#60; Back</span>
-            </button>
-        </a>
+
+        <button id="back-btn" onclick="location.href='@Url.Action("PatientDashboard", "Patient")'">
+            <span class="h6 p-0 m-0 text-center" style="color: #10bce9;">&#60; Back</span>
+        </button>
+        <button type="button" class="btn shadow border-info ms-2" hidden
+                style="border-radius: 10px; border-color: aqua" id="colorButton">
+            <i id="moon" class="bi bi-moon text-info fs-5"></i>
+            <i id="sun" class="bi bi-sun text-info fs-5 d-none"></i>
+        </button>
     </div>
 </div>
 
-<div class="container dark-mode1 bg-white">
-    <form method="post">
+<div class="container dark-mode1 bg-white dark-mode1">
+    <form method="post" enctype="multipart/form-data" asp-controller="patient" asp-action="SubmitElseInfo">
         <h3 class="dark-mode1">Patient Information</h3>
         <div class="form-floating col-12 ">
             <textarea asp-for="symptoms" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
                       style="height: 100px"></textarea>
             <label for="floatingTextarea2" class="first">Enter Brief Details of Symptoms(Optional)</label>
-        </div>  
+        </div>
         <div class="row mt-3">
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
-                <input asp-for="firstName" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input asp-for="patientFirstName" type="text" class="form-control" id="floatingInput" placeholder="First Name">
                 <label for="floatingInput" class="email">Your First Name</label>
             </div>
             <div class="form-floating col-lg-6 col-md-12 col-sm-12">
-                <input asp-for="lastName" type="text" class="form-control" id="floatingPassword" placeholder="Password">
+                <input asp-for="patientLastName" type="text" class="form-control" id="floatingPassword" placeholder="Password">
                 <label for="floatingPassword" class="email">Your Last Name</label>
             </div>
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12 mt-2">
-                <input asp-for="patientDob" type="date" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input asp-for="patientDob" type="date" class="form-control" id="floatingInput" placeholder="date">
                 <label for="floatingInput" class="email">Date of Birth</label>
             </div>
         </div>
@@ -61,25 +63,25 @@
         <h4>Patient Location</h4>
         <div class="row mt-2">
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
-                <input asp-for="street" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input asp-for="street" type="text" class="form-control" id="floatingInput" placeholder="Street">
                 <label for="floatingInput" class="email">Street</label>
             </div>
             <div class="form-floating col-lg-6 col-md-12 col-sm-12">
                 <input asp-for="city" type="text" class="form-control" id="floatingPassword" placeholder="Password">
-                <label for="floatingPassword" class="email">City</label>
+                <label for="floatingInput" class="email">City</label>
             </div>
         </div>
         <div class="row mt-2">
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
-                <input asp-for="state" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-               <label for="floatingInput" class="email">State</label>
+                <input asp-for="state" type="text" class="form-control" id="floatingInput" placeholder="State">
+                <label for="floatingInput" class="email">State</label>
             </div>
             <div class="form-floating col-lg-6 col-md-12 col-sm-12">
-                <input asp-for="zipCode" type="text" class="form-control" id="floatingPassword" placeholder="Password">
-                <label for="floatingPassword" class="email">Zip Code</label>
+                <input asp-for="zipCode" type="text" class="form-control" id="floatingPassword" placeholder="Zipcode">
+                <label for="floatingInput" class="email">Zip Code</label>
             </div>
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12 mt-2">
-                <input asp-for="roomNo" type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input asp-for="roomNo" type="text" class="form-control" id="floatingInput" placeholder="Roomm">
                 <label for="floatingInput" class="email">Room # / Suite (optional)</label>
             </div>
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12 mt-2">
@@ -90,7 +92,7 @@
         <h4>(Optional)Upload Photo Or Document</h4>
         <div class="form mb-3 col-lg-12 col-md-12 col-sm-12 d-flex">
             <div class="input-group mb-3">
-                <input type="file" class="form-control form-control-lg id="fromFilelg" multiple>
+                <input asp-for="File" class="form-control form-control-lg dark-mode1" id="formFileLg" type="file" multiple>
                 <label class="input-group-text bg-primary text-white" for="inputGroupFile02">
                     <i class="bi bi-cloud-arrow-up m-1"></i>&nbsp;Upload
                 </label>
@@ -104,8 +106,6 @@
     </form>
 </div>
 
-@await Html.PartialAsync("footer")
-<script src="~/js/dark-mode.js"></script>
 <script>
     const phoneInputField = document.querySelectorAll("input[type='tel']");
     for (var i = 0; i < phoneInputField.length; i++) {

@@ -34,13 +34,13 @@
             </h3>
             <form method="post">
                 <div class="input-div form-floating mt-3">
-                    <input type="password" class="form-control shadow-none" id="myInput" placeholder="Password">
+                    <input type="password" asp-for="Passwordhash" class="form-control shadow-none" id="myInput" placeholder="Password">
                     <label class="FloatingInput" for="Name">Password</label>
                     <i class="i1 bi bi-eye icon" onclick="myPassword()" id="icon_1"></i>
                 </div>
 
                 <div class="input-div form-floating mt-3">
-                    <input type="password" class="form-control shadow-none" id="myInput1" placeholder="Password">
+                    <input type="password" asp-for="Passwordhash" class="form-control shadow-none" id="myInput1" placeholder="Password">
                     <label class="FloatingInput" for="Name">Confirm Password</label>
                     <i class="i1 bi bi-eye icon" onclick="confirmpassword()" id="icon_1"></i>
                 </div>

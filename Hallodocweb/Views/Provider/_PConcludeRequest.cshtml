@@ -164,10 +164,10 @@
                                         </button>
                                         <ul class="dropdown-menu table_dropdowns">
                                             <li>
-                                                <button class="dropdown-item" onclick="concludecare(@item.reqId)">
+                                                <a class="dropdown-item" href="@Url.Action("ConcludeCare", new {ReqId = item.reqId})">
                                                     <i class="bi bi-file-earmark-text"></i>
                                                     Conclude Care
-                                                </button>
+                                                </a>
                                                 <a class="dropdown-item" href="@Url.Action("ViewCase", new {Requestclientid = item.Requestclientid , RequestTypeId = item.requestTypeId})">
                                                     <i class="bi bi-file-earmark-text"></i>
                                                     ViewCase

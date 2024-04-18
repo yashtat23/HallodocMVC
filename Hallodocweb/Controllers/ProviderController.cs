@@ -461,12 +461,9 @@ namespace HalloDoc.mvc.Controllers
             return RedirectToAction("ProviderDashboard");
         }
         [HttpPost]
-        public IActionResult EncounterFormSubmit(EncounterFormModel model, string finalizeBtn)
+        public IActionResult EncounterFormSubmit(EncounterFormModel model)
         {
-            if (!string.IsNullOrEmpty(finalizeBtn))
-            {
-                model.IsFinalized = true;
-            }
+           
             _providerService.PSubmitEncounterForm(model);
             _notyf.Success("Successfully Finalize!!");
             return RedirectToAction("ProviderDashboard");
@@ -593,6 +590,77 @@ namespace HalloDoc.mvc.Controllers
         {
             var data = _adminService.ViewShift(ShiftDetailId);
             return View("_PViewShift", data);
+        }
+
+        public IActionResult ConcludeCare(int reqId)
+        {
+            HttpContext.Session.SetInt32("rid", reqId);
+            var model = _adminService.GetAllDocById(reqId);
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult CUploadFiles(ViewUploadModel model)
+        {
+            var rid = (int)HttpContext.Session.GetInt32("rid");
+            if (model.uploadedFiles == null)
+            {
+                _notyf.Error("First Upload Files");
+                return RedirectToAction("ConcludeCare", "Provider", new { reqId = rid });
+            }
+            bool isUploaded = _adminService.UploadFiles(model.uploadedFiles, rid);
+            if (isUploaded)
+            {
+                _notyf.Success("Uploaded Successfully");
+                return RedirectToAction("ConcludeCare", "Provider", new { reqId = rid });
+            }
+            else
+            {
+                _notyf.Error("Upload Failed");
+                return RedirectToAction("ConcludeCare", "Provider", new { reqId = rid });
+            }
+        }
+
+        public IActionResult CDeleteFileById(int id)
+        {
+            var rid = (int)HttpContext.Session.GetInt32("rid");
+            bool isDeleted = _adminService.DeleteFileById(id);
+            if (isDeleted)
+            {
+                return RedirectToAction("ConcludeCare", "Provider", new { reqId = rid });
+            }
+            else
+            {
+                _notyf.Error("SomeThing Went Wrong");
+                return RedirectToAction("ConcludeCare", "Provider", new { reqId = rid });
+            }
+        }
+
+        public IActionResult CDeleteAllFiles(List<string> selectedFiles)
+        {
+            var rid = (int)HttpContext.Session.GetInt32("rid");
+            bool isDeleted = _adminService.DeleteAllFiles(selectedFiles, rid);
+            if (isDeleted)
+            {
+                _notyf.Success("Deleted Successfully");
+                return RedirectToAction("ConcludeCare", "Provider", new { reqId = rid });
+            }
+            _notyf.Error("SomeThing Went Wrong");
+            return RedirectToAction("ConcludeCare", "Provider", new { reqId = rid });
+
+        }
+
+        [HttpPost]
+        public IActionResult ConcludeCareSubmit(int ReqId,string ProviderNote)
+        {
+            _providerService.concludecaresubmit(ReqId,ProviderNote);
+            return RedirectToAction("ProviderDashboard");
+        }
+
+        public IActionResult Finalizesubmit(int reqid)
+        {
+            _providerService.finalizesubmit(reqid);
+            return RedirectToAction("ProviderDashboard");
         }
 
     }

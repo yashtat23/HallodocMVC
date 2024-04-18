@@ -293,19 +293,20 @@ namespace Hallodocweb.Controllers
             return RedirectToAction("patientreg");
         }
 
-        public IActionResult patientresetpass(string id)
-        {
-            var aspuser = _context.Aspnetusers.FirstOrDefault(x => x.Id == id);
-            return View(aspuser);
-        }
+        //public IActionResult patientresetpass(string id)
+        //{
+        //    var aspuser = _context.Aspnetusers.FirstOrDefault(x => x.Id == id);
+        //    return View(aspuser);
+        //}
 
         [HttpPost]
         public IActionResult patientresetpass(Aspnetuser aspnetuser)
         {
             var aspuser = _context.Aspnetusers.FirstOrDefault(x => x.Id == aspnetuser.Id);
-            aspuser.Passwordhash = aspnetuser.Passwordhash;
+            aspnetuser.Passwordhash = GenerateSHA256(aspnetuser.Passwordhash);
             _context.Aspnetusers.Update(aspuser);
             _context.SaveChanges();
+            _notyf.Success("Password change successfully!!");
             return RedirectToAction("patientreg");
         }
 
@@ -342,10 +343,11 @@ namespace Hallodocweb.Controllers
         //    var y = _patientService.subinformation(patientInfo);
         //    return View(y);
         //}
-        [CustomAuthorize("User")]
+        //[CustomAuthorize("User")]
         public IActionResult patientsomeoneelse()
         {
             return View();
+
         }
 
         public IActionResult patientcreateacc()
@@ -356,8 +358,7 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult patientcreateacc(CreateAccountModel createAccountModel)
         {
-            if (ModelState.IsValid)
-            {
+            
                 bool isCreated = _patientService.CreateAccount(createAccountModel);
                 if (isCreated)
                 {
@@ -370,11 +371,7 @@ namespace Hallodocweb.Controllers
                     return RedirectToAction("patientcreateacc");
                 }
 
-            }
-            else
-            {
-                return View(createAccountModel);
-            }
+            
         }
 
         [CustomAuthorize("User")]
@@ -478,19 +475,36 @@ namespace Hallodocweb.Controllers
             }
         }
 
-      
-        [HttpPost]
-        public IActionResult patientsomeoneelse(FamilyReqModel familyFriendRequestForm)
+        public string GetLoginId()
         {
-            int userid = (int)_htttpcontext.HttpContext.Session.GetInt32("UserId");
-
-            try
+            var token = HttpContext.Request.Cookies["PatientJwt"];
+            if (token == null || !_jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
             {
-                _patientService.ReqforSomeoneElse(familyFriendRequestForm, userid);
+                return "";
+            }
+            var loginId = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "aspNetUserId");
+            return loginId.Value;
+        }
+
+        [HttpPost]
+        public IActionResult SubmitElseInfo(FamilyReqModel model)
+        {
+            string resetPasswordPath = Url.Action("ResetPassword");
+            string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+
+            string createAccountLink = baseUrl + resetPasswordPath;
+            var loginid = GetLoginId();
+            bool issubmitted = _patientService.SomeElseReq(model, createAccountLink, loginid);
+            if (issubmitted)
+            {
+                _notyf.Success("Submitted Successfully");
                 return RedirectToAction("patientdashboard");
             }
-            catch { return View(); }
-
+            else
+            {
+                _notyf.Error("Something wrong");
+                return View(model);
+            }
         }
 
     }

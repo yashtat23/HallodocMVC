@@ -1,275 +1,328 @@
 ﻿@using DataAccess.CustomModel;
-@model List<viewUploads>;
 
-<div class="container p-sm-2 p-md-3">
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
-            tabindex="0">
-            <div class=" mt-2 d-flex justify-content-between align-items-center">
-                <h4>Conclude Care</h4>
-                <div id="resultDiv"></div>
-                <a onclick="DashboardMain()" class="btn shadow  btn-outline-secondary border-info text-info px-3 ">
-                    <i class="fa-solid fa-angle-left"></i> Back
-                </a>
-            </div>
+@model ViewUploadModel;
 
-            <div class="container-fluid shadow border rounded mt-3 px-4 mb-5 pb-5">
-                <div class="text-secondary pt-3 my-2 dark-mode2">Patient Name</div>
-                <span class="text-info fs-2 my-2">@Model[0].fname @Model[0].lname</span> <span class="my-2 fs-5 text-secondary dark-mode2">
-                    (@Model[0].cnf_number)
-                </span>
-                <form method="post" enctype="multipart/form-data" id="ProviderUploadForm">
-                    <input id="reqId" type="hidden" asp-for="@Model[0].reqid" value="@Model[0].reqid" />
-                    <div class="input-group mb-3  rounded my-4">
-                        <input asp-for="@Model[0].Upload" type="file" class="form-control  py-3" id="inputGroupFile" multiple accept=".pdf">
-                        <button type="button" onclick="ProviderUploadBtn()" class="input-group-text fw-bold bg-info upload">
-                            <i class="bi bi-cloud-arrow-up me-2 fw-bold text-white"></i>
-                            <span class="text-white">Upload</span>
-                        </button>
-                    </div>
-                    <span asp-validation-for="@Model[0].Upload" class="text-danger"></span>
-                </form>
+@* @{
+    ViewData["Title"] = "PViewDocument";
+} *@
 
-                <div class="table-responsive">
-                    <table class="table ">
-                        <thead class="bg-body-tertiary ">
-                            <thead class="table-active">
-                                <tr>
-                                    <th>
-                                        <span class="ms-2">Documents</span>
-                                    </th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
+<style>
+    #downloadSelected {
+        color: rgb(0, 183, 255);
+        background-color: white;
+        border: 1px solid rgb(0, 183, 255);
+        border-radius: 5px;
+    }
 
-                        <tbody>                               
-                                @foreach (var obj in Model)
-                                {
-                                    for (int i = 0; i < obj.documentsname.Count(); i++)
-                                    {
-                                    <tr class="align-middle dark-mode2">
-                                        <td class="first-col">
-                                            <input id="reqWiseFileId" type="hidden" value="@obj.requestWiseFileId[i]" />
-                                            <input id="data" type="hidden" value="true" />
-                                            <input id="data" asp-for="@obj.email" type="hidden" value="@obj.email" />
-                                            <input id="inputMain" value="@obj.documentsname[i]" data-mailMain="@obj.email" data-reqid="@obj.reqid" data-reqwisefileid="@obj.requestWiseFileId[i]" type="checkbox" name="Mark" class="checkbox fileCheckbox" /><span class="document-combo ms-5">
-                                                <i class="fa-solid fa-file fa-sm" style="color: #005ca3;"></i>
-                                                <span class="document-name mx-2">@obj.documentsname[i]</span>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-outline-info" type="button" onclick="window.location.href='@Url.Action("DownloadFile","Provider",new {data = @obj.documentsname[i]})'"><i class="fa-solid fa-cloud-arrow-down"></i></button>
-                                            <button class="btn btn-outline-info delete-btn" onclick="ConcludeDeleteBtn('@obj.reqid','@obj.requestWiseFileId[i]')"> <i class="fa-solid fa-trash-can"></i></button>
-                                        </td>
+        #downloadSelected:hover {
+            background-color: rgb(0, 183, 255);
+            color: white;
+        }
+</style>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="~/css/dark-mode.css" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
-                                    </tr>
-                                    }
+<link rel="stylesheet" href="~/css/PatientDashboard.css">
 
-                                }
-                        </tbody>
-                    </table>
-                </div>
 
-                <form  method="post" id="concludeCareForm">
-                    <h6 class="mt-3">Provider Notes</h6>
-                    <div class="form-floating">
-                        <input type="hidden" value="@Model[0].reqid" asp-for="@Model[0].reqid" />
-                        <input type="text" class="form-control" asp-for="@Model[0].notes" id="floatingPassword" style="height: 100px" placeholder=" ">
-                        <label class="floating-label" for="floatingInput" style="width: 100%;" >
-                            Provider Notes
-                        </label>
-                        <span asp-validation-for="@Model[0].notes" class="text-danger"></span>
-                    </div>
+<nav class="navbar navbar-expand w-100 dark-mode1">
 
-                    @if (Model[0].isFinalize != null && Model[0].isFinalize[0] )
-                    {
-                        <div class="d-flex justify-content-end mt-5">
-                            <button type="button" onclick="concludeCareBtn(@Model[0].reqid)" class="btn btn-info text-white">Conclude Care</button>
-                        </div>
-                    }
-                    else
-                    {
-                    <div class="d-flex justify-content-end mt-5">
-                        <button type="button" onclick="FinalizePopup(@Model[0].reqid)" class="btn btn-info text-white">Conclude Care</button>
-                    </div>
-                    }
+    <div class="container-fluid">
+        <div class="d-flex align-items-center">
+            <button class="navbar-toggler d-block d-lg-none" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation" style="height: 50%;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <img class="navbar-brand ms-3" id="logo" src="~/img/hallodoc.png" alt="logo" style="height:100px">
 
-                </form>
+        </div>
+        <div>
+            <ul class="navbar-nav ms-auto d-flex flex-nowrap align-items-center gap-2">
+                <div class="d-none d-sm-flex  justify-content-center align-items-center ">
+                <li class="nav-item">
+                    <span class="">Welcome</span>
+                </li>
+                <li class="nav-item p-2 fw-bolder">
+                    <span class="d-flex gap-1">
+                        <span class="dark-mode1">Yash</span>
+                        <span class="dark-mode1">Variya</span>
+                    </span>
+                </li>
+        </div>
+        <li class="nav-item">
+            <a asp-conroller="Admin" asp-action="Logout">
+                <button onclick="location.href='@Url.Action("ProviderDashboard", "Provider")'" class="px-2 btn btn-outline-info mx-2 float-end">
+                    <span class=" d-none d-md-block">Logout</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
+                </button>
 
+            </a>
+
+        </li>
+        <li class="nav-item">
+            <button type="button" class="btn shadow border-info ms-2"
+                    style="border-radius: 10px; border-color: aqua" id="colorButton">
+                <i id="moon" class="bi bi-moon text-info fs-5"></i>
+                <i id="sun" class="bi bi-sun text-info fs-5 d-none"></i>
+            </button>
+        </li>
+        </ul>
+    </div>
+    </div>
+
+
+    <!-- tabs -->
+</nav>
+
+<div class="container my-5 bg-white dark-mode1">
+
+    <div class="container bg-white dark-mode1 p-4 ">
+        <div class="d-flex justify-content-between mb-4">
+            <h2 class="">Documents</h2>
+            <button class="mx-bg-opacity-25 dark-mode1" id="downloadSelected" onclick="location.href='@Url.Action("ProviderDashboard", "Provider")'">&lt; Back</button>
+
+        </div>
+        <div class="row">
+            <p class="col-12">Patient Name</p>
+            <p class="col-12">
+                <span class="fw-bolder fs-4">@Model.firstName @Model.lastName </span>
+                <span>(f34r34t5gvr44)</span>
+            </p>
+
+            <!-- row--- -->
+        </div>
+
+        <!-- ----container    -->
+    </div>
+
+    <form method="post" asp-action="UploadFiles" asp-controller="Admin" class="input-group my-5 mt-3" enctype="multipart/form-data">
+        @*<input name="file" type="file" class="form-control" id="formFileLg" multiple>*@
+        <input asp-for="uploadedFiles" type="file" class="form-control form-control-lg" id="formFileLg" multiple>
+        <button type="submit" class="input-group-text bg-primary text-white" for="inputGroupFile02"><i class="bi bi-cloud-arrow-up m-1"></i>&nbsp;Upload</button>
+        <br />
+    </form>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-between">
+
+            <h3>Documents</h3>
+            <div class="d-flex gap-2">
             </div>
         </div>
     </div>
+    <div class="table-responsive">
+        <table class="table dataTable table-hover" id="data-table" aria-describedby="data-table_info">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" id="selectAll" onclick="toggleCheckboxes()">
+                    </th>
+                    <th class="sorting" data-value="Description">
+                        File
+                    </th>
 
-    <div class="modal fade" id="finalizeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body p-5">
-                    <form method="post" id="HousecallModalForm">
-                        <input type="hidden" value="" id="FinalizePopupReqId" />
-                        <div class="d-flex justify-content-center ">
-                            <i class="bi bi-info-circle-fill text-success d-flex justify-content-center display-4 mb-3 border border-2 border-success  rounded-circle  p-2" ></i>
-                        </div>
-                        <h5 class="d-flex justify-content-center mb-3">You Need To Finalize Before Conclude</h5>
-                        <p class="text-secondary fw-lighter text-center  mb-3">
-                            Are you sure you want to Finalize this request?
-                        </p>
+                    <th>
+                        Upload Date<i class="bi bi-arrow-up-short"></i>
+                    </th>
+                    <th>
+                        Actions
+                    </th>
 
-                        <div class="mt-4 d-flex justify-content-center">
-                            <button type="button" onclick="ProviderEncounterForm()" class="btn text-white continue-btn mx-2" style="background-color:purple;">Finalize</button>
-                            <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.files.Count > 0)
+                {
+                    @foreach (var item in Model.files)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="selectedFiles" value="@item.Filename">
+                            </td>
+
+                            <td>
+                                <i class="bi bi-file-earmark-fill" style="color:red"></i>
+                                @item.Filename
+                            </td>
+
+                            <td>@item.Createddate.ToString("MMM dd, yyyy")</td>
+                            <td>
+
+                                <a href="~/UploadedFiles/@item.Filename" class="btn px-2 py-1 btn-outline-info shadow-none night-mode-btn" download>
+                                    <i class="bi bi-cloud-download"></i>
+                                </a>
+                                <a class="btn ms-2 px-2 py-1 btn-outline-info shadow-none night-mode-btn" asp-controller="Admin" asp-action="DeleteFileById" asp-route-id="@item.Requestwisefileid">
+                                    @*onclick="deleteFile(@item.Requestwisefileid)"*@
+                                    <i class="bi bi-trash"></i>
+                                </a>
+
+                            </td>
+                        </tr>
+
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" style="text-align: center;">No records found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <hr style="border: black 20px" />
+    <form asp-action="ConcludeCareSubmit">
+    <div>
+            <input asp-for="@Model.ReqId" hidden />
+        <h6>Provider Notes</h6>
+        <div class="form-floating">
+            <textarea class="form-control" asp-for="ProviderNote" placeholder="Leave a comment here" id="providerNote" style="height: 100px"></textarea>
+            <label for="floatingTextarea2">Provider Notes</label>
         </div>
     </div>
-
+    <div class="text-end">
+            <button type="submit" class="btn btn-primary my-3">Conclude Care</button>
+    </div>
+        </form>
 </div>
 
-<partial name="_ValidationScriptsPartial" />
+@* <script>
+    function concludeCareSubmit() {
+        console.log("POp");
+        var reqId = @Model.ReqId;
+        var providerNote = $('#providerNote').val();
+        alert(providerNote);
+        $.ajax({
+            url: '/provider/concludecaresubmit',
+            type: 'POST',
+            data: { ReqId: reqId, Providernote: providerNote },
+            success: function (response) {
 
+            },
+            Error: function (response) {
+                alert("bndfjd");
+            }
 
+        });
+</script> *@
 <script>
-    function ProviderUploadBtn() {
-        if ($("#ProviderUploadForm").valid()) {
-            $.ajax({
-                url: '/Provider/ConcludeViewUploadMain',
-                type: 'POST',
-                processData: false,
-                contentType: false,
-                data: new FormData($('#ProviderUploadForm')[0]),
-                success: function (response) {
-                    console.log(response);
-                    ConcludeCare(response.data);
-                    toastr.success("Data Uploaded Successfully");
-                },
-                error: function (error) {
-                    toastr.error("Error");
-                }
-            });
+
+
+    function toggleCheckboxes() {
+        var checkboxes = document.getElementsByName('selectedFiles');
+        var selectAllCheckbox = document.getElementById('selectAll');
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = selectAllCheckbox.checked;
+        }
+    }
+
+    function downloadSelectedFiles() {
+        var selectedFiles = [];
+        var checkboxes = document.getElementsByName('selectedFiles');
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                selectedFiles.push(checkboxes[i].value);
+            }
+        }
+
+        // If no files are selected, return
+        if (selectedFiles.length === 0) {
+            alert('Please select at least one file to download.');
+            return;
+        }
+
+        // Construct URLs for all selected files and initiate download
+        for (var j = 0; j < selectedFiles.length; j++) {
+
+            var fileUrl = '/UploadedFiles/' + selectedFiles[j];
+            var link = document.createElement('a');
+            link.href = fileUrl;
+            link.setAttribute('download', ''); // This attribute triggers the download
+            link.click(); // Simulate a click event to initiate the download
         }
 
     }
-    
 
-    function ConcludeDeleteBtn(id, ReqWiseId) {
+    function deleteAllFiles() {
+        var selectedFiles = [];
+        var checkboxes = document.getElementsByName('selectedFiles');
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                selectedFiles.push(checkboxes[i].value);
+            }
+        }
+
+        // If no files are selected, return
+        if (selectedFiles.length === 0) {
+            alert('Please select at least one file to Delete.');
+            return;
+        }
+
+        var confirmDelete = confirm("Are you sure you want to delete all selected files?");
+        if (!confirmDelete) {
+            return;
+        }
+        deleteSelectedFiles(selectedFiles);
+
+    }
+
+    function deleteSelectedFiles(selectedFiles) {
         $.ajax({
-            url: '/Provider/DeleteFile',
+            url: '/Admin/DeleteAllFiles',
             type: 'POST',
-            data: { id: id, reqFileId: ReqWiseId },
+            data: { selectedFiles: selectedFiles },
             success: function (response) {
-                ConcludeCare(response.data);
-                toastr.success("Data Deleted Successfully");
-            },
-            error: function (error) {
-                toastr.error("Error");
+
+                window.location.reload();
+
             }
         });
     }
-    
-    
-    
-    function concludeCareBtn() {
-        if ($("#concludeCareForm").valid()) {
-            $.ajax({
-                url: '/Provider/ProviderConcludeCarePost',
-                type: 'POST',
-                data: $("#concludeCareForm").serialize(),
-                success: function (response) {
-                    DashboardMain();
-                    toastr.success("Conclude Care Successfully");
-                },
-                error: function (error) {
-                    toastr.error("Error");
-                },
-            });
+
+    function sendMail() {
+        var selectedFiles = [];
+        var checkboxes = document.getElementsByName('selectedFiles');
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                selectedFiles.push(checkboxes[i].value);
+            }
         }
-    }
-    
 
-    function FinalizePopup(reqid) {
-        $.ajax({
-            url: "/Provider/FinalizePopup",
-            data: { data: reqid },
-            type: 'GET',
-            success: function (result) {
-                $('#finalizeModal').modal('show');
-                $("#FinalizePopupReqId").val(result.isSend);
-            },
-            error: function (e) {
-                console.log(e);
-                toastr.error("Error");
-            },
-        });
+        // If no files are selected, return
+        if (selectedFiles.length === 0) {
+            alert('Please select at least one file to Send.');
+            return;
+        }
+
+        var confirmDelete = confirm("Are you sure you want to send all selected files?");
+        if (!confirmDelete) {
+            return;
+        }
+
+        sendSelectedFiles(selectedFiles);
     }
-    
-    
-    function concludeCareBtnWithFinalize(reqId) {
+    function sendSelectedFiles(selectedFiles) {
         $.ajax({
-            url: '/Provider/ProviderConcludeCarePost',
+            url: '/Admin/SendAllFiles',
             type: 'POST',
-            data: $("#concludeCareForm").serialize(),
+            data: { selectedFiles: selectedFiles },
             success: function (response) {
-                DashboardMain();
-                toastr.success("Conclude Care Successfully");
-            },
-            error: function (error) {
-                toastr.error("Error");
-            },
+
+                window.location.reload();
+
+            }
         });
-    }
-
-
-    function FinalizeBtn(reqId) {
-        let action = "/Provider/FinalizeEncounter";
-            $.ajax({
-                url: action,
-                type: 'GET',
-                data: { reqId: reqId },
-                success: function (result) {
-                    DashboardMain();
-                    toastr.success("Encounter Form Update Successfully");
-                },
-                error: function () {
-                    toastr.error("Error");
-                },
-            });
-    }
-    
-    
-    function finalizeModalBtn(reqId) {
-        $.ajax({
-            url: action,
-            type: 'GET',
-            data: { reqId: reqId },
-            success: function (result) {
-                $('#finalizeModal').modal('hide');
-                toastr.success("Request Finalize Successfully");
-            },
-            error: function () {
-                toastr.error("Error");
-            },
-        });
-    }
-
-
-    function ProviderEncounterForm() {
-       
-            var a = $("#FinalizePopupReqId").val();
-            alert(a);
-            $.ajax({
-                url: "/Provider/concludeEncounter",
-                data: { data: a },
-                type: 'GET',
-                success: function (result) {
-                    $("#finalizeModal").modal("hide");
-                    $("#content").html(result);
-                },
-                error: function () {
-                    alert('Error loading partial view');
-                }
-            });
-        
     }
 
 

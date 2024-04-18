@@ -188,6 +188,12 @@ namespace BusinessLogic.Repository
 
                 _db.Users.Add(u);
                 _db.SaveChanges();
+                Aspnetuserrole aspnetuserrole = new Aspnetuserrole();
+                aspnetuserrole.Userid = aspnetuser1.Id;
+                aspnetuserrole.Roleid = (int)AspNetRole.user;
+                _db.Aspnetuserroles.Add(aspnetuserrole);
+                _db.SaveChanges();
+
             }
             else
             {
@@ -324,6 +330,12 @@ namespace BusinessLogic.Repository
                 _db.Users.Add(user);
                 _db.SaveChanges();
 
+                Aspnetuserrole aspnetuserrole = new Aspnetuserrole();
+                aspnetuserrole.Userid = asp.Id;
+                aspnetuserrole.Roleid = (int)AspNetRole.user;
+                _db.Aspnetuserroles.Add(aspnetuserrole);
+                _db.SaveChanges();
+
                 try
                 {
                     SendRegistrationEmailCreateRequest(familyReqModel.patientEmail, createaccountLink);
@@ -435,8 +447,11 @@ namespace BusinessLogic.Repository
                 _db.Users.Add(user);
                 _db.SaveChanges();
 
-
-
+                Aspnetuserrole aspnetuserrole = new Aspnetuserrole();
+                aspnetuserrole.Userid = asp.Id;
+                aspnetuserrole.Roleid = (int)AspNetRole.user;
+                _db.Aspnetuserroles.Add(aspnetuserrole);
+                _db.SaveChanges();
 
                 try
                 {
@@ -542,8 +557,11 @@ namespace BusinessLogic.Repository
                 _db.Users.Add(user);
                 _db.SaveChanges();
 
-
-
+                Aspnetuserrole aspnetuserrole = new Aspnetuserrole();
+                aspnetuserrole.Userid = asp.Id;
+                aspnetuserrole.Roleid = (int)AspNetRole.user;
+                _db.Aspnetuserroles.Add(aspnetuserrole);
+                _db.SaveChanges();
 
                 try
                 {
@@ -889,86 +907,137 @@ namespace BusinessLogic.Repository
 
         }
 
-        public void ReqforSomeoneElse(FamilyReqModel familyFriendRequestForm, int userid)
+        public bool SomeElseReq(FamilyReqModel model, string createAccountLink, string loginid)
         {
-            string? aspid = _db.Aspnetusers.Where(Au => Au.Email == familyFriendRequestForm.patientEmail).Select(Au => Au.Id).FirstOrDefault();
-
-
-            var user = _db.Users.FirstOrDefault(x => x.Userid == userid);
-
-
-
-
-            Request data = new Request()                             //Request
+            try
             {
 
-                Userid = userid,
-                Requesttypeid = 2,
-                Firstname = user.Firstname,
-                Lastname = user.Lastname,
-                Email = user.Email,
-                Phonenumber = user.Mobile,
-                //Relationname = familyFriendRequestForm.Relation,
-                Status = 1,
-                Createddate = DateTime.Now,
-                Isurgentemailsent = new BitArray(1),
-            };
+            }
+            catch { }
+            var stateMain = _db.Regions.Where(x => x.Name.ToLower() == model.state.ToLower().Trim()).FirstOrDefault();
 
-            _db.Requests.Add(data);
-            _db.SaveChanges();
-
-
-            int reqid = data.Requestid;
-
-            var reqClient = new Requestclient()             //RequestClient
+            if (stateMain == null)
             {
-                Requestid = reqid,
-                Firstname = familyFriendRequestForm.firstName,
-                Lastname = familyFriendRequestForm.lastName,
-                Email = familyFriendRequestForm.email,
-                Phonenumber = familyFriendRequestForm.phoneNo,
-                Notes = familyFriendRequestForm.symptoms,
-                Address = familyFriendRequestForm.roomNo + " " + familyFriendRequestForm.street + " " + familyFriendRequestForm.city + " " + familyFriendRequestForm.state + " " + familyFriendRequestForm.zipCode,
-                //Intyear = familyFriendRequestForm.patientDob.,
-                //Intdate = familyFriendRequestForm.DateOfBirth.Day,
-                //Strmonth = familyFriendRequestForm.DateOfBirth.Month.ToString(),
-                Street = familyFriendRequestForm.street,
-                City = familyFriendRequestForm.city,
-                State = familyFriendRequestForm.state,
-                Zipcode = familyFriendRequestForm.zipCode,
+                return false;
+            }
+            User user = new User();
+            Aspnetuser asp = new Aspnetuser();
+            var existUser = _db.Aspnetusers.FirstOrDefault(r => r.Email == model.patientEmail);
 
-            };
-            _db.Requestclients.Add(reqClient);
-            _db.SaveChanges();
-
-
-
-            if (familyFriendRequestForm.File != null && familyFriendRequestForm.File.Length > 0)
+            if (existUser == null)
             {
-                //get file name
-                var fileName = Path.GetFileName(familyFriendRequestForm.File.FileName);
-
-                //define path
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedFiles", fileName);
-
-                // Copy the file to the desired location
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    familyFriendRequestForm.File.CopyTo(stream);
-                }
-
-                Requestwisefile requestwisefile = new()
-                {
-                    Filename = fileName,
-                    Requestid = data.Requestid,
-                    Createddate = DateTime.Now
-                };
-
-                _db.Requestwisefiles.Add(requestwisefile);
+                asp.Id = Guid.NewGuid().ToString();
+                asp.Username = model.patientFirstName + "_" + model.patientLastName;
+                asp.Email = model.patientEmail;
+                asp.Phonenumber = model.patientPhoneNo;
+                asp.Createddate = DateTime.Now;
+                _db.Aspnetusers.Add(asp);
                 _db.SaveChanges();
-            };
+
+                user.Aspnetuserid = asp.Id;
+                user.Firstname = model.patientFirstName;
+                user.Lastname = model.patientLastName;
+                user.Email = model.patientEmail;
+                user.Mobile = model.patientPhoneNo;
+                user.City = model.city;
+                user.State = model.state;
+                user.Street = model.street;
+                user.Zipcode = model.zipCode;
+                user.Intyear = int.Parse(model.patientDob.ToString("yyyy"));
+                user.Intdate = int.Parse(model.patientDob.ToString("dd"));
+                user.Strmonth = model.patientDob.ToString("MMM");
+                user.Createdby = loginid;
+                user.Createddate = DateTime.Now;
+                user.Regionid = stateMain.Regionid;
+                _db.Users.Add(user);
+                _db.SaveChanges();
 
 
+                Aspnetuserrole aspnetuserrole = new Aspnetuserrole();
+                aspnetuserrole.Userid = asp.Id;
+                aspnetuserrole.Roleid = (int)AspNetRole.user;
+                _db.Aspnetuserroles.Add(aspnetuserrole);
+                _db.SaveChanges();
+                try
+                {
+                    createAccountLink = createAccountLink + "/" + asp.Id;
+                    SendRegistrationEmailCreateRequest(model.patientEmail, createAccountLink);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+            else
+            {
+                user = _db.Users.Where(m => m.Email == model.patientEmail).FirstOrDefault();
+            }
+
+            var loginPatient = _db.Users.Where(x => x.Aspnetuserid == loginid).FirstOrDefault();
+
+            Request request = new Request();
+            request.Requesttypeid = (int)RequestTypeEnum.Family;
+            request.Status = (int)StatusEnum.Unassigned;
+            request.Createddate = DateTime.Now;
+            request.Isurgentemailsent = new BitArray(1, false);
+            request.Firstname = loginPatient.Firstname;
+            request.Lastname = loginPatient.Lastname;
+            request.Phonenumber = loginPatient.Mobile;
+            request.Email = loginPatient.Email;
+            request.Relationname = "Friend";
+            request.Userid = user.Userid;
+
+            _db.Requests.Add(request);
+            _db.SaveChanges();
+
+            Requestclient info = new Requestclient();
+            info.Requestid = request.Requestid;
+            info.Notes = model.symptoms;
+            info.Firstname = model.patientFirstName;
+            info.Lastname = model.patientLastName;
+            info.Phonenumber = model.patientPhoneNo;
+            info.Email = model.patientEmail;
+            info.Street = model.street;
+            info.City = model.city;
+            info.State = model.state;
+            info.Zipcode = model.zipCode;
+            info.Regionid = stateMain.Regionid;
+            info.Intyear = int.Parse(model.patientDob.ToString("yyyy"));
+            info.Intdate = int.Parse(model.patientDob.ToString("dd"));
+            info.Strmonth = model.patientDob.ToString("MMM");
+
+            _db.Requestclients.Add(info);
+            _db.SaveChanges();
+
+
+            if (model.File != null)
+            {
+                if (model.File != null && model.File.Length > 0)
+                {
+                    //get file name
+                    var fileName = Path.GetFileName(model.File.FileName);
+
+                    //define path
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedFiles", fileName);
+
+                    // Copy the file to the desired location
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        model.File.CopyTo(stream);
+                    }
+
+                    Requestwisefile requestwisefile = new()
+                    {
+                        Filename = fileName,
+                        Requestid = request.Requestid,
+                        Createddate = DateTime.Now
+                    };
+
+                    _db.Requestwisefiles.Add(requestwisefile);
+                    _db.SaveChanges();
+                };
+            }
+            return true;
         }
     }
 }

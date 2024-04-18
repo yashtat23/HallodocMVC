@@ -502,10 +502,11 @@ namespace BusinessLogic.Repository
                 Requestid = requestId,
                 Notes = assignCaseModel.additionalNotes,
                 Createddate = DateTime.Now,
-                Status = 2
+                Status = 1,
+               
 
             };
-                reqData.Status = 2;
+                //reqData.Status = 2;
             reqData.Physicianid = assignCaseModel.physicanNo;
 
             _db.Add(reqstatusData);

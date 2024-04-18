@@ -21,5 +21,7 @@ namespace BusinessLogic.Interfaces
         int GetPhysicianId(string userid);
 
         MonthWiseScheduling PhysicianMonthlySchedule(string date, int status, string aspnetuserid);
+        bool concludecaresubmit(int ReqId, string ProviderNote);
+        bool finalizesubmit(int reqid);
     }
 }
