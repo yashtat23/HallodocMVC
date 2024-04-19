@@ -128,19 +128,23 @@
                                         @foreach (var items in Model.medicalHistoriesList)
                                         {
                                             <tr>
-                                                <td>@items.createdDate</td>
+                                                <td>@items.createdDate.ToString("MMM dd, yyyy")</td>
                                                 <td>@items.currentStatus</td>
                                                 <td>
                                                     <a class="btn btn-outline-info fw-bold" asp-controller="patient" asp-action="_DocumentList" asp-route-rid=@items.reqId>
                                                         <span><i class="bi bi-file-earmark fw-bold"></i></span>
                                                         <span>
-                                                            View Documents (@items.document.Count())
+                                                            View Documents (@items.docCount)
                                                         </span>
                                                     </a>
                                                 </td>
                                                 <td>@items.reqId</td>
                                             </tr>
                                         }
+                                    }
+                                    else
+                                    {
+                                        <tr>No Items found</tr>
                                     }
                                 </tbody>
                             </table>

@@ -441,6 +441,7 @@ namespace Hallodocweb.Controllers
         {
             var model = _adminService.Agreement(requestClientid);
             model.reqType = reqType;
+            _notyf.Success("Link send Successfully");
             return PartialView("_SendAgreement", model);
         }
 
@@ -916,6 +917,7 @@ namespace Hallodocweb.Controllers
         public IActionResult AdminAccount(CreateAdminAccount model)
         {
                 var email = GetTokenEmail();
+            var pass = GenerateSHA256(model.AdminPassword);
                 var isCreated = _adminService.CreateAdminAccount(model, email);
                 if (isCreated)
                 {

@@ -11,7 +11,7 @@
             </div>
             <div class="modal-body">
                 <form method="post" asp-controller="Admin" asp-action="AssignCasePost" onsubmit="return Assignvalidation()" id="Assign_Req">
-                    @* tirth patel *@
+                    
                     <div class="mb-3 text-secondary">
                         <p>To assign this request, search and select another Physician</p>
                     </div>
@@ -25,7 +25,7 @@
                             {
                                 <option value="@item.Regionid">@item.Name</option>
                             }
-                        </select>
+                        </select>   
                         <small id="regionreq" style="color:red" class="d-none">Region no is required</small>
                     </div>
 

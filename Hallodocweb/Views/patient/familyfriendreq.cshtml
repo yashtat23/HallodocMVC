@@ -71,6 +71,7 @@
             <textarea class="form-control" asp-for="symptoms"  placeholder="Leave a comment here" id="floatingTextarea2"
                       style="height: 100px"></textarea>
             <label for="floatingTextarea2" class="first">Enter Brief Details of Symptoms(Optional)</label>
+                            <span class="text-danger" asp-validation-for="symptoms"></span>
         </div>
         <div class="row mt-3">
 
@@ -113,12 +114,12 @@
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
                 <input type="text" asp-for="street" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput" class="email">Street</label>
-                  
+                <span class="text-danger" asp-validation-for="street"></span>
             </div>
             <div class="form-floating col-lg-6 col-md-12 col-sm-12">
                 <input type="text" asp-for="city" class="form-control" id="floatingPassword" placeholder="Password">
                 <label for="floatingPassword" class="email">City</label>
-                  
+                <span class="text-danger" asp-validation-for="city"></span>
             </div>
         </div>
         <div class="row mt-2">
@@ -131,12 +132,12 @@
             <div class="form-floating col-lg-6 col-md-12 col-sm-12">
                 <input type="text" asp-for="zipCode" class="form-control" id="floatingPassword" placeholder="Password">
                 <label for="floatingPassword" class="email">Zip Code</label>
-                 
+                <span class="text-danger" asp-validation-for="zipCode"></span>
             </div>
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12 mt-2">
                 <input type="text" asp-for="roomNo" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput" class="email">Room # / Suite (optional)</label>
-                 
+                <span class="text-danger" asp-validation-for="roomNo"></span>
             </div>
 
         </div>

@@ -34,6 +34,95 @@ namespace BusinessLogic.Repository
             _environment = hostEnvironment;
         }
 
+        public DashboardModel GetRequestsByStatus(int tabNo, int CurrentPage, int phyid)
+        {
+            var query = from r in _db.Requests
+                        join rc in _db.Requestclients on r.Requestid equals rc.Requestid
+                        where r.Physicianid == phyid
+                        select new AdminDashTableModel
+                        {
+                            firstName = rc.Firstname,
+                            lastName = rc.Lastname,
+                            intDate = rc.Intdate,
+                            intYear = rc.Intyear,
+                            strMonth = rc.Strmonth,
+                            requestorFname = r.Firstname,
+                            requestorLname = r.Lastname,
+                            createdDate = r.Createddate,
+                            mobileNo = rc.Phonenumber,
+                            city = rc.City,
+                            state = rc.State,
+                            street = rc.Street,
+                            zipCode = rc.Zipcode,
+                            requestTypeId = r.Requesttypeid,
+                            status = r.Status,
+                            Requestclientid = rc.Requestclientid,
+                            reqId = r.Requestid,
+                            regionId = rc.Regionid,
+                            calltype = (short)r.Calltype,
+                            isFinalized = _db.Encounterforms.Where(x => x.Requestid == r.Requestid).Select(x => x.Isfinalized).First() ?? null
+                        };
+
+
+            if (tabNo == 1)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.Unassigned);
+            }
+
+            else if (tabNo == 2)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.Accepted);
+            }
+            else if (tabNo == 3)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.MDEnRoute || x.status == (int)StatusEnum.MDOnSite);
+            }
+            else if (tabNo == 4)
+            {
+
+                query = query.Where(x => x.status == (int)StatusEnum.Conclude);
+            }
+
+
+
+            var result = query.ToList();
+            int count = result.Count();
+            int TotalPage = (int)Math.Ceiling(count / (double)5);
+            result = result.Skip((CurrentPage - 1) * 5).Take(5).ToList();
+
+            DashboardModel dashboardModel = new DashboardModel();
+            dashboardModel.adminDashboardList = result;
+            dashboardModel.regionList = _db.Regions.ToList();
+            dashboardModel.TotalPage = TotalPage;
+            dashboardModel.CurrentPage = CurrentPage;
+            return dashboardModel;
+        }
+
+        public StatusCountModel GetStatusCount(int phyid)
+        {
+            var requestsWithClients = _db.Requests
+     .Join(_db.Requestclients,
+         r => r.Requestid,
+         rc => rc.Requestid,
+         (r, rc) => new { Request = r, RequestClient = rc })
+     .Where(r => r.Request.Physicianid == phyid).ToList();
+
+            StatusCountModel statusCount = new StatusCountModel
+            {
+                NewCount = requestsWithClients.Count(x => x.Request.Status == (int)StatusEnum.Unassigned),
+                PendingCount = requestsWithClients.Count(x => x.Request.Status == (int)StatusEnum.Accepted),
+                ActiveCount = requestsWithClients.Count(x => x.Request.Status == (int)StatusEnum.MDEnRoute || x.Request.Status == (int)StatusEnum.MDOnSite),
+                ConcludeCount = requestsWithClients.Count(x => x.Request.Status == (int)StatusEnum.Conclude),
+
+            };
+
+            return statusCount;
+
+
+        }
 
         public void acceptCase(int requestId, string loginUserId)
         {
@@ -102,7 +191,7 @@ namespace BusinessLogic.Repository
         }
 
         public void housecall(int requestId)
-        { 
+        {
             Request? req = _db.Requests.FirstOrDefault(x => x.Requestid == requestId);
             req.Status = (int)StatusEnum.Conclude;
             _db.Requests.Update(req);
@@ -300,7 +389,7 @@ namespace BusinessLogic.Repository
                             Requestid = model.RequestId,
                             Adminnotes = model.ProviderNotes,
                             Createdby = physician!.Aspnetuserid!,
-                            Createddate  = DateTime.Now,
+                            Createddate = DateTime.Now,
                         };
                         _db.Requestnotes.Add(requestNote);
                     }
@@ -371,12 +460,12 @@ namespace BusinessLogic.Repository
             return month;
         }
 
-        public bool concludecaresubmit(int ReqId,string ProviderNote)
+        public bool concludecaresubmit(int ReqId, string ProviderNote)
         {
             try
             {
                 var req1 = _db.Requests.FirstOrDefault(x => x.Requestid == ReqId);
-                var ise = new BitArray(1,false);
+                var ise = new BitArray(1, false);
                 req1.Status = (int)StatusEnum.Closed;
                 req1.Isurgentemailsent = ise;
                 _db.Requests.Update(req1);

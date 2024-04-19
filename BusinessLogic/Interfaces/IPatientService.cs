@@ -29,7 +29,9 @@ namespace BusinessLogic.Interfaces
 
         Task<bool> IsEmailExists(string email);
 
-        MedicalHistoryList GetMedicalHistory(int userid);
+        //MedicalHistoryList GetMedicalHistory(int userid);
+
+        MedicalHistoryList GetMedicalHistory(string email);
 
         //List<MedicalHistory> GetMedicalHistory(User user);
         IQueryable<Requestwisefile>? GetAllDocById(Int64 requestId);
@@ -42,7 +44,7 @@ namespace BusinessLogic.Interfaces
         Profile GetProfile(int userid);
         bool EditProfile(Profile profile);
 
-        void StoreData(PatientInfoModel patientRequestModel, int reqTypeid, int userid);
+        bool StoreData(PatientInfoModel patientRequestModel);
 
         PatientInfoModel FetchData(string email);
 

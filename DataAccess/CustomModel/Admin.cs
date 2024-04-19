@@ -90,7 +90,8 @@ namespace DataAccess.CustomModel
         public int? regionId { get; set; }
 
         public short calltype { get; set; }
-        public bool? isFinalized { get; set; }   
+        public bool? isFinalized { get; set; }
+        public int? phyId { get; set; }
 
     }
 
@@ -168,6 +169,7 @@ namespace DataAccess.CustomModel
         public int regionNo { get; set; }
 
         public string additionalNotes { get; set; }
+        public int? selectRegionId { get; set; }
 
     }
 

@@ -9,6 +9,9 @@ namespace BusinessLogic.Interfaces
 {
     public interface IProviderService
     {
+        DashboardModel GetRequestsByStatus(int tabNo, int CurrentPage, int phyid);
+        public StatusCountModel GetStatusCount(int phyid);
+
         void acceptCase(int requestId,string loginUserId);
 
         bool TransferRequest(TransferRequest model);

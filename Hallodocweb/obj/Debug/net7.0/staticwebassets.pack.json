@@ -81,6 +81,14 @@
       "PackagePath": "staticwebassets\\PhysicianImages\\30\\ProfilePhoto.png"
     },
     {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\31\\Independent_Contractor.pdf",
+      "PackagePath": "staticwebassets\\PhysicianImages\\31\\Independent_Contractor.pdf"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\PhysicianImages\\31\\ProfilePhoto.jpg",
+      "PackagePath": "staticwebassets\\PhysicianImages\\31\\ProfilePhoto.jpg"
+    },
+    {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\Rotativa\\wkhtmltoimage.exe",
       "PackagePath": "staticwebassets\\Rotativa\\wkhtmltoimage.exe"
     },
@@ -115,6 +123,14 @@
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Create request_Provider_mobile.png",
       "PackagePath": "staticwebassets\\UploadedFiles\\Create request_Provider_mobile.png"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\EncounterForm (5).pdf",
+      "PackagePath": "staticwebassets\\UploadedFiles\\EncounterForm (5).pdf"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\EncounterForm.pdf",
+      "PackagePath": "staticwebassets\\UploadedFiles\\EncounterForm.pdf"
     },
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Exported-Requests (36) (1).csv",
@@ -163,6 +179,10 @@
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Exported-Requests (39).csv",
       "PackagePath": "staticwebassets\\UploadedFiles\\Exported-Requests (39).csv"
+    },
+    {
+      "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Exported-Requests (50).csv",
+      "PackagePath": "staticwebassets\\UploadedFiles\\Exported-Requests (50).csv"
     },
     {
       "Id": "D:\\Final Project\\Hallodoc\\Hallodocweb\\wwwroot\\UploadedFiles\\Fig Contact your Provider.jpg",

@@ -9,13 +9,13 @@
             <span style="color: darkblue;">(New)</span>
         </span>
         <span class="d-flex gap-1 gap-md-3">
-            <button class="action-btn" onclick="sendLink()">
+            <button class="action-btn" onclick="PSendLink()">
                 <i class="bi bi-send"></i> <span class="d-none d-md-block">
                     Send
                     Link
                 </span>
             </button>
-            <button class="action-btn" onclick="location.href='@Url.Action("CreateRequest", "Provider")'">
+            <button class="action-btn" onclick="location.href='@Url.Action("CreateReq", "Admin")'">
                 <i class="bi bi-journal-text"></i> <span class="d-none d-md-block">Create Requests</span>
             </button>
 
@@ -355,9 +355,8 @@ else
 {
     <div class="text-center text-danger fw-bold h5">No record found</div>
 }
-<div id="modelContent"></div>
 <div id="modelContentSendLink"></div>
-
+<div id="modelContent"></div>
 
 <!-- accordions -->
 @*<div class="accordion accordion-flush d-block d-md-none" id="accordionFlushExample">
@@ -624,6 +623,22 @@ else
 
 
 
+    function PSendLink() {
 
+        $.ajax({
+            method: "GET",
+            url: "/Admin/SendLink",
+            // async: false,
+            // data: { requestid: requestid },
+
+            success: function (result) {
+                $('#modelContent').html(result);
+                $('#SendLinkModal').modal('show');
+            },
+            error: function () {
+                alert('Error loading partial view');
+            }
+        })
+    }
 
 </script>

@@ -67,12 +67,16 @@ namespace HalloDoc.mvc.Controllers
         }
         public IActionResult GetCount()
         {
-            var statusCountModel = _adminService.GetStatusCount();
+            var aspid = GetLoginId();
+            var phyid = _providerService.GetPhysicianId(aspid);
+            var statusCountModel = _providerService.GetStatusCount(phyid);
             return PartialView("_PAllRequests", statusCountModel);
         }
         public IActionResult GetRequestsByStatus(int tabNo, int CurrentPage)
-        {
-            var list = _adminService.GetRequestsByStatus(tabNo, CurrentPage);
+                {
+            var aspid = GetLoginId();
+            var phyid = _providerService.GetPhysicianId(aspid); 
+            var list = _providerService.GetRequestsByStatus(tabNo, CurrentPage,phyid);
 
             if (tabNo == 0)
             {

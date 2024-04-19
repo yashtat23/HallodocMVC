@@ -18,7 +18,7 @@
                     <input type="text" asp-for="@Model.requestId" hidden />
                     <div class="mb-3 ">
 
-                        <select class="form-select text-secondary" aria-label="Default select example" id="region" onchange="GetPhysicianData(this.value)">
+                        <select class="form-select text-secondary" aria-label="Default select example" id="regiontransfer" onchange="GetPhysicianData(this.value)">
                             <option selected>Select Region</option>
                             @foreach (var item in Model.region.ToList())
                             {
@@ -29,7 +29,7 @@
 
                     <div class="mb-3 text-secondary">
                         <div class="form-floating mb-3">
-                            <select asp-for="@Model.physicanNo" class="form-select text-secondary" aria-label="Default select example" id="physician">
+                            <select asp-for="@Model.physicanNo" id="transferselectphysiscian" class="form-select text-secondary" aria-label="Default select example" id="physician">
                                 <option selected></option>
                             </select>
                             <label for="floatingInput">Select Physican</label>
@@ -73,27 +73,22 @@
     }
 
     function GetPhysicianData(regionId) {
-        console.log(regionId);
+        console.log(regiontransfer);
         $.ajax({
             method: "GET",
             url: "/Admin/GetPhysicianData",
             async: false,
             data: { regionId: regionId },
 
-            success: function (data) {
-                // physicion = document.getElementById('#secondSelection');
-                // region = document.getElementById('#firstSelection');
-                //region.value == '0' ? physicion.disabled : physicion.enabled;
-
-                $('#physician').empty();
-                $('#physician').html("<option selected disabled>" + "Select Physician" + "</option>");
-                $.each(data, function (index, item) {
-
-                    $('#physician').append($('<option>', {
-                        value: item.physicianid,
-                        text: item.firstname + " " + item.lastname
-
+            success: function (response) {
+                $('#transferselectphysiscian').empty();
+                console.log(response);
+                $.each(response, function (index, object) {
+                    $('#transferselectphysiscian').append($('<option>', {
+                        value: object["physicianId"],   
+                        text: object["physicianName"]
                     }));
+
                 });
             },
             error: function () {

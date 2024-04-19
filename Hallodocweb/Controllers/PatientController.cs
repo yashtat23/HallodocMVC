@@ -300,10 +300,10 @@ namespace Hallodocweb.Controllers
         //}
 
         [HttpPost]
-        public IActionResult patientresetpass(Aspnetuser aspnetuser)
+        public IActionResult patientresetpass(Aspnetuser model)
         {
-            var aspuser = _context.Aspnetusers.FirstOrDefault(x => x.Id == aspnetuser.Id);
-            aspnetuser.Passwordhash = GenerateSHA256(aspnetuser.Passwordhash);
+            var aspuser = _context.Aspnetusers.FirstOrDefault(x => x.Id == model.Id);
+            aspuser.Passwordhash = GenerateSHA256(model.Passwordhash);
             _context.Aspnetusers.Update(aspuser);
             _context.SaveChanges();
             _notyf.Success("Password change successfully!!");
@@ -374,13 +374,36 @@ namespace Hallodocweb.Controllers
             
         }
 
-        [CustomAuthorize("User")]
+        //[CustomAuthorize("User")]
+        //public IActionResult patientdashboard()
+        //{
+        //    string? Email = HttpContext.Session.GetString("Email");
+        //    var user = _context.Users.Where(x=>x.Email == Email).FirstOrDefault();
+
+        //    var infos = _patientService.GetMedicalHistory(email);
+
+        //    return View(infos);
+        //}
+
+        //public string GetTokenEmail()
+        //{
+        //    var token = HttpContext.Request.Cookies["PatientJwt"];
+        //    if (token == null || !_jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
+        //    {
+        //        return "";
+        //    }
+        //    var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+        //    return emailClaim.Value;
+        //}
+
         public IActionResult patientdashboard()
         {
-            string? Email = HttpContext.Session.GetString("Email");
-            var user = _context.Users.Where(x=>x.Email == Email).FirstOrDefault();
-
-            var infos = _patientService.GetMedicalHistory(user.Userid);
+            var email = _htttpcontext.HttpContext.Session.GetString("Email");
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("patientreg");
+            }
+            var infos = _patientService.GetMedicalHistory(email);
 
             return View(infos);
         }
@@ -461,23 +484,19 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult patientsubinformation(PatientInfoModel insertPatientRegister)
         {
-            int reqTypeid = 1;
-            int userid = (int)_htttpcontext.HttpContext.Session.GetInt32("UserId");
-            try
+            bool isValid = _patientService.StoreData(insertPatientRegister);
+            if (!isValid)
             {
-                _patientService.StoreData(insertPatientRegister, reqTypeid, userid);
-                return RedirectToAction("patientdashboard");
+                _notyf.Error("Service Is Not Available In Entered Region");
+                return View(insertPatientRegister);
             }
-            catch
-            {
-
-                return View();
-            }
+            _notyf.Success("Submit Successfully !!");
+            return RedirectToAction("patientdashboard", "Patient");
         }
 
         public string GetLoginId()
         {
-            var token = HttpContext.Request.Cookies["PatientJwt"];
+            var token = HttpContext.Request.Cookies["jwt"];
             if (token == null || !_jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
             {
                 return "";

@@ -638,34 +638,52 @@ namespace BusinessLogic.Repository
         }
 
 
-        public MedicalHistoryList GetMedicalHistory(int userid)
+        //public MedicalHistoryList GetMedicalHistory(int userid)
+        //{
+        //    var user = _db.Users.FirstOrDefault(x => x.Userid == userid);
+
+        //    var medicalhistory = (from request in _db.Requests
+        //                          join requestfile in _db.Requestwisefiles
+        //                          on request.Requestid equals requestfile.Requestid
+        //                          where request.Email == user.Email && request.Email != null
+        //                          group requestfile by request.Requestid into groupedFiles
+        //                          select new MedicalHistory
+        //                          {
+
+        //                              reqId = groupedFiles.Select(x => x.Request.Requestid).FirstOrDefault(),
+        //                              createdDate = groupedFiles.Select(x => x.Request.Createddate).FirstOrDefault(),
+        //                              currentStatus = groupedFiles.Select(x => x.Request.Status).FirstOrDefault(),
+        //                              document = groupedFiles.Select(x => x.Filename.ToString()).ToList(),
+        //                              ConfirmationNumber = groupedFiles.Select(x => x.Request.Confirmationnumber).FirstOrDefault(),
+        //                          }).ToList();
+
+        //    MedicalHistoryList medicalHistoryList = new()
+        //    {
+        //        medicalHistoriesList = medicalhistory,
+        //        id = userid,
+        //        firstName = user.Firstname,
+        //        lastName = user.Lastname
+        //    };
+
+        //    return medicalHistoryList;
+        //}
+
+        public MedicalHistoryList GetMedicalHistory(string email)
         {
-            var user = _db.Users.FirstOrDefault(x => x.Userid == userid);
-
-            var medicalhistory = (from request in _db.Requests
-                                  join requestfile in _db.Requestwisefiles
-                                  on request.Requestid equals requestfile.Requestid
-                                  where request.Email == user.Email && request.Email != null
-                                  group requestfile by request.Requestid into groupedFiles
-                                  select new MedicalHistory
-                                  {
-
-                                      reqId = groupedFiles.Select(x => x.Request.Requestid).FirstOrDefault(),
-                                      createdDate = groupedFiles.Select(x => x.Request.Createddate).FirstOrDefault(),
-                                      currentStatus = groupedFiles.Select(x => x.Request.Status).FirstOrDefault(),
-                                      document = groupedFiles.Select(x => x.Filename.ToString()).ToList(),
-                                      ConfirmationNumber = groupedFiles.Select(x => x.Request.Confirmationnumber).FirstOrDefault(),
-                                  }).ToList();
-
-            MedicalHistoryList medicalHistoryList = new()
+            var user = _db.Users.FirstOrDefault(x => x.Email == email);
+            List<MedicalHistory> list = new();
+            MedicalHistoryList model = new();
+            model.id = user.Userid;
+            model.firstName = user.Firstname;
+            model.lastName = user.Lastname;
+            var requests = _db.Requests.Where(m => m.Userid == user.Userid).ToList();
+            foreach (var item in requests)
             {
-                medicalHistoriesList = medicalhistory,
-                id = userid,
-                firstName = user.Firstname,
-                lastName = user.Lastname
-            };
-
-            return medicalHistoryList;
+                int count = _db.Requestwisefiles.Where(m => m.Requestid == item.Requestid).Count();
+                list.Add(new MedicalHistory { createdDate = item.Createddate, currentStatus = item.Status, docCount = count, reqId = item.Requestid });
+            }
+            model.medicalHistoriesList = list;
+            return model;
         }
 
         public IQueryable<Requestwisefile>? GetAllDocById(Int64 requestId)
@@ -829,30 +847,49 @@ namespace BusinessLogic.Repository
             };
             return userdata;
         }
-        public void StoreData(PatientInfoModel patientRequestModel, int reqTypeid, int userid)
-
+        public bool StoreData(PatientInfoModel patientRequestModel)
         {
-            User? user = _db.Users.FirstOrDefault(i => i.Userid == userid);
-
-            Request reqdata = new Request()                             //Request
+            try
             {
-                Userid = userid,
-                Requesttypeid = reqTypeid,
-                Firstname = user.Firstname,
-                Lastname = user.Lastname,
-                Email = user.Email,
-                Phonenumber = user.Mobile,
-                Status = 1,
-                Createddate = DateTime.Now,
-                Isurgentemailsent = new BitArray(1),
-            };
+            
+            var stateMain = _db.Regions.Where(r => r.Name.ToLower() == patientRequestModel.state.ToLower().Trim()).FirstOrDefault();
+            if (stateMain == null) { return false; }
 
-            _db.Requests.Add(reqdata);
+            Request request = new Request();
+            request.Requesttypeid = 2;
+            request.Status = 1;
+            request.Createddate = DateTime.Now;
+            request.Isurgentemailsent = new BitArray(1);
+            request.Firstname = patientRequestModel.firstname;
+            request.Lastname = patientRequestModel.lastname;
+            request.Phonenumber = patientRequestModel.phonenumber;
+            request.Email = patientRequestModel.email;
+            request.Userid = request.Userid;
+
+            _db.Requests.Add(request);
             _db.SaveChanges();
 
+            Requestclient info = new Requestclient();
+            info.Request = request;
+            info.Requestid = request.Requestid;
+            info.Notes = patientRequestModel.symptoms;
+            info.Firstname = patientRequestModel.firstname;
+            info.Lastname = patientRequestModel.lastname;
+            info.Phonenumber = patientRequestModel.phonenumber;
+            info.Email = patientRequestModel.email;
+            info.Street = patientRequestModel.street;
+            info.City = patientRequestModel.city;
+            info.State = patientRequestModel.state;
+            info.Zipcode = patientRequestModel.zipcode;
+            info.Intyear = patientRequestModel.Dateofbirth.Year;
+            info.Intdate = patientRequestModel.Dateofbirth.Day;
+            info.Strmonth = patientRequestModel.Dateofbirth.ToString("MMM");
+            info.Regionid = stateMain.Regionid;
 
-            int reqid = reqdata.Requestid;
 
+            _db.Requestclients.Add(info)
+;
+            _db.SaveChanges();
 
 
             if (patientRequestModel.File != null)
@@ -877,7 +914,7 @@ namespace BusinessLogic.Repository
                         Requestwisefile requestwisefile = new()
                         {
                             Filename = fileName,
-                            Requestid = reqdata.Requestid,
+                            Requestid = request.Requestid,
                             Createddate = DateTime.Now
                         };
 
@@ -890,7 +927,7 @@ namespace BusinessLogic.Repository
 
             var reqclientdata = new Requestclient()                 //request client
             {
-                Requestid = reqid,
+                Requestid = request.Requestid,
                 Firstname = patientRequestModel.firstname,
                 Lastname = patientRequestModel.lastname,
                 Email = patientRequestModel.email,
@@ -905,6 +942,10 @@ namespace BusinessLogic.Repository
             _db.Requestclients.Add(reqclientdata);
             _db.SaveChanges();
 
+                return true;
+
+            }
+            catch (Exception ex) { return false; }
         }
 
         public bool SomeElseReq(FamilyReqModel model, string createAccountLink, string loginid)

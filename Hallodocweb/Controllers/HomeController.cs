@@ -56,7 +56,7 @@ namespace Hallodocweb.Controllers
         public IActionResult ReviewAgreement(ReviewAgreement Agreement)
         {
             bool isChange = _adminService.ReviewAgree(Agreement);
-            return RedirectToAction("AdminDashboard");
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -75,7 +75,7 @@ namespace Hallodocweb.Controllers
                 Reason = Description
             };
             _adminService.CancelAgreement(model);
-            return RedirectToAction("AdminDashboard","Admin");
+            return RedirectToAction("Index");
         }
 
         public static string GenerateSHA256(string input)
@@ -99,6 +99,13 @@ namespace Hallodocweb.Controllers
         {
             return View();
         }
+
+        public IActionResult AdminLogout()
+        {
+            Response.Cookies.Delete("jwt");
+            return RedirectToAction("AdminLogin", "Home");
+        }
+
         [HttpPost]
         public IActionResult AdminLogin(AdminLoginModelR adminLoginModel)
         {
@@ -110,17 +117,20 @@ namespace Hallodocweb.Controllers
                     adminLoginModel.password = GenerateSHA256(adminLoginModel.password);
                     if (aspnetuser.Passwordhash == adminLoginModel.password)
                     {
-                         var jwtToken = _jwtService.GetJwtToken(aspnetuser);
-                        Response.Cookies.Append("jwt", jwtToken);
+                         
                         //string Aspid = HttpContext.Session.SetString("UserId");
                         int role = aspnetuser.Aspnetuserroles.Where(x => x.Userid == aspnetuser.Id).Select(x => x.Roleid).First();
                         if (role == 1)
                         {
+                            var jwtToken = _jwtService.GetJwtToken(aspnetuser);
+                            Response.Cookies.Append("jwt", jwtToken);
                             _notyf.Success("Logged in Successfully");
                             return RedirectToAction("AdminDashboard", "Admin");
                         }
                         else
                         {
+                            var jwtToken = _jwtService.GetJwtToken(aspnetuser);
+                            Response.Cookies.Append("jwt", jwtToken);
                             _notyf.Success("Logged in Successfully");
                             return RedirectToAction("ProviderDashboard", "Provider");
 

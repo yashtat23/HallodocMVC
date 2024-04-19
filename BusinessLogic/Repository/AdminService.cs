@@ -158,8 +158,9 @@ namespace BusinessLogic.Repository
                             Requestclientid = rc.Requestclientid,
                             reqId = r.Requestid,
                             regionId = rc.Regionid,
-                            calltype = (short)r.Calltype,
-                            isFinalized = _db.Encounterforms.Where(x=>x.Requestid == r.Requestid).Select(x=>x.Isfinalized).First()??null
+                            phyId = r.Physicianid ?? null
+                            //calltype = (short)r.Calltype,
+                            //isFinalized = _db.Encounterforms.Where(x=>x.Requestid == r.Requestid).Select(x=>x.Isfinalized).First()??null
                         };
 
 
@@ -506,7 +507,7 @@ namespace BusinessLogic.Repository
                
 
             };
-                //reqData.Status = 2;
+            reqData.Status = 2;
             reqData.Physicianid = assignCaseModel.physicanNo;
 
             _db.Add(reqstatusData);
@@ -803,6 +804,9 @@ namespace BusinessLogic.Repository
 
         public void SendAgreementEmail(SendAgreement model, string link)
         {
+            try
+            {
+
             Requestclient reqCli = _db.Requestclients.FirstOrDefault(requestCli => requestCli.Requestclientid == model.ReqClientId);
 
             string mail = "tatva.dotnet.yashvariya@outlook.com";
@@ -828,6 +832,11 @@ namespace BusinessLogic.Repository
             mailMessage.To.Add(model.email);
 
             client.Send(mailMessage);
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
         public bool ReviewAgree(ReviewAgreement Agreement)
@@ -838,14 +847,14 @@ namespace BusinessLogic.Repository
                 var req = _db.Requests.FirstOrDefault(x => x.Requestid == reqClient.Requestid);
                 if (req != null)
                 {
-                    req.Status = (int)StatusEnum.MDEnRoute;
+                    req.Status = 4;
+                    _db.Requests.Update(req);
 
                     Requeststatuslog requeststatuslog = new Requeststatuslog();
                     requeststatuslog.Requestid = req.Requestid;
                     requeststatuslog.Status = req.Status;
                     requeststatuslog.Createddate = DateTime.Now;
 
-                    _db.Requests.Update(req);
                     _db.Requeststatuslogs.Add(requeststatuslog);
                     _db.SaveChanges();
 
@@ -2012,7 +2021,7 @@ namespace BusinessLogic.Repository
                 {
                     Guid id = Guid.NewGuid();
                     Aspnetuser aspnetuser = new();
-
+                    
                     aspnetuser.Id = id.ToString();
                     aspnetuser.Username = obj.UserName;
                     aspnetuser.Passwordhash = obj.AdminPassword;
@@ -2243,7 +2252,7 @@ namespace BusinessLogic.Repository
             var aspUser = _db.Aspnetusers.FirstOrDefault(r => r.Email == obj.Email);
 
 
-            if (aspUser == null && obj.latitude != null)
+            if (aspUser == null)
             {
 
                 

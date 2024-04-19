@@ -11,12 +11,15 @@ namespace DataAccess.CustomModels
 {
     public class PatientInfoModel
     {
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$",ErrorMessage ="This Type of Symptoms is not valid")]
         public string? symptoms { get; set; }
 
         [Required(ErrorMessage = "First Name is required")]
+        [RegularExpression(@"^[^<>.,?;:'()!~%-_@#%/*""\s]+$", ErrorMessage = "First name is required and must be properly formatted.")]
         public string? firstname { get; set; }
 
         [Required(ErrorMessage = "Last Name is required")]
+        [RegularExpression(@"^[^<>.,?;:'()!~%-_@#%/*""\s]+$", ErrorMessage = "Last name is required and must be properly formatted.")]
         public string? lastname { get; set; }
 
         [Required(ErrorMessage = "Date of Birth is required")]
@@ -30,19 +33,24 @@ namespace DataAccess.CustomModels
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Entered phone format is not valid.")]
         public string phonenumber { get; set; }
 
-        //[Required(ErrorMessage = "Street is required")]
+        [Required(ErrorMessage = "Street is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$",ErrorMessage = "Please enter a valid street")]
         public string? street { get; set; }
 
-        //[Required(ErrorMessage = "City is required")]
+        [Required(ErrorMessage = "City is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "Please enter a valid city")]
         public string? city { get; set; }
 
         [Required(ErrorMessage = "State is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "Please enter a valid State")]
         public string state { get; set; }
 
-        //[Required(ErrorMessage = "Zipcode is required")]
+        [Required(ErrorMessage = "Zipcode is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "Please enter a valid ZipCode")]
         public string? zipcode { get; set; }
 
         //[Required(ErrorMessage = "Room Number is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$" ,ErrorMessage ="This Type of Room No Is not Valid")]
         public string? roomno { get; set; }
 
         [Required(ErrorMessage ="Password is required")]
@@ -62,9 +70,11 @@ namespace DataAccess.CustomModels
     public class FamilyReqModel
     {
         [Required(ErrorMessage = "First Name is required")]
+        [RegularExpression(@"^[^<>.,?;:'()!~%-_@#%/*""\s]+$", ErrorMessage = "First name is required and must be properly formatted.")]
         public string? firstName { get; set; }
 
         [Required(ErrorMessage = "Last Name is required")]
+        [RegularExpression(@"^[^<>.,?;:'()!~%-_@#%/*""\s]+$", ErrorMessage = "Last name is required and must be properly formatted.")]
         public string? lastName { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
@@ -76,13 +86,15 @@ namespace DataAccess.CustomModels
         public string? phoneNo { get; set; }
 
         //public string relation { get; set; }
-
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of Symptoms is not valid")]
         public string? symptoms { get; set; }
 
         [Required(ErrorMessage = "Patient Firstname is required")]
+        [RegularExpression(@"^[^<>.,?;:'()!~%-_@#%/*""\s]+$", ErrorMessage = "First name is required and must be properly formatted.")]
         public string patientFirstName { get; set; }
 
         [Required(ErrorMessage = "Patient Lastname is required")]
+        [RegularExpression(@"^[^<>.,?;:'()!~%-_@#%/*""\s]+$", ErrorMessage = "Last name is required and must be properly formatted.")]
         public string? patientLastName { get; set; }
 
         [Required(ErrorMessage = "Date of Birth is required")]
@@ -96,20 +108,28 @@ namespace DataAccess.CustomModels
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Entered phone format is not valid.")]
         public string? patientPhoneNo { get; set; }
 
+        [Required(ErrorMessage = "Street is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "Please enter a valid street")]
         public string? street { get; set; }
 
+        [Required(ErrorMessage = "City is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "Please enter a valid city")]
         public string? city { get; set; }
 
         [Required(ErrorMessage = "State is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "Please enter a valid State")]
         public string? state { get; set; }
 
+        [Required(ErrorMessage = "Zipcode is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "Please enter a valid ZipCode")]
         public string? zipCode { get; set; }
 
-        //[Required(ErrorMessage = "Room Number is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of Room No Is not Valid")]
         public int? roomNo { get; set; }
 
         public IFormFile? File { get; set; }
 
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of Relation No Is not Valid")]
         public string? relation { get; set; }
 
     }
@@ -117,8 +137,10 @@ namespace DataAccess.CustomModels
     public class ConciergeReqModel
     {
         [Required(ErrorMessage = "Please Enter Your First Name")]
+        [RegularExpression(@"^[^<>.,?;:'()!~%-_@#%/*""\s]+$", ErrorMessage = "First name is required and must be properly formatted.")]
         public string firstName { get; set; }
         [Required(ErrorMessage = "Last Name is required")]
+        [RegularExpression(@"^[^<>.,?;:'()!~%-_@#%/*""\s]+$", ErrorMessage = "Last name is required and must be properly formatted.")]
         public string? lastName { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Please enter a valid email address like a@g.com")]
@@ -128,13 +150,17 @@ namespace DataAccess.CustomModels
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Entered phone format is not valid.")]
         public string? phoneNo { get; set; }
 
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of Hotel Name No Is not Valid")]
         public string? hotelName { get; set; }
 
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of Symptoms No Is not Valid")]
         public string? symptoms { get; set; }
 
         [Required(ErrorMessage = "Patient Firstname is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of Patient First Name No Is not Valid")]
         public string? patientFirstName { get; set; }
         [Required(ErrorMessage = "Patient Lastname is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of Patient Last Name No Is not Valid")]
         public string? patientLastName { get; set; }
         [Required(ErrorMessage = "Date of Birth is required")]
         public DateTime patientDob { get; set; }
@@ -146,64 +172,82 @@ namespace DataAccess.CustomModels
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Entered phone format is not valid.")]
         public string? patientPhoneNo { get; set; }
 
+        [Required(ErrorMessage = "Street is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of Street No Is not Valid")]
         public string? street { get; set; }
 
+        [Required(ErrorMessage = "city is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "City Name is Not Valid")]
         public string? city { get; set; }
         [Required(ErrorMessage = "State is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "State is not Valid")]
         public string? state { get; set; }
 
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of Patient First Name No Is not Valid")]
         public string? zipCode { get; set; }
-
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of Room No Is not Valid")]
         public int? roomNo { get; set; }
     }
 
     public class BusinessReqModel
     {
-        [Required(ErrorMessage = "Please Enter Your Email")]
+        [Required(ErrorMessage = "Please Enter Your Firstname")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "FirstName is not Valid")]
         public string firstName { get; set; }
 
+        [Required(ErrorMessage = "Please Enter Your Lastname")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "Lastname is not Valid")]
+        public string lastName { get; set; }
 
-        public string? lastName { get; set; }
+        [Required(ErrorMessage = "Email is required")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Please enter a valid email address like a@g.com")]
+        public string    email { get; set; }
 
-
-        public string? email { get; set; }
-
-
+        [Required(ErrorMessage = "Phone Number is required")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Entered phone format is not valid.")]
         public string? phoneNo { get; set; }
 
-
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of BusinessName BusinessName is not Valid")]
         public string? businessName { get; set; }
 
-
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "CaseNo is not Valid")]
         public string? caseNo { get; set; }
 
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "symptoms is not Valid")]
         public string? symptoms { get; set; }
 
-
+        [Required(ErrorMessage = "Please Enter Your Firstname")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "FirstName is not Valid")]
         public string? patientFirstName { get; set; }
 
-
+        [Required(ErrorMessage = "Please Enter Your Lastname")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "Lastname is not Valid")]
         public string? patientLastName { get; set; }
 
-
+        [Required(ErrorMessage = "Please Enter Your Date of Birth")]
         public DateTime patientDob { get; set; }
 
-
+        [Required(ErrorMessage = "Email is required")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Please enter a valid email address like a@g.com")]
         public string? patientEmail { get; set; }
 
-
+        [Required(ErrorMessage = "Phone Number is required")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Entered phone format is not valid.")]
         public string? patientPhoneNo { get; set; }
 
-
+        [Required(ErrorMessage = "Street is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of Street No Is not Valid")]
         public string? street { get; set; }
 
-
+        [Required(ErrorMessage = "city is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "City Name is Not Valid")]
         public string? city { get; set; }
-
+        [Required(ErrorMessage = "State is required")]
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "State is not Valid")]
         public string? state { get; set; }
-
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of Patient First Name No Is not Valid")]
         public string? zipCode { get; set; }
-
+        [RegularExpression(@"^(?:\p{L}+ )*\p{L}+$", ErrorMessage = "This Type of Room No Is not Valid")]
         public int? roomNo { get; set; }
 
     }
@@ -221,6 +265,8 @@ namespace DataAccess.CustomModels
         public string StrMonth { get; set; }
         public int? IntYear { get; set; }
         public string ConfirmationNumber { get; set; }
+
+        public int docCount { get; set; }
 
     }
     public class MedicalHistoryList
@@ -260,5 +306,14 @@ namespace DataAccess.CustomModels
         public List<PatientInfoModel> subinformationModels { get; set; }
     }
 
-  
+    public class DocumentModel
+    {
+        public List<Requestwisefile>? files { get; set; }
+        public string? firstName { get; set; }
+        public string? lastName { get; set; }
+        public int? ReqId { get; set; }
+
+        public List<IFormFile>? uploadedFiles { get; set; }
+    }
+
 }

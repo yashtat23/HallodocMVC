@@ -14,7 +14,7 @@
     </div>
     <div class="container-fluid justify-content-center shadow mt-4" style="max-width:1000px">
         <div class="viewCaseForm form-floating patient-request-form p-3">
-            <form method="post" asp-controller="Admin" asp-action="AdminAccount" class="mb-4">
+            <form method="post" class="mb-4" asp-action="AdminAccount" asp-controller="Admin">
                 <h5>Account Information</h5> 
                 <div class="row g-2 m-1">
                     <div class="col-4">
@@ -152,21 +152,53 @@
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
 </script>
 <script>
-    function confirmEmail() {
-        var email = document.getElementById("AdminEmail").value
-        var confemail = document.getElementById("AdminConfirmEmail").value
-        if (email != confemail) {
-            $('#EmailConfirmVedidation').addClass("d-block").removeClass("d-none");
-            // alert('Email Not Matching!');
-        }
-        else{
-            $('#EmailConfirmVedidation').addClass("d-block").removeClass("d-none");
-        }
-    }
+    // function confirmEmail() {
+    //     var email = document.getElementById("AdminEmail").value
+    //     var confemail = document.getElementById("AdminConfirmEmail").value
+    //     if (email != confemail) {
+    //         $('#EmailConfirmVedidation').addClass("d-block").removeClass("d-none");
+    //         // alert('Email Not Matching!');
+    //     }
+    //     else{
+    //         $('#EmailConfirmVedidation').addClass("d-block").removeClass("d-none");
+    //     }
+    // }
 
     $('.admin-tab').removeClass("active");
     $('#access-tab').addClass("active");
 
-    
+    // function createAdminPostFor() {
+
+    //     var payload = $("#CreateAdminAccountForm").serializeArray();
+    //     //var RegionArray = [];
+    //     //var checkedBoxes = $('.region-checkbox:checkbox:checked');
+    //     //console.log(RegionArray);
+    //     //; $.each(checkedBoxes, function () {
+    //     //    RegionArray.push(parseInt(this.value))
+    //     //});
+    //     //console.log(payload2);
+    //     //payload2.push({ name: 'RegionArray', value: RegionArray });
+    //     //if ($("#myProfileThirdForm").valid()) {
+    //     $.ajax({
+    //         url: "/Admin/AdminAccount",
+    //         type: 'POST',
+    //         data: payload,
+    //         success: function (response) {
+    //             //     if (response.isRegionExists == false) {
+    //             //         toastr.error("State doesn't exists !!");
+    //             //     }
+    //             //     else if (response.isSubmit == true) {
+    //             //         toastr.success("Data Updated");
+    //             //     } else {
+    //             //         toastr.error("Change atleast one field");
+    //             //     }
+    //         },
+
+    //         error: function (e) {
+    //             alert("Error");
+    //         },
+    //     });
+    //     //}
+    // }
     
 </script>
