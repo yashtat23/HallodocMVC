@@ -31,22 +31,22 @@
                         {
                         <tr class="align-middle">
                             <td>
-                                    @Enum.Parse( typeof(DataAccess.Enums.AccountType), item.accType.ToString())
+                                    @Enum.Parse( typeof(DataAccess.Enums.AccountTypeEnum), item.accType.ToString())
                             </td>
                             <td>
-                                    @item.fname, @item.lname
+                                    @item.fname @item.lname
                             </td>
                             <td>
                                     @item.phone
                             </td>
                             <td>
-                                    @Enum.Parse( typeof(DataAccess.Enums.Status), item.status.ToString())
+                                    @Enum.Parse( typeof(DataAccess.Enums.PhysicianStatusEnum), item.status.ToString())
                             </td>
                             <td>
-                                @item.openReq
+                                369
                             </td>
                             <td>
-                                <button type="button" class="btn  border-info text-info">
+                                <button type="button" class="btn  border-info text-info" onclick="useraccessedit(@item.accType)">
                                     Edit
                                 </button>
                             </td>
@@ -56,77 +56,22 @@
             </table>
         </div>
     </div>
-
-    @* <div class="border rounded shadow d-block d-lg-none">
-    <div class="accordion container-fluid p-0" id="accordionPanelsStayOpenExample">
-    <table class="w-100">
-    <thead>
-    <tr>
-    <th class="d-none"></th>
-    <th class="d-none"></th>
-    </tr>
-    </thead>
-    @{
-    var counter = 1;
-    }
-    <tbody>
-    @foreach (var obj in Model.AdminUploadDocument)
-    {
-    <tr class="d-flex flex-column">
-    <td>
-    <h2 class="accordion-header" id="flush-heading@(counter)"></h2>
-
-    <div class="accordion-button collapsed d-flex flex-column pb-0" data-bs-toggle="collapse"
-    data-bs-target="#flush-collapse@(counter)" aria-expanded="false"
-    aria-controls="flush-collapse@(counter)">
-
-    <div class="w-100 ">
-    <input type="checkbox" name="Mark" class="checkbox fileCheckbox me-2" onchange="allCheck()" />
-    <span class="fw-bolder">
-    vatsal
-    </span>
-    </div>
-    <div class="w-100">
-    <div class="">
-    <span class="fw-bolder">On Call Status</span>: Un Available
-    </div>
-    </div>
-
-    </div>
-
-    </td>
-    <td>
-    <div id="flush-collapse@(counter)" class="accordion-collapse collapse"
-    aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample">
-    <div class="accordion-body main-flex pt-0">
-    <div class="inner-flex pt-1">
-    <span class="fw-bolder">Role</span>: Physician
-    </div>
-    <div class="inner-flex pb-2">
-    <span class="fw-bolder">Status</span>: Active
-    </div>
-    <div class="inner-flex d-flex justify-content-between">
-    <button type="button" class="btn btn-outline-dark border-info text-info">
-    Edit
-    </button>
-    </div>
-
-    </div>
-    </div>
-    </td>
-    </tr>
-    </tbody>
-    </table>
-
-    </div>
-    </div> *@
 </div>
 
-@* <div id="providerContactModal">
-</div> *@
+<div class="tab-pane fade" id="access-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+</div>
 
 <script>
-
+    function useraccessedit(accType) {
+        $.ajax({
+            url: '/Admin/UserAccessEdit',
+            type: 'GET',
+            data: { accType: accType },
+            success: function (response) {
+                $("#access-tab-pane").html(response);
+            }
+        });
+    }
 
     $("#accountAccessType").change(function () {
         let selectedValue = $("#accountAccessType").val();
@@ -144,7 +89,5 @@
             }
         });
     });
-
-
 
 </script>                                            

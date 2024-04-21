@@ -76,10 +76,11 @@
                             <span class="d-none" style="color:red" id="EmailConfirmVedidation">Email And Confirm Email is Not Matching</span>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-floating phone-div w-100 h-100 ">
-                            <input type="tel" asp-for="AdminPhone" class="patientPhone form-control w-100 h-100" placeholder="">
+                    <div class="col-md-6" >
+                        <div class="form-floating phone-div w-100 h-75 ">
+                            <input type="tel" asp-for="AdminPhone" class="patientPhone form-control" placeholder="">
                             <label for="">Phone</label>
+                            <span class="text-danger" asp-validation-for="AdminPhone"></span>
                         </div>
                     </div>
                     <div class="col-md-6 d-flex justify-content-start flex-wrap mt-4">
@@ -94,19 +95,21 @@
                         }
                     </div>
                 </div>
-                <h5>Mailing & Billing Information</h5>
+                <h5 class="my-3">Mailing & Billing Information</h5>
 
                 <div class="row g-2 m-1">
                     <div class="col-md-6">
                         <div class="form-floating">
                             <input type="text" asp-for="Address1" class="form-control" placeholder="">
                             <label for="">Address1</label>
+                            <span class="text-danger" asp-validation-for="Address1"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
                             <input type="text" asp-for="Address2" class="form-control" placeholder="">
                             <label for="floatingSelectGrid">Address2</label>
+                            <span class="text-danger" asp-validation-for="Address1"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -131,14 +134,18 @@
                         <div class="form-floating">
                             <input type="text" asp-for="Zip" class="form-control" placeholder="">
                             <label for="">Zip</label>
+                            <span class="text-danger" asp-validation-for="Zip"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating phone-div w-100 h-100 ">
-                            <input type="tel" asp-for="BillingPhone" class="patientPhone form-control w-100 h-100" placeholder="">
+                            <input type="tel" asp-for="BillingPhone" class="form-control" placeholder="">
                             <label for="">Phone</label>
+                            <span class="text-danger" asp-validation-for="BillingPhone"></span>
                         </div>
                     </div>
+
+
                 </div>
 
 
@@ -148,6 +155,8 @@
 
     </div>
 </div>
+<partial name="_ValidationScriptsPartial" />
+
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
 </script>
@@ -201,4 +210,6 @@
     //     //}
     // }
     
+
+
 </script>

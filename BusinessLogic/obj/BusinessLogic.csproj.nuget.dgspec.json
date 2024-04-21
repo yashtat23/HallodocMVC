@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Final Project\\Hallodoc\\BusinessLogic\\BusinessLogic.csproj": {}
+    "E:\\Hallodoc\\BusinessLogic\\BusinessLogic.csproj": {}
   },
   "projects": {
-    "D:\\Final Project\\Hallodoc\\BusinessLogic\\BusinessLogic.csproj": {
+    "E:\\Hallodoc\\BusinessLogic\\BusinessLogic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Final Project\\Hallodoc\\BusinessLogic\\BusinessLogic.csproj",
+        "projectUniqueName": "E:\\Hallodoc\\BusinessLogic\\BusinessLogic.csproj",
         "projectName": "BusinessLogic",
-        "projectPath": "D:\\Final Project\\Hallodoc\\BusinessLogic\\BusinessLogic.csproj",
-        "packagesPath": "C:\\Users\\pce173\\.nuget\\packages\\",
-        "outputPath": "D:\\Final Project\\Hallodoc\\BusinessLogic\\obj\\",
+        "projectPath": "E:\\Hallodoc\\BusinessLogic\\BusinessLogic.csproj",
+        "packagesPath": "C:\\Users\\yashv\\.nuget\\packages\\",
+        "outputPath": "E:\\Hallodoc\\BusinessLogic\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\pce173\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\yashv\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,14 +22,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "D:\\Final Project\\Hallodoc\\DataAccess\\DataAccess.csproj": {
-                "projectPath": "D:\\Final Project\\Hallodoc\\DataAccess\\DataAccess.csproj"
+              "E:\\Hallodoc\\DataAccess\\DataAccess.csproj": {
+                "projectPath": "E:\\Hallodoc\\DataAccess\\DataAccess.csproj"
               }
             }
           }
@@ -77,21 +78,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Final Project\\Hallodoc\\DataAccess\\DataAccess.csproj": {
+    "E:\\Hallodoc\\DataAccess\\DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Final Project\\Hallodoc\\DataAccess\\DataAccess.csproj",
+        "projectUniqueName": "E:\\Hallodoc\\DataAccess\\DataAccess.csproj",
         "projectName": "DataAccess",
-        "projectPath": "D:\\Final Project\\Hallodoc\\DataAccess\\DataAccess.csproj",
-        "packagesPath": "C:\\Users\\pce173\\.nuget\\packages\\",
-        "outputPath": "D:\\Final Project\\Hallodoc\\DataAccess\\obj\\",
+        "projectPath": "E:\\Hallodoc\\DataAccess\\DataAccess.csproj",
+        "packagesPath": "C:\\Users\\yashv\\.nuget\\packages\\",
+        "outputPath": "E:\\Hallodoc\\DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\pce173\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\yashv\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -99,6 +100,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -166,7 +168,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     }

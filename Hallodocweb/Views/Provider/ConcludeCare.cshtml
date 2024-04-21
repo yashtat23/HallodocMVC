@@ -33,54 +33,11 @@
 <link rel="stylesheet" href="~/css/PatientDashboard.css">
 
 
-<nav class="navbar navbar-expand w-100 dark-mode1">
-
-    <div class="container-fluid">
-        <div class="d-flex align-items-center">
-            <button class="navbar-toggler d-block d-lg-none" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation" style="height: 50%;">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <img class="navbar-brand ms-3" id="logo" src="~/img/hallodoc.png" alt="logo" style="height:100px">
-
-        </div>
-        <div>
-            <ul class="navbar-nav ms-auto d-flex flex-nowrap align-items-center gap-2">
-                <div class="d-none d-sm-flex  justify-content-center align-items-center ">
-                <li class="nav-item">
-                    <span class="">Welcome</span>
-                </li>
-                <li class="nav-item p-2 fw-bolder">
-                    <span class="d-flex gap-1">
-                        <span class="dark-mode1">Yash</span>
-                        <span class="dark-mode1">Variya</span>
-                    </span>
-                </li>
-        </div>
-        <li class="nav-item">
-            <a asp-conroller="Admin" asp-action="Logout">
-                <button onclick="location.href='@Url.Action("ProviderDashboard", "Provider")'" class="px-2 btn btn-outline-info mx-2 float-end">
-                    <span class=" d-none d-md-block">Logout</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
-                </button>
-
-            </a>
-
-        </li>
-        <li class="nav-item">
-            <button type="button" class="btn shadow border-info ms-2"
-                    style="border-radius: 10px; border-color: aqua" id="colorButton">
-                <i id="moon" class="bi bi-moon text-info fs-5"></i>
-                <i id="sun" class="bi bi-sun text-info fs-5 d-none"></i>
-            </button>
-        </li>
-        </ul>
-    </div>
-    </div>
-
-
-    <!-- tabs -->
-</nav>
+<button type="button" class="btn shadow border-info ms-2" hidden
+        style="border-radius: 10px; border-color: aqua" id="colorButton">
+    <i id="moon" class="bi bi-moon text-info fs-5"></i>
+    <i id="sun" class="bi bi-sun text-info fs-5 d-none"></i>
+</button>
 
 <div class="container my-5 bg-white dark-mode1">
 
@@ -94,7 +51,7 @@
             <p class="col-12">Patient Name</p>
             <p class="col-12">
                 <span class="fw-bolder fs-4">@Model.firstName @Model.lastName </span>
-                <span>(f34r34t5gvr44)</span>
+                @*<span>(f34r34t5gvr44)</span>*@
             </p>
 
             <!-- row--- -->
@@ -121,9 +78,7 @@
         <table class="table dataTable table-hover" id="data-table" aria-describedby="data-table_info">
             <thead>
                 <tr>
-                    <th>
-                        <input type="checkbox" id="selectAll" onclick="toggleCheckboxes()">
-                    </th>
+                   
                     <th class="sorting" data-value="Description">
                         File
                     </th>
@@ -143,9 +98,6 @@
                     @foreach (var item in Model.files)
                     {
                         <tr>
-                            <td>
-                                <input type="checkbox" name="selectedFiles" value="@item.Filename">
-                            </td>
 
                             <td>
                                 <i class="bi bi-file-earmark-fill" style="color:red"></i>
@@ -171,21 +123,22 @@
                 else
                 {
                     <tr>
-                        <td colspan="3" style="text-align: center;">No records found.</td>
+                        <td colspan="4" style="text-align: center;">No records found.</td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
     <hr style="border: black 20px" />
-    <form asp-action="ConcludeCareSubmit">
+    <form asp-action="ConcludeCareSubmit" onsubmit="return concludecarevalidation()">
     <div>
             <input asp-for="@Model.ReqId" hidden />
         <h6>Provider Notes</h6>
         <div class="form-floating">
-            <textarea class="form-control" asp-for="ProviderNote" placeholder="Leave a comment here" id="providerNote" style="height: 100px"></textarea>
+                <textarea class="form-control" id="concludecareprovidernote" asp-for="ProviderNote" placeholder="Leave a comment here" id="providerNote" style="height: 100px"></textarea>
             <label for="floatingTextarea2">Provider Notes</label>
-        </div>
+                <small id="concludecareprovidernotereq" style="color:red" class="d-none">Provider note is required</small>
+            </div>
     </div>
     <div class="text-end">
             <button type="submit" class="btn btn-primary my-3">Conclude Care</button>
@@ -212,15 +165,30 @@
 
         });
 </script> *@
+<partial name="_ValidationScriptsPartial" />
+
 <script>
+    $('#concludecareprovidernote').on('input', function () {
+        var desc = $('#concludecareprovidernote').val();
+        if (desc == "") {
+            $('#concludecareprovidernotereq').addClass("d-block").removeClass("d-none");
+        } else {
+            $('#concludecareprovidernotereq').addClass("d-none").removeClass("d-block");
+        }
+    })
 
-
-    function toggleCheckboxes() {
-        var checkboxes = document.getElementsByName('selectedFiles');
-        var selectAllCheckbox = document.getElementById('selectAll');
-
-        for (var i = 0; i < checkboxes.length; i++) {
-            checkboxes[i].checked = selectAllCheckbox.checked;
+    function concludecarevalidation(){
+        var desc = $('#concludecareprovidernote').val();
+        if (desc == "") {
+            $('#concludecareprovidernotereq').addClass("d-block").removeClass("d-none");
+        } else {
+            $('#concludecareprovidernotereq').addClass("d-none").removeClass("d-block");
+        }
+        if (desc != "") {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 

@@ -76,7 +76,6 @@
                 <th scope="col">Phone</th>
                 <th scope="col">Address</th>
                 <th scope="col">Notes</th>
-                <th scope="col">Chats With</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -117,11 +116,18 @@
                             </div>
                         </td>
                         @*2*@
-                        <td style="background:@bgColor">Mar 23, 2023(0)</td>
+                        @if (Model.adminDashboardList.FirstOrDefault().intDate != null)
+                        {
+                            <td style="background:@bgColor;"> @Model.adminDashboardList.FirstOrDefault().intDate @Model.adminDashboardList.FirstOrDefault().strMonth @Model.adminDashboardList.FirstOrDefault().intYear </td>
+                        }
+                        else
+                        {
+                            <td style="background:@bgColor"> - </td>
+                        }  
                         @*3*@
                         <td style="background:@bgColor"> @item.requestorFname @item.requestorLname</td>
                         @*4*@
-                        <td style="background:@bgColor">Dec 21, 2023 969h 0m 01m</td>
+                        <td style="background:@bgColor;"> @item.reqDate</td>
                         @*5*@
                         <td style="background:@bgColor">
                             <div class="table_phone">
@@ -148,41 +154,12 @@
                         @*7*@
                         <td style="background:@bgColor">-</td>
                         @*8*@
-                        <td style="background:@bgColor">
-
-                            <div class="d-flex">
-                                <div class="dropdown mb-1 w-75">
-                                    <button class="btn text-white border border-white py-1"
-                                            type="button" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                        <i class="bi bi-person-fill"></i>
-                                        <span>
-                                            Patient
-                                        </span>
-                                    </button>
-
-                                </div>
-
-                            </div>
-                            <div>
-                                <div class="dropdown w-75">
-                                    <button class="btn text-white border border-white py-1"
-                                            type="button" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                        <i class="bi bi-person-badge-fill"></i>
-                                        <span>
-                                            Provider
-                                        </span>
-                                    </button>
-
-                                </div>
-                            </div>
-                        </td>
+                        
                         @*9*@
                         <td style="background:@bgColor">
                             <div>
                                 <div class="dropdown mt-3">
-                                    <button class="btn text-white border border-white py-1  dropdown-toggle w-50 d-flex justify-content-around align-items-center"
+                                    <button class="btn text-white border border-white py-1  dropdown-toggle w-100 d-flex justify-content-around align-items-center"
                                             id="chat_with_dropdown2" type="button" data-bs-toggle="dropdown"
                                             aria-expanded="false">
                                         <span>

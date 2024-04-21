@@ -89,13 +89,13 @@ namespace Hallodocweb.Controllers
                 {
                     HttpContext.Session.SetString("Email", loginvm.Email);
                     Response.Cookies.Append("jwt", result.Token);
-                    TempData["Success"] = "Login Successfully";
+                    _notyf.Success("Login Successfull!!!");
                     return RedirectToAction("PatientDashboard", "Patient");
                 }
                 else
                 {
                     ModelState.AddModelError("", result.Message);
-                    TempData["Error"] = result.Message;
+                    _notyf.Error("Invalid Caredential");
                     return View();
                 }
             }
@@ -415,20 +415,40 @@ namespace Hallodocweb.Controllers
         }
 
         [CustomAuthorize("User")]
-        public IActionResult _DocumentList(int Rid)
+        public IActionResult _DocumentList(int reqId)
         {
-            HttpContext.Session.SetInt32("rid", Rid);
-            var y = _patientService.GetAllDocById(Rid);
+            try
+            {
+            HttpContext.Session.SetInt32("rid", reqId);
+            var y = _patientService.GetAllDocById(reqId);
             return View(y);
+            }
+            catch
+            {
+                return View();
+            }
         }
 
         [HttpPost]
-        public IActionResult _DocumentList()
+        public IActionResult UploadDocuments(DocumentModel model)
         {
-            int? rid = (int)HttpContext.Session.GetInt32("rid");
-            var file = HttpContext.Request.Form.Files.FirstOrDefault();
-            _patientService.AddFile(file);
-            return RedirectToAction("_DocumentList","Patient", new { Rid = rid });
+            var rid = (int)HttpContext.Session.GetInt32("rid");
+            if (model.uploadedFiles == null)
+            {
+                _notyf.Error("First Upload Files");
+                return RedirectToAction("_DocumentList", "Patient", new { reqId = rid });
+            }
+            bool isUploaded = _patientService.UploadDocuments(model.uploadedFiles, rid);
+            if (isUploaded)
+            {
+                _notyf.Success("Uploaded Successfully");
+                return RedirectToAction("_DocumentList", "Patient", new { reqId = rid });
+            }
+            else
+            {
+                _notyf.Error("Upload Failed");
+                return RedirectToAction("_DocumentList", "Patient", new { reqId = rid });
+            }
         }
 
         //[httpget]

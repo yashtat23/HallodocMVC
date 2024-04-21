@@ -50,7 +50,8 @@
                 <div class="input-div form-floating mt-3">
                     <input asp-for="confirmPassword" type="password" class="form-control shadow-none" id="myInput1" placeholder="Password">
                     <label class="FloatingInput" for="Name">Confirm Password</label>
-                    <i class="i1 bi bi-eye icon" onclick="confirmpassword()" id="icon_1"></i> 
+                    <i class="i1 bi bi-eye icon" onclick="confirmpassword()" id="icon_1"></i>
+                    <span class="text-danger" asp-validation-for="confirmPassword"></span>
                 </div>
 
                 <div class="mt-3">

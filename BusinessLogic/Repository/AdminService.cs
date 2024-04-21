@@ -17,7 +17,7 @@ using System.Text.Json.Nodes;
 using System.Net.Mail;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using static Org.BouncyCastle.Math.EC.ECCurve;
+//using static Org.BouncyCastle.Math.EC.ECCurve;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -26,7 +26,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Hosting;
 using System.Text.Json;
 using OfficeOpenXml;
-using Org.BouncyCastle.Ocsp;
+//using Org.BouncyCastle.Ocsp;
 using DataAccess.Enums;
 
 namespace BusinessLogic.Repository
@@ -94,9 +94,9 @@ namespace BusinessLogic.Repository
                             status = r.Status,
                             Requestclientid = rc.Requestclientid,
                             reqId = r.Requestid,
-                            regionId = rc.Regionid
-                        };
-
+                            regionId = rc.Regionid,
+        };
+                
 
             if (tabNo == 1)
             {
@@ -136,8 +136,10 @@ namespace BusinessLogic.Repository
 
         public DashboardModel GetRequestsByStatus(int tabNo, int CurrentPage)
         {
+            
             var query = from r in _db.Requests
                         join rc in _db.Requestclients on r.Requestid equals rc.Requestid
+
                         select new AdminDashTableModel
                         {
                             firstName = rc.Firstname,
@@ -158,10 +160,17 @@ namespace BusinessLogic.Repository
                             Requestclientid = rc.Requestclientid,
                             reqId = r.Requestid,
                             regionId = rc.Regionid,
-                            phyId = r.Physicianid ?? null
+                            phyId = r.Physicianid ?? null,
+                            reqDate = r.Createddate.ToString("yyyy-MMM-dd"),
+                            notes = _db.Requeststatuslogs
+                                    .Where(x => x.Requestid == r.Requestid)
+                                    .OrderBy(x => x.Requeststatuslogid)
+                                    .Select(x => x.Notes)
+                                    .LastOrDefault() ?? null,
+
                             //calltype = (short)r.Calltype,
                             //isFinalized = _db.Encounterforms.Where(x=>x.Requestid == r.Requestid).Select(x=>x.Isfinalized).First()??null
-                        };
+        };
 
 
             if (tabNo == 1)
@@ -748,7 +757,7 @@ namespace BusinessLogic.Repository
         {
             var reqData = _db.Requests.Where(i => i.Requestid == requestId).FirstOrDefault();
 
-            reqData.Status = (int)StatusEnum.Accepted;
+            reqData.Status = 1;
             reqData.Physicianid = assignCaseModel.physicanNo;
 
             Requeststatuslog requeststatuslog = new Requeststatuslog()
@@ -1287,6 +1296,32 @@ namespace BusinessLogic.Repository
             return result;
         }
 
+        public List<ProviderModel> GetProviderByRegion(int regionId)
+        {
+            BitArray deletebit = new BitArray(new[] { true });
+
+            var provider = from phy in _db.Physicians
+                           join role in _db.Roles on phy.Roleid equals role.Roleid
+                           join phynoti in _db.Physiciannotifications on phy.Physicianid equals phynoti.Pysicianid
+                           join phyregion in _db.Physicianregions on phy.Physicianid equals phyregion.Physicianid
+                           where phyregion.Regionid == regionId
+                           where phy.Isdeleted != deletebit
+                           orderby phy.Physicianid
+                           select new ProviderModel
+                           {
+                               phyId = phy.Physicianid,
+                               firstName = phy.Firstname,
+                               lastName = phy.Lastname,
+                               status = phy.Status.ToString(),
+                               role = role.Name,
+                               onCallStatus = "un available",
+                               notification = phynoti.Isnotificationstopped[0],
+                           };
+            var result = provider.ToList();
+
+            return result;
+        }
+
         public bool StopNotification(int PhysicianId)
         {
 
@@ -1724,6 +1759,7 @@ namespace BusinessLogic.Repository
 
             if (resetPass.Passwordhash != password)
             {
+                password = GenerateSHA256(password);
                 resetPass.Passwordhash = password;
                 _db.SaveChanges();
 
@@ -2020,11 +2056,10 @@ namespace BusinessLogic.Repository
                 else
                 {
                     Guid id = Guid.NewGuid();
-                    Aspnetuser aspnetuser = new();
-                    
+                    Aspnetuser aspnetuser = new Aspnetuser();
                     aspnetuser.Id = id.ToString();
-                    aspnetuser.Username = obj.UserName;
-                    aspnetuser.Passwordhash = obj.AdminPassword;
+                    aspnetuser.Username = obj.UserName; 
+                    aspnetuser.Passwordhash = GenerateSHA256(obj.AdminPassword);
                     aspnetuser.Email = obj.Email;
                     aspnetuser.Phonenumber = obj.AdminPhone;
                     aspnetuser.Createddate = DateTime.Now;
@@ -2032,18 +2067,21 @@ namespace BusinessLogic.Repository
                     _db.Aspnetusers.Add(aspnetuser);
                     _db.SaveChanges();
 
+                    Aspnetuserrole role = new Aspnetuserrole();
+                    role.Userid = aspnetuser.Id;
+                    role.Roleid = 1;
+                    _db.Aspnetuserroles.Add(role);
+                    _db.SaveChanges();
+
                     var aspnetId = _db.Aspnetusers.Where(x => x.Email == email).Select(x => x.Id).First();
+
                     Admin admin = new Admin();
-
-
                     admin.Aspnetuserid = aspnetuser.Id;
                     admin.Firstname = obj.FirstName;
                     admin.Lastname = obj.LastName;
                     admin.Email = obj.Email;
-
                     admin.Mobile = obj.AdminPhone;
                     admin.Address1 = obj.Address1;
-
                     admin.Address2 = obj.Address2;
                     admin.Zip = obj.Zip;
                     admin.Altphone = obj.BillingPhone;
@@ -2051,12 +2089,8 @@ namespace BusinessLogic.Repository
                     admin.Createddate = DateTime.Now;
                     admin.Isdeleted = new BitArray(1, false);
 
-
                     _db.Admins.Add(admin);
                     _db.SaveChanges();
-
-
-
 
                     var AdminRegions = obj.AdminRegion.ToList();
                     for (int i = 0; i < AdminRegions.Count; i++)
@@ -2243,6 +2277,8 @@ namespace BusinessLogic.Repository
             return role;
         }
 
+
+
         public AdminEditPhysicianProfile createProviderAccount(AdminEditPhysicianProfile obj, List<int> physicianRegions)
         {
             AdminEditPhysicianProfile model = new AdminEditPhysicianProfile();
@@ -2255,13 +2291,11 @@ namespace BusinessLogic.Repository
             if (aspUser == null)
             {
 
-                
                 Aspnetuser _user = new Aspnetuser();
-                Physician phy = new Physician();
                 Guid id = Guid.NewGuid();
                 _user.Id = id.ToString();
                 _user.Username = obj.username;
-                _user.Passwordhash = obj.password;
+                _user.Passwordhash = GenerateSHA256(obj.password);
                 _user.Email = obj.Email;
                 _user.Phonenumber = obj.PhoneNumber;
                 _user.Createddate = DateTime.Now;
@@ -2269,8 +2303,13 @@ namespace BusinessLogic.Repository
                 _db.Aspnetusers.Add(_user);
                 _db.SaveChanges();
 
+                Aspnetuserrole _role = new Aspnetuserrole();
+                _role.Userid = _user.Id;
+                _role.Roleid = 3;
+                _db.Aspnetuserroles.Add(_role);
+                _db.SaveChanges();
 
-
+                Physician phy = new Physician();
                 phy.Aspnetuserid = _user.Id;
                 phy.Firstname = obj.Firstname;
                 phy.Lastname = obj.Lastname;
@@ -2295,7 +2334,24 @@ namespace BusinessLogic.Repository
                 _db.Physicians.Add(phy);
                 _db.SaveChanges();
 
+                int phyid = phy.Physicianid;
 
+                Physiciannotification notification = new Physiciannotification();
+                notification.Pysicianid = phyid;
+                notification.Isnotificationstopped = new BitArray(1, false);
+                _db.Physiciannotifications.Add(notification);
+                _db.SaveChanges();
+
+                Physicianlocation _phyLoc = new Physicianlocation();
+                _phyLoc.Physicianid = phy.Physicianid;
+                _phyLoc.Latitude = obj.latitude;
+                _phyLoc.Longitude = obj.longitude;
+                _phyLoc.Createddate = DateTime.Now;
+                _phyLoc.Physicianname = phy.Firstname;
+                _phyLoc.Address = phy.Address1;
+
+                _db.Physicianlocations.Add(_phyLoc);
+                _db.SaveChanges();
 
                 foreach (var item in physicianRegions)
                 {
@@ -2309,11 +2365,6 @@ namespace BusinessLogic.Repository
                 }
                 _db.SaveChanges();
 
-                Physiciannotification notification = new Physiciannotification();
-                notification.Pysicianid = phy.Physicianid;
-                notification.Isnotificationstopped = new BitArray(1, false);
-                _db.Physiciannotifications.Add(notification);
-                _db.SaveChanges();
 
                 //Aspnetuserrole _userRole = new Aspnetuserrole();
                 //_userRole.Userid = "10";
@@ -2323,16 +2374,6 @@ namespace BusinessLogic.Repository
                 //_db.SaveChanges();
 
 
-                Physicianlocation _phyLoc = new Physicianlocation();
-                _phyLoc.Physicianid = phy.Physicianid;
-                _phyLoc.Latitude = obj.latitude;
-                _phyLoc.Longitude = obj.longitude;
-                _phyLoc.Createddate = DateTime.Now;
-                _phyLoc.Physicianname = phy.Firstname;
-                _phyLoc.Address = phy.Address1;
-
-                _db.Physicianlocations.Add(_phyLoc);
-                _db.SaveChanges();
 
 
                 AddProviderDocuments(phy.Physicianid, obj.Photo, obj.ContractorAgreement, obj.BackgroundCheck, obj.HIPAA, obj.NonDisclosure);
@@ -3121,7 +3162,7 @@ namespace BusinessLogic.Repository
                                 lname = admins.Lastname,
                                 accType = role.Accounttype,
                                 phone = admins.Mobile,
-                                status = admins.Status,
+                                status = admins.Status??null,
                             };
                 var result1 = admin.ToList();
                 return result1;
@@ -3417,7 +3458,7 @@ namespace BusinessLogic.Repository
 
         public List<BlockHistory> BlockHistory(BlockHistory2 blockHistory2)
         {
-            var requestData = _db.Blockrequests.Where(x => x.Isactive != null).Select(x => new BlockHistory()
+            var requestData = _db.Blockrequests.Where(x => x.Isactive == null).Select(x => new BlockHistory()
             {
                 patientname = _db.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Firstname).First(),
                 phonenumber = x.Phonenumber,

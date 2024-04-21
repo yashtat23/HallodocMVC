@@ -34,9 +34,9 @@ namespace BusinessLogic.Interfaces
         MedicalHistoryList GetMedicalHistory(string email);
 
         //List<MedicalHistory> GetMedicalHistory(User user);
-        IQueryable<Requestwisefile>? GetAllDocById(Int64 requestId);
+        DocumentModel GetAllDocById(int requestId);
 
-        void AddFile(IFormFile file);
+        bool UploadDocuments(List<IFormFile> files, int reqId);
 
         List<PatientInfoModel> subinformation(PatientInfoModel patientInfoModel);
 
@@ -44,7 +44,7 @@ namespace BusinessLogic.Interfaces
         Profile GetProfile(int userid);
         bool EditProfile(Profile profile);
 
-        bool StoreData(PatientInfoModel patientRequestModel);
+        bool StoreData(PatientInfoModel patientRequestModel);   
 
         PatientInfoModel FetchData(string email);
 

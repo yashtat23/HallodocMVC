@@ -138,7 +138,7 @@ namespace Hallodocweb.Controllers
                     }
                     else
                     {
-                        _notyf.Error("Password is incorrect");
+                        _notyf.Error("Invalid credentials!!");
 
                         return View();
                     }

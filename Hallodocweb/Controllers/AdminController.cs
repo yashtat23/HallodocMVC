@@ -403,7 +403,7 @@ namespace Hallodocweb.Controllers
                 requestId = requestId,
                 region = _adminService.GetRegion(),
             };
-            _notyf.Success("Assign Successfully!");
+            //_notyf.Success("Assign Successfully!");
             return PartialView("_TransferRequests", assignCase);
         }
 
@@ -411,6 +411,7 @@ namespace Hallodocweb.Controllers
         public IActionResult TransferReqPost(AssignCaseModel assignCaseModel)
         {
             _adminService.TransferReqPostData(assignCaseModel, assignCaseModel.requestId);
+            _notyf.Success("Assign Successfully!");
             return View("AdminDashboard", "Admin");
         }
 
@@ -641,9 +642,29 @@ namespace Hallodocweb.Controllers
 
         public IActionResult Provider()
         {
-            var provider = _adminService.GetProvider();
-            return PartialView("_Provider", provider);
+            ProviderModel2 model = new ProviderModel2();
+            model.regions = _adminService.RegionTable();
+            model.providerModels = _adminService.GetProvider();
+            return PartialView("_Provider", model);
         }
+
+        [HttpGet]
+        public IActionResult ProviderRegionFilter(int regionId)
+        {
+
+            ProviderModel2 model = new ProviderModel2();
+            model.regions = _adminService.RegionTable();
+            if (regionId == 0)
+            {
+                model.providerModels = _adminService.GetProvider();
+            }
+            else
+            {
+                model.providerModels = _adminService.GetProviderByRegion(regionId);
+            }
+            return PartialView("_Provider", model);
+        }
+
 
         public void ProviderCheckbox(int PhysicianId)
         {
@@ -1328,6 +1349,22 @@ namespace Hallodocweb.Controllers
             var _data = _adminService.GetPatientRecordExplore(userId);
 
             return PartialView("_PatientRecordExplore", _data);
+        }
+
+        public IActionResult UserAccessEdit(int accType)
+        {
+            if(accType == 0 || accType == 1)
+            {
+                var obj = _adminService.RegionList();
+                return PartialView("_CreateAdminAccount", obj);
+            }
+            else
+            {
+                AdminEditPhysicianProfile data = new AdminEditPhysicianProfile();
+                data.regions = _adminService.RegionTable();
+                data.roles = _adminService.physicainRole();
+                return PartialView("_CreateProviderAccount", data);
+            }
         }
 
     }

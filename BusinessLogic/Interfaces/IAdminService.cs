@@ -87,6 +87,7 @@ namespace BusinessLogic.Interfaces
         bool VerifyState(string state);
 
         List<ProviderModel> GetProvider();
+        List<ProviderModel> GetProviderByRegion(int regionId);
         bool StopNotification(int phyId);
 
         public ProviderModel providerContact(int PhysicianId);

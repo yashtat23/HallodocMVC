@@ -1,5 +1,5 @@
-﻿﻿@using DataAccess.DataModels;
-@model IQueryable<Requestwisefile>;
+﻿@using DataAccess.CustomModels;
+@model DocumentModel;
 
 <style>
     #downloadSelected {
@@ -8,6 +8,7 @@
         border: 1px solid rgb(0, 183, 255);
         border-radius: 5px;
     }
+
         #downloadSelected:hover {
             background-color: rgb(0, 183, 255);
             color: white;
@@ -21,182 +22,111 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
-<link rel="stylesheet" href="~/css/patientdashboard.css">
-<br />
 
-<nav class="navbr navbar navbar-expand w-100 shadow dark-mode1">
+<link rel="stylesheet" href="~/css/PatientDashboard.css">
 
-    <div class="container-fluid">
-        <div class="d-flex align-items-center">
-            <button class="navbar-toggler d-block d-lg-none" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation" style="height: 50%;">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <img class="navbar-brand ms-3" id="logo" src="~/img/hallodoc.png" alt="logo">
 
-        </div>
-        <div>
-            <ul class="navbar-nav ms-auto d-flex flex-nowrap align-items-center gap-2">
-                <div class="d-none d-sm-flex  justify-content-center align-items-center ">
-                <li class="nav-item">
-                    <span>Welcome</span>
-                </li>
-                <li class="nav-item p-2 fw-bolder">
-                    <span class="d-flex gap-1">
-                        <span> Yash</span>
-                        <span> Variya</span>
-                    </span>
-                </li>
-        </div>
-        <li class="nav-item">
-            <a asp-controller="patient" asp-action="patientreg">
-                <button id="logout" class="px-3 btn btn-outline-info mx-2 float-end dark-mode1">
-                    <span class="d-none d-md-block">Logout</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
-                </button>
-            </a>
-        </li>
-        <li class="nav-item">
-            <button type="button" class="btn shadow border-info ms-2"
-                    style="border-radius: 10px; border-color: aqua" id="colorButton">
-                <i id="moon" class="bi bi-moon text-info fs-5"></i>
-                <i id="sun" class="bi bi-sun text-info fs-5 d-none"></i>
-            </button>
-        </li>
-        </ul>
-    </div>
-    </div>
-</nav>
+<button type="button" class=" btn shadow border-info float-end mt-0 me-5 ms-2"
+        style="border-radius: 10px; border-color: aqua" id="colorButton">
+    <i id="moon" class="bi bi-moon text-info fs-5"></i>
+    <i id="sun" class="bi bi-sun text-info fs-5 d-none"></i>
+</button>
+<div class="container my-5 bg-white dark-mode1">
 
-<hr class="m-0 hr_line d-none d-lg-block">
-<nav class="navbr navbar navbar-expand-lg py-0 pt-2 bg-body dark-mode1" style="z-index: 10;">
-    <div class="container-fluid">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class=" bg-white ps-5 nav nav-underline dark-mode1" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
-                            type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
-                        Dashboard
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a>
-                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
-                                type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
-                            Profile
-                        </button>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="container my-5 bg-light dark-mode1">
-
-    <div class="container bg-white p-4 dark-mode1">
+    <div class="container bg-white dark-mode1 p-4 ">
         <div class="d-flex justify-content-between mb-4">
             <h2>Documents</h2>
-            <a asp-controller="patient" asp-action="patientdashboard">
-                <button id="logout" class="px-3 dark-mode1" onclick="swapDivs()" id="backview">
-                    <span class="d-none d-md-block">&lt; Back</span><i class="bi bi-box-arrow-right d-md-none d-block"></i>
-                </button>
-            </a>
+            <button class="btn-outline-info mx-2 float-end" onclick="location.href='@Url.Action("PatientDashboard", "Patient")'">&lt; Back</button>
         </div>
         <div class="row">
             <p class="col-12">Patient Name</p>
             <p class="col-12">
-                <span class="fw-bolder fs-4">Yash VAriya </span>
-                <span>(f34r34t5gvr44)</span>
+                <span class="fw-bolder fs-4">@Model.firstName @Model.lastName </span>
+                <span>@Model.confirmationnumber</span>
             </p>
             <p class="col-12 py-3">check here for any files that you or the doctors of your subsequents requestors have attached for you to review</p>
-          
+
             <!-- row--- -->
         </div>
 
         <!-- ----container    -->
     </div>
 
-    <form class="input-group my-5 mt-3" method="post" enctype="multipart/form-data">
-        <div class="input-group mb-3">
-            <input asp-for="FirstOrDefault().Filename" type="file" class="form-control form-control-lg" id="fromFilelg" multiple>
-            <button type="submit" class="input-group-text bg-primary text-white" for="inputGroupFile02">
-                <i class="bi bi-cloud-arrow-up m-1"></i>&nbsp;Upload
-            </button>
-        </div>
+    <form method="post" asp-action="UploadDocuments" asp-controller="Patient" class="input-group my-5 mt-3" enctype="multipart/form-data" onsubmit="return checkFileUploaded()">
+        @*<input name="file" type="file" class="form-control" id="formFileLg" multiple>*@
+        <input asp-for="uploadedFiles" type="file" class="form-control dark-mode1" id="formFileLg" multiple>
+        <button type="submit" class="input-group-text bg-primary text-white" for="inputGroupFile02"><i class="bi bi-cloud-arrow-up m-1"></i>&nbsp;Upload</button>
+        <br />
     </form>
-<div class="row my-3">
-    <div class="col-12 d-flex justify-content-between">
+    <div class="row my-3">
+        <div class="col-12 d-flex justify-content-between">
 
-        <h3>Documents</h3>
-        <button class="px-3 dark-mode1" id="downloadSelected" onclick="downloadSelectedFiles()">Download All</button>
+            <h3>Documents</h3>
+            <button class="px-3 dark-mode1" id="downloadSelected" onclick="downloadSelectedFiles()">Download All</button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table dataTable table-hover" id="data-table" aria-describedby="data-table_info">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" id="selectAll" onclick="toggleCheckboxes()">
+                    </th>
+                    <th class="sorting" data-value="Description">
+                        File
+                    </th>
+                    <th>
+                        Uploader
+                    </th>
+                    <th>
+                        Upload Date<i class="bi bi-arrow-up-short"></i>
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.files.Count() > 0)
+                {
+                    @foreach (var item in Model.files)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="selectedFiles" value="@item.Filename">
+                            </td>
+
+                            <td>
+                                <i class="bi bi-file-earmark-fill" style="color:red"></i>
+                                @item.Filename
+                            </td>
+                            <td>@item.Requestid</td>
+                            <td>@item.Createddate.ToString("MMM dd, yyyy")</td>
+                            <td>
+
+                                <a href="~/UploadedFiles/@item.Filename" class="btn px-2 py-1 btn-outline-info shadow-none night-mode-btn" download>
+                                    <i class="bi bi-cloud-download"></i>
+                                </a>
+
+                            </td>
+                        </tr>
+
+                    }
+                }
+                else
+                {
+                <td class="d-flex justify-content-center align-items-center" style="text-align: center;">No records found.</td>
+                }
+            </tbody>
+            
+        </table>
+        
+            
     </div>
 </div>
-<div class="table-responsive">
-    <table class="table dataTable table-hover" id="data-table" aria-describedby="data-table_info">
-        <thead>
-            <tr>
-                <th>
-                    <input type="checkbox" id="selectAll" onclick="toggleCheckboxes()">
-                </th>
-                <th class="sorting" data-value="Description">
-                    File
-                </th>
-                <th>
-                    Uploader
-                </th>
-                <th>
-                    Upload Date<i class="bi bi-arrow-up-short"></i>
-                </th>
-                <th>
-                    Actions
-                </th>
-
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Count() > 0)
-            {
-                @foreach (Requestwisefile rwf in Model)
-                {
-                    <tr>
-                        <td>
-                            <input type="checkbox" name="selectedFiles" value="@rwf.Filename">
-                        </td>
-
-                        <td>
-                            <i class="bi bi-file-earmark-fill" style="color:red"></i>
-                            @rwf.Filename
-                        </td>
-                        <td>@rwf.Requestid</td>
-                        <td>@rwf.Createddate.ToString("MMM dd, yyyy")</td>
-                        <td>
-                            
-                            <a href="~/UploadedFiles/@rwf.Filename" class="btn px-2 py-1 btn-outline-info shadow-none night-mode-btn" download>
-                                <i class="bi bi-cloud-download"></i>
-                            </a>
-
-                        </td>
-                    </tr>
-
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="3" style="text-align: center;">No records found.</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-</div>
-
-
-<script src="~/js/dark-mode.js"></script>
 <script>
     function toggleCheckboxes() {
         var checkboxes = document.getElementsByName('selectedFiles');
@@ -233,5 +163,19 @@
             link.click(); // Simulate a click event to initiate the download
         }
 
+    }
+
+    function checkFileUploaded() {
+        var files = $("#formFileLg").val();
+
+
+        if (files == "") {
+            toastr.error("First upload file");
+            return false;
+        }
+        else {
+
+            return true;
+        }
     }
 </script>

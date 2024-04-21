@@ -8,9 +8,12 @@ namespace DataAccess.CustomModel
     public class LoginVm
     {
         [Required(ErrorMessage = "Email is required")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Please enter a valid email address like a@g.com")]
         public string? Email { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+      ErrorMessage = "8 characters long (one uppercase, one lowercase letter, one digit, and one special character.")]
         public string? Password { get; set; }
     }
 
@@ -41,6 +44,8 @@ namespace DataAccess.CustomModel
 
         [Required(ErrorMessage = "Confirm Password is required")]
         [Compare("password", ErrorMessage = "Password Missmatch")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+      ErrorMessage = "8 characters long (one uppercase, one lowercase letter, one digit, and one special character.")]
         public string? confirmPassword { get; set; }
     }
 

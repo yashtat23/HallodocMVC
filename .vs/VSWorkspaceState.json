@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\BusinessLogic",
+    "\\BusinessLogic\\Repository",
+    "\\DataAccess",
+    "\\DataAccess\\CustomModel",
+    "\\Hallodocweb",
+    "\\Hallodocweb\\Controllers",
+    "\\Hallodocweb\\Views",
+    "\\Hallodocweb\\Views\\Admin",
+    "\\Hallodocweb\\Views\\patient"
+  ],
+  "SelectedNode": "\\Hallodocweb\\Views\\Admin\\AdminDashboard.cshtml",
+  "PreviewInSolutionExplorer": false
+}

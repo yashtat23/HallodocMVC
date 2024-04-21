@@ -69,9 +69,15 @@ namespace BusinessLogic.Repository
                     asp.Createddate = DateTime.Now;
                     _db.Aspnetusers.Add(asp);
 
+                    Aspnetuserrole aspnetuserrole = new Aspnetuserrole();
+                    aspnetuserrole.Userid = asp.Id;
+                    aspnetuserrole.Roleid = 2;
+                    _db.Aspnetuserroles.Add(aspnetuserrole);
+
                     user.Aspnetuserid = asp.Id;
                     user.Email = model.email;
                     user.Firstname = asp.Username;
+                    user.Lastname = asp.Username;
                     user.Createdby = asp.Id;
                     user.Createddate = DateTime.Now;
                     _db.Users.Add(user);
@@ -686,35 +692,91 @@ namespace BusinessLogic.Repository
             return model;
         }
 
-        public IQueryable<Requestwisefile>? GetAllDocById(Int64 requestId)
+        public DocumentModel GetAllDocById(int requestId)
         {
-            var data = from request in _db.Requestwisefiles
-                       where request.Requestid == requestId
-                       select request;
-            return data;
+            var list = _db.Requestwisefiles.Where(x => x.Requestid == requestId).ToList();
+            var reqClient = _db.Requestclients.Where(x => x.Requestid == requestId).FirstOrDefault();
+            var req = _db.Requests.Where(x => x.Requestid == requestId).FirstOrDefault();
+
+            DocumentModel result = new()
+            {
+                files = list,
+                firstName = reqClient.Firstname,
+                lastName = reqClient.Lastname,
+                confirmationnumber = req.Confirmationnumber,
+            };
+
+            return result;
         }
 
-        public void AddFile(IFormFile file)
+        //public void AddFile(IFormFile file)
+        //{
+        //    var fileName = Path.GetFileName(file.FileName);
+
+        //    //define path
+        //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedFiles", fileName);
+
+        //    // Copy the file to the desired location
+        //    using (var stream = new FileStream(filePath, FileMode.Create))
+        //    {
+        //        file.CopyTo(stream);
+        //    }
+        //    var u = _http.HttpContext.Session.GetInt32("rid");
+        //    Requestwisefile requestwisefile = new()
+        //    {
+        //        Filename = fileName,
+        //        Requestid = (int)u,
+        //        Createddate = DateTime.Now
+        //    };
+        //    _db.Requestwisefiles.Add(requestwisefile);
+        //    _db.SaveChanges();
+        //}
+
+        public bool UploadDocuments(List<IFormFile> files, int reqId)
         {
-            var fileName = Path.GetFileName(file.FileName);
 
-            //define path
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedFiles", fileName);
-
-            // Copy the file to the desired location
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            try
             {
-                file.CopyTo(stream);
+                if (files != null)
+                {
+                    foreach (IFormFile file in files)
+                    {
+                        if (file != null && file.Length > 0)
+                        {
+                            //get file name
+                            var fileName = Path.GetFileName(file.FileName);
+
+                            //define path
+                            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedFiles", fileName);
+
+                            // Copy the file to the desired location
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                file.CopyTo(stream)
+                       ;
+                            }
+
+                            Requestwisefile requestwisefile = new()
+                            {
+                                Filename = fileName,
+                                Requestid = reqId,
+                                Createddate = DateTime.Now
+                            };
+
+                            _db.Requestwisefiles.Add(requestwisefile);
+
+                        }
+                    }
+                    _db.SaveChanges();
+                    return true;
+                }
+                else { return false; }
+
             }
-            var u = _http.HttpContext.Session.GetInt32("rid");
-            Requestwisefile requestwisefile = new()
+            catch (Exception ex)
             {
-                Filename = fileName,
-                Requestid = (int)u,
-                Createddate = DateTime.Now
-            };
-            _db.Requestwisefiles.Add(requestwisefile);
-            _db.SaveChanges();
+                return false;
+            }
         }
 
         public List<PatientInfoModel> subinformation(PatientInfoModel patientInfoModel)
@@ -775,7 +837,7 @@ namespace BusinessLogic.Repository
                 };
                 return obj;
             }
-            else
+            else if(user.Intdate != null && user.Intyear != null && user.Strmonth != "")
             {
                 Profile profile = new()
                 {
@@ -789,6 +851,25 @@ namespace BusinessLogic.Repository
                     Street = user.Street,
                     ZipCode = user.Zipcode,
                     DateOfBirth = new DateTime(Convert.ToInt32(user.Intyear), DateTime.ParseExact(user.Strmonth, "MMM", CultureInfo.InvariantCulture).Month, Convert.ToInt32(user.Intdate)),
+                    //isMobileCheck = user.Ismobile[0] ? 1 : 0,
+
+                };
+                return profile;
+            }
+            else
+            {
+                Profile profile = new()
+                {
+
+                    FirstName = user.Firstname,
+                    LastName = user.Lastname,
+                    Email = user.Email,
+                    //PhoneNo = user.Mobile,
+                    //State = user.State,
+                    //City = user.City,
+                    //Street = user.Street,
+                    //ZipCode = user.Zipcode,
+                    //DateOfBirth = new DateTime(Convert.ToInt32(user.Intyear), DateTime.ParseExact(user.Strmonth, "MMM", CultureInfo.InvariantCulture).Month, Convert.ToInt32(user.Intdate)),
                     //isMobileCheck = user.Ismobile[0] ? 1 : 0,
 
                 };

@@ -131,7 +131,7 @@
                                                 <td>@items.createdDate.ToString("MMM dd, yyyy")</td>
                                                 <td>@items.currentStatus</td>
                                                 <td>
-                                                    <a class="btn btn-outline-info fw-bold" asp-controller="patient" asp-action="_DocumentList" asp-route-rid=@items.reqId>
+                                                    <a class="btn btn-outline-info fw-bold" asp-controller="patient" asp-action="_DocumentList" asp-route-reqid=@items.reqId>
                                                         <span><i class="bi bi-file-earmark fw-bold"></i></span>
                                                         <span>
                                                             View Documents (@items.docCount)
@@ -208,10 +208,10 @@
                         Here, I Want to create new request for...
                         <br />
                         <div class="d-flex justify-content-center gap-3 my-3">
-                            <button class="px-3 modal-b dark-mode1" id="button1" onclick="passId(event)">
+                            <button class="px-3 modal-b dark-mode1 meElseBtn" id="button1" onclick="passId(event)" data-meelse="1">
                                 <span class="">Me</span>
                             </button>
-                            <button class="px-3 modal-b dark-mode1" id="button2" onclick="passId(event)">
+                            <button class="px-3 modal-b dark-mode1 meElseBtn" id="button2" onclick="passId(event)" data-meelse="2">
                                 <span class="">Some one Else</span>
                             </button>
                         </div>
@@ -325,24 +325,6 @@
     //----------model-----------
     $('.modal').css('top', $(window).outerHeight() / 4 - ($(".modal-dialog").outerHeight()) / 2 + 'px');
 
-    let buttonId = null;
-
-    function passId(event) {
-        buttonId = event.target.id;
-
-    }
-
-    function redirect() {
-        if (buttonId === 'button1') {
-            location.assign('patientsubinformation');
-        }
-        else if (buttonId === 'button2') {
-            location.assign('patientsomeoneelse');
-        } else {
-            // Default redirection if buttonId is not set or unexpected
-        }
-    }
-
     function viewDocs() {
         var divToReplace = document.getElementById("medicalHistory");
         var replacementDiv = document.getElementById("viewdocs");
@@ -399,5 +381,42 @@
         // $('#regionreq').addClass("d-none").removeClass("d-block");
 
     })
+
+    let buttonId = null;
+
+    function passId(event) {
+        buttonId = event.target.id;
+
+    }
+
+    //var meelse = 0;
+    //$(".meElseBtn").click(function () {
+    //    meelse = $(this).data("meelse");
+
+    //})
+
+    //function redirect() {
+    //    if (meelse == 0) {
+    //        return false;
+    //    }
+    //    else if (meelse == 1) {
+    //        location.assign('patientsubinformation');
+    //        return;
+    //    }
+    //    else {
+    //        location.assign('patientsomeoneelse');
+    //        return;
+    //    }
+
+    function redirect() {
+        if (buttonId === 'button1') {
+            location.assign('patientsubinformation');
+        }
+        else if (buttonId === 'button2') {
+            location.assign('patientsomeoneelse');
+        } else {
+            // Default redirection if buttonId is not set or unexpected
+        }
+    }
 
 </script>

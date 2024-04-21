@@ -59,6 +59,9 @@ namespace DataAccess.CustomModel
 
         public string? lastName { get; set; }
 
+        
+        public string? reqDate { get; set; }
+
         public string strMonth { get; set; }
         public int? intYear { get; set; }
         public int? intDate { get; set; }
@@ -189,20 +192,30 @@ namespace DataAccess.CustomModel
 
         public List<IFormFile>? uploadedFiles { get; set; }
 
+
         public string? ProviderNote { get; set; }
 
     }
 
+
     public class Order
     {
         public int? ReqId { get; set; }
+        [Required(ErrorMessage = "Profession Name is required")]
         public List<Healthprofessionaltype> Profession { get; set; }
+        [Required(ErrorMessage = "Business is required")]
         public List<Healthprofessional> Business { get; set; }
-        public string BusineesContact { get; set; }
-        public string email { get; set; }
-        public string faxnumber { get; set; }
-        public string orderdetail { get; set; }
 
+        [Required(ErrorMessage = "Business Contact is required")]
+        public string BusineesContact { get; set; }
+
+        [Required(ErrorMessage = "Email is required")]
+        public string email { get; set; }
+        [Required(ErrorMessage = "Fax Number is required")]
+        public string faxnumber { get; set; }
+        [Required(ErrorMessage = "Order Detail is required")]
+        public string orderdetail { get; set; }
+        [Required(ErrorMessage = "Refill is required")]
         public int refill { get; set; }
         public int vendorid { get; set; }
 
@@ -427,8 +440,14 @@ namespace DataAccess.CustomModel
 
         [Required(ErrorMessage = "Please Enter A Message")]
         public string? message { get; set; }
+
     }
 
+    public class ProviderModel2
+    {
+        public List<ProviderModel>? providerModels { get; set; }
+        public List<Region>? regions { get; set; }
+    }
 
     public class EditPhysicianAccount
     {
@@ -516,29 +535,46 @@ namespace DataAccess.CustomModel
     public class CreateAdminAccount
     {
         [Required(ErrorMessage = "User Name is required")]
-        public string? UserName { get; set; }
+        [RegularExpression(@"^[a-zA-Z0-9_-]{3,16}$", ErrorMessage = "Username must be between 3 and 16 characters long and can only contain letters, numbers, underscores, and hyphens.")]
+        public string UserName { get; set; }
+
         [Required(ErrorMessage = "Password is required")]
-        public string? AdminPassword { get; set; }
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+      ErrorMessage = "8 characters long (one uppercase, one lowercase letter, one digit, and one special character.")]
+        public string AdminPassword { get; set; }
         public short? Status { get; set; }
         public string? Role { get; set; }
         [Required(ErrorMessage = "First Name is required")]
-        public string? FirstName { get; set; }
+        [RegularExpression(@"^[a-zA-Z][a-zA-Z ]+$", ErrorMessage = "First name is required and must be properly formatted.")]
+        public string FirstName { get; set; }
         [Required(ErrorMessage = "Last Name is required")]
-        public string? LastName { get; set; }
+        [RegularExpression(@"^[a-zA-Z][a-zA-Z ]+$", ErrorMessage = "First name is required and must be properly formatted.")]
+        public string LastName { get; set; }
+        [Required(ErrorMessage = "Phone Name is required")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Entered phone format is not valid.")]
         public string? AdminPhone { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        public string? Email { get; set; }
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Please enter a valid email address like a@g.com")]
+        public string Email { get; set; }
         [Required(ErrorMessage = "Confirm Email is required")]
-        public string? ConfirmEmail { get; set; }
+        [Compare("Email", ErrorMessage = "Email Missmatch")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Please enter a valid email address like a@g.com")]
+        public string ConfirmEmail { get; set; }
         public List<Region>? RegionList { get; set; }
         public IEnumerable<int> AdminRegion { get; set; }
+
+        [RegularExpression(@"^[A-Za-z0-9]+(?:\s[A-Za-z0-9,]+)?$", ErrorMessage = "Invalid Address Name Format")]
         public string? Address1 { get; set; }
+        [RegularExpression(@"^[A-Za-z0-9]+(?:\s[A-Za-z0-9,]+)?$", ErrorMessage = "Invalid Address Name Format")]
         public string? Address2 { get; set; }
-        [Required(ErrorMessage = "City is required")]
+        [RegularExpression(@"^[a-zA-Z][a-zA-Z ]+$", ErrorMessage = "Please enter a valid city")]
         public string? City { get; set; }
         [Required(ErrorMessage = "State is required")]
-        public string? State { get; set; }
+        [RegularExpression(@"^[a-zA-Z][a-zA-Z ]+$", ErrorMessage = "Please enter a valid State")]
+        public string State { get; set; }
+        [RegularExpression(@"^\d{6}(?:[-\s]\d{4})?$", ErrorMessage = "Please enter a valid ZipCode")]
         public string? Zip { get; set; }
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Entered phone format is not valid.")]
         public string? BillingPhone { get; set; }
         public int[] RegionArray { get; set; }
     }
@@ -582,46 +618,74 @@ namespace DataAccess.CustomModel
 
     public class AdminEditPhysicianProfile
     {
-
+        [Required(ErrorMessage = "User Name is required")]
+        [RegularExpression(@"^[a-zA-Z0-9_-]{3,16}$", ErrorMessage = "Username must be between 3 and 16 characters long and can only contain letters, numbers, underscores, and hyphens.")]
         public string? username { get; set; }
 
+        [Required(ErrorMessage = "Password is required")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+      ErrorMessage = "8 characters long (one uppercase, one lowercase letter, one digit, and one special character.")]
         public string? password { get; set; }
 
+        [Required(ErrorMessage = "Email is required")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Please enter a valid email address like a@g.com")]
         public string? Email { get; set; }
+
+        [Required(ErrorMessage = "Email is required")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Please enter a valid email address like a@g.com")]
         public string? Con_Email { get; set; }
 
+        [Required(ErrorMessage = "Phone Number is required")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Entered phone format is not valid.")]
         public string? PhoneNumber { get; set; }
 
         public string? Status { get; set; }
 
-
+        [Required(ErrorMessage = "City is required")]
+        [RegularExpression(@"^[a-zA-Z][a-zA-Z ]+$", ErrorMessage = "Please enter a valid city")]
         public string? city { get; set; }
 
         public string? country { get; set; }
 
+        [RegularExpression(@"^\d{6}(?:\d{1})?$", ErrorMessage = "Invalid PIN Code Format")]
         public string? zipcode { get; set; }
 
+        [Required(ErrorMessage = "First Name is required")]
+        [RegularExpression(@"^[a-zA-Z][a-zA-Z ]+$", ErrorMessage = "First name is required and must be properly formatted.")]
         public string? Firstname { get; set; }
 
+        [Required(ErrorMessage = "Last Name is required")]
+        [RegularExpression(@"^[a-zA-Z][a-zA-Z ]+$", ErrorMessage = "Last name is required and must be properly formatted.")]
         public string? Lastname { get; set; }
 
         public int? Regionid { get; set; }
 
         public int? Roleid { get; set; }
 
+        [Required(ErrorMessage = "MedicalLicense is required")]
+        [RegularExpression(@"^[A-Za-z0-9- ]{1,50}$", ErrorMessage = "Invalid Medical License Format")]
         public string? MedicalLicesnse { get; set; }
 
+        [Required(ErrorMessage = "NPI Number is required")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "NPI number must be a 10-digit number")]
         public string? NPInumber { get; set; }
 
         public string? SycnEmail { get; set; }
 
-        public string? Businessname { get; set; }
+        [Required(ErrorMessage = "Business Name is required")]
+        [RegularExpression(@"^[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)?$", ErrorMessage = "Invalid Business Name Format")]
+        public string Businessname { get; set; }
 
-        public string? BusinessWebsite { get; set; }
-
+        [Required(ErrorMessage = "Business Website is required")]
+        [RegularExpression(@"^(http[s]?:\/\/)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}([\/\w .-]*)*\/?$", ErrorMessage = "Invalid Website URL")]
+        public string BusinessWebsite { get; set; }
+        [RegularExpression(@"^[ A-Za-z0-9]$", ErrorMessage = "Invalid Admin Note Format")]
         public string? Adminnotes { get; set; }
 
+        [RegularExpression(@"^[A-Za-z0-9]+(?:\s[A-Za-z0-9,]+)?$", ErrorMessage = "Invalid Business Name Format")]
         public string? Address1 { get; set; }
+
+        [RegularExpression(@"^[A-Za-z0-9]+(?:\s[A-Za-z0-9,]+)?$", ErrorMessage = "Invalid Business Name Format")]
         public string? Address2 { get; set; }
 
         public int PhyID { get; set; }
@@ -1196,5 +1260,6 @@ namespace DataAccess.CustomModel
 
         public BitArray isFinalize { get; set; }
     }
+
 
 }
