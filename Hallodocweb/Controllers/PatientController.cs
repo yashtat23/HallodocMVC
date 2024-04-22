@@ -79,7 +79,6 @@ namespace Hallodocweb.Controllers
         [HttpPost]
 
         public IActionResult patientreg(LoginVm loginvm)
-        
         {
             loginvm.Password = GenerateSHA256(loginvm.Password);
             if (ModelState.IsValid)

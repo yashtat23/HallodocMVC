@@ -17,10 +17,10 @@
             <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="location.href='@Url.Action("CreateReq", "Admin")'">
                 <i class="bi bi-journal-text"></i> <span class="d-none d-md-block">Create Request</span>
             </button>
-            <button class="action-btn my-3 d-flex gap-2 dark-mode1" id="exportbtn" onclick="ExpertSingleTab(1)">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1" id="exportbtn" onclick="Export(1)">
                 <i class="bi bi-reply"></i> <span class="d-none d-md-block">Export</span>
             </button>
-            <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="ExportAll()">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="Export(0)">
                 <i class="bi bi-reply-all"></i> <span class="d-none d-md-block">Export All</span>
             </button>
             <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="RequestSupport()">
@@ -703,20 +703,6 @@ else
         // Export(request);
     });
 
-    $('#newRegionFilter').on('change', function () {
-        var searchRegion = $('#newRegionFilter').val();
-
-        $.ajax({
-            url: '/Admin/FilterRegion',
-            type: 'GET',
-            data: { regionId: searchRegion, tabNo: 1 },
-            success: function (response) {
-                console.log(response);
-                $("#tab1").html(response);
-            }
-        })
-    })
-
     function showCancelCase(reqId) {
         $.ajax({
             url: '/Admin/CancelCase',
@@ -767,3 +753,6 @@ else
     }
 
 </script>
+
+
+

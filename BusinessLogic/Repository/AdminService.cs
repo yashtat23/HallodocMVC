@@ -236,6 +236,14 @@ namespace BusinessLogic.Repository
             //return dashboard;
         }
 
+        public LoginDetail GetLoginDetail(string email)
+        {
+            var admin = _db.Admins.Where(x => x.Email == email).FirstOrDefault();
+            LoginDetail model = new();
+            model.firstName = admin.Firstname;
+            model.lastName = admin.Lastname;
+            return model;
+        }
         public DashboardModel GetRequestByRegion(FilterModel filterModel)
         {
 
@@ -2961,58 +2969,65 @@ namespace BusinessLogic.Repository
         {
             //List<requestsRecordModel> listdata = new List<requestsRecordModel>();
             //requestsRecordModel requestsRecordModel = new requestsRecordModel();
-
-            var requestList = _db.Requests.Where(r => r.Isdeleted == null).Select(x => new RequestsRecordModel()
+            
+                var requestList = _db.Requests.Where(r => r.Isdeleted == null).Select(x => new RequestsRecordModel()
+                {
+                    requestid = x.Requestid,
+                    requesttypeid = x.Requesttypeid,
+                    patientname = x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Firstname).First(),
+                    requestor = x.Firstname,
+                    email = x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Email).First(),
+                    contact = x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Phonenumber).First(),
+                    address = x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Street).First() + " " + x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.City).First() + " " + x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.State).First(),
+                    zip = x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Zipcode).First(),
+                    statusId = x.Status,
+                    physician = _db.Physicians.Where(r => r.Physicianid == x.Physicianid).Select(r => r.Firstname).First(),
+                    physicianNote = x.Requestnotes.Where(r => r.Requestid == x.Requestid).Select(r => r.Physiciannotes).First(),
+                    AdminNote = x.Requestnotes.Where(r => r.Requestid == x.Requestid).Select(r => r.Adminnotes).First(),
+                    pateintNote = x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Notes).First(),
+                }).ToList();
+            try
             {
-                requestid = x.Requestid,
-                requesttypeid = x.Requesttypeid,
-                patientname = x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Firstname).First(),
-                requestor = x.Firstname,
-                email = x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Email).First(),
-                contact = x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Phonenumber).First(),
-                address = x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Street).First() + " " + x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.City).First() + " " + x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.State).First(),
-                zip = x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Zipcode).First(),
-                statusId = x.Status,
-                physician = _db.Physicians.Where(r => r.Physicianid == x.Physicianid).Select(r => r.Firstname).First(),
-                physicianNote = x.Requestnotes.Where(r => r.Requestid == x.Requestid).Select(r => r.Physiciannotes).First(),
-                AdminNote = x.Requestnotes.Where(r => r.Requestid == x.Requestid).Select(r => r.Adminnotes).First(),
-                pateintNote = x.Requestclients.Where(r => r.Requestid == x.Requestid).Select(r => r.Notes).First(),
-            }).ToList();
-
-            if (recordsModel != null)
-            {
-                if (recordsModel.searchRecordOne != null)
+                if (recordsModel != null)
                 {
-                    requestList = requestList.Where(r => r.statusId == recordsModel.searchRecordOne).Select(r => r).ToList();
-                }
+                    if (recordsModel.searchRecordOne != null)
+                    {
+                        requestList = requestList.Where(r => r.statusId == recordsModel.searchRecordOne).Select(r => r).ToList();
+                    }
 
-                if (recordsModel.searchRecordTwo != null)
-                {
-                    requestList = requestList.Where(r => r.patientname.Trim().ToLower().Contains(recordsModel.searchRecordTwo.Trim().ToLower())).Select(r => r).ToList();
-                }
+                    if (recordsModel.searchRecordTwo != null)
+                    {
+                        requestList = requestList.Where(r => r.patientname.Trim().ToLower().Contains(recordsModel.searchRecordTwo.Trim().ToLower())).Select(r => r).ToList();
+                    }
 
-                if (recordsModel.searchRecordThree != null)
-                {
-                    requestList = requestList.Where(r => r.requesttypeid == recordsModel.searchRecordThree).Select(r => r).ToList();
-                }
+                    if (recordsModel.searchRecordThree != null)
+                    {
+                        requestList = requestList.Where(r => r.requesttypeid == recordsModel.searchRecordThree).Select(r => r).ToList();
+                    }
 
-                if (recordsModel.searchRecordSix != null)
-                {
-                    requestList = requestList.Where(r => r.physician.Trim().ToLower().Contains(recordsModel.searchRecordSix.Trim().ToLower())).Select(r => r).ToList();
-                }
+                    if (recordsModel.searchRecordSix != null)
+                    {
+                        requestList = requestList.Where(r => r.physician.Trim().ToLower().Contains(recordsModel.searchRecordSix.Trim().ToLower())).Select(r => r).ToList();
+                    }
 
-                if (recordsModel.searchRecordSeven != null)
-                {
-                    requestList = requestList.Where(r => r.email.Trim().ToLower().Contains(recordsModel.searchRecordSeven.Trim().ToLower())).Select(r => r).ToList();
-                }
+                    if (recordsModel.searchRecordSeven != null)
+                    {
+                        requestList = requestList.Where(r => r.email.Trim().ToLower().Contains(recordsModel.searchRecordSeven.Trim().ToLower())).Select(r => r).ToList();
+                    }
 
-                if (recordsModel.searchRecordEight != null)
-                {
-                    requestList = requestList.Where(r => r.contact.Trim().ToLower().Contains(recordsModel.searchRecordEight.Trim().ToLower())).Select(r => r).ToList();
+                    if (recordsModel.searchRecordEight != null)
+                    {
+                        requestList = requestList.Where(r => r.contact.Trim().ToLower().Contains(recordsModel.searchRecordEight.Trim().ToLower())).Select(r => r).ToList();
+                    }
                 }
             }
-
+            catch (Exception e)
+            {
+                
+            }
             return requestList;
+
+
         }
         public void DeleteRecords(int reqId)
         {

@@ -383,7 +383,7 @@ namespace HalloDoc.mvc.Controllers
         {
             var loginUserId = GetLoginId();
             _providerService.acceptCase(requestId, loginUserId);
-            return Ok();
+            return RedirectToAction("ProviderDashboard");
         }
 
         public IActionResult PViewDocument(int reqId)
@@ -665,6 +665,29 @@ namespace HalloDoc.mvc.Controllers
         {
             _providerService.finalizesubmit(reqid);
             return RedirectToAction("ProviderDashboard");
+        }
+
+        public IActionResult RequestAdmin()
+        {
+            return PartialView("_PRequestAdmin");
+        }
+
+        [HttpPost]
+        public IActionResult RequestAdmin(RequestAdmin model)
+        {
+            try
+            {
+                var email = GetTokenEmail();
+                _providerService.RequestAdmin(model, email);
+                _notyf.Success("Email Send Successfully");
+                return Ok();
+            }
+            catch
+            {
+                return NotFound();
+            }
+
+
         }
 
     }

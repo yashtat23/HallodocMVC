@@ -23,6 +23,7 @@ using DataAccess.Enums;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Drawing;
 using Rotativa.AspNetCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Hallodocweb.Controllers
 {
@@ -159,7 +160,9 @@ namespace Hallodocweb.Controllers
         [CustomAuthorize("Admin")]
         public IActionResult AdminDashboard()
         {
-            return View();
+            var email = GetTokenEmail();
+            var model = _adminService.GetLoginDetail(email);
+            return View(model);
         }
 
         public IActionResult Logout()
@@ -514,8 +517,10 @@ namespace Hallodocweb.Controllers
 
         [HttpPost]
         //public IActionResult ExportReq(List<RequestListAdminDash> reqList)
-        public string ExportReq(List<AdminDashTableModel> reqList)
+        public string ExportReq(int tabNo)
         {
+            var reqList = _adminService.Expert(tabNo);
+
             StringBuilder stringbuild = new StringBuilder();
 
             string header = "\"No\"," + "\"Name\"," + "\"DateOfBirth\"," + "\"Requestor\"," +
@@ -703,9 +708,8 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult providerEditFirst(string password, int phyId, string email)
         {
-
             bool editProvider = _adminService.providerResetPass(email, password);
-            //_notyf.Success("Edit Save!");
+            _notyf.Success("Edit Save!");
             return Json(new { indicate = editProvider, phyId = phyId });
         }
         [HttpPost]
@@ -1313,34 +1317,38 @@ namespace Hallodocweb.Controllers
         }
         public IActionResult FilterRegion(FilterModel filterModel)
         {
-            if (filterModel.tabNo == 1)
-            {
-                var list = _adminService.GetRequestByRegion(filterModel);
-                return PartialView("_NewRequests", list);
-            }
-            else if (filterModel.tabNo == 2) {
-                var list = _adminService.GetRequestByRegion(filterModel);
-                return PartialView("_PendingRequests", list);
-            }
-            else if (filterModel.tabNo == 3) {
-                var list = _adminService.GetRequestByRegion(filterModel);
-                return PartialView("_ActiveRequests", list);
-            }
-            else if (filterModel.tabNo == 4) {
-                var list = _adminService.GetRequestByRegion(filterModel);
-                return PartialView("_ConcludeRequests", list);
-            }
-            else if (filterModel.tabNo == 5) {
-                var list = _adminService.GetRequestByRegion(filterModel);
-                return PartialView("TocloseRequests", list);
-            }
-            else if(filterModel.tabNo == 6) {
-                var list = _adminService.GetRequestByRegion(filterModel);
-                return PartialView("_UnpaidRequests", list);
-            }
-            else {
-                return RedirectToAction("AdminDashboard");
-            }
+            var list = _adminService.GetRequestByRegion(filterModel);
+            return PartialView("_NewRequests", list);
+        }
+
+        public IActionResult FilterRegionPending(FilterModel filterModel)
+        {
+            var list = _adminService.GetRequestByRegion(filterModel);
+            return PartialView("_PendingRequests", list);
+        }
+
+        public IActionResult FilterRegionActive(FilterModel filterModel)
+        {
+            var list = _adminService.GetRequestByRegion(filterModel);
+            return PartialView("_ActiveRequests", list);
+        }
+
+        public IActionResult FilterRegionConclude(FilterModel filterModel)
+        {
+            var list = _adminService.GetRequestByRegion(filterModel);
+            return PartialView("_ConcludeRequests", list);
+        }
+
+        public IActionResult FilterRegionToClose(FilterModel filterModel)
+        {
+            var list = _adminService.GetRequestByRegion(filterModel);
+            return PartialView("_TocloseRequests", list);
+        }
+
+        public IActionResult FilterRegionUnpaid(FilterModel filterModel)
+        {
+            var list = _adminService.GetRequestByRegion(filterModel);
+            return PartialView("_UnpaidRequests", list);
         }
 
         public IActionResult GetPatientRecordExplore(int userId)

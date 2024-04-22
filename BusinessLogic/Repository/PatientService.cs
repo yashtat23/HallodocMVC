@@ -217,6 +217,8 @@ namespace BusinessLogic.Repository
             request.Phonenumber = patientInfoModel.phonenumber;
             request.Email = patientInfoModel.email;
             request.Userid = u.Userid;
+            request.Calltype = 0;
+            request.Physicianid = 30;
 
             _db.Requests.Add(request);
             _db.SaveChanges();

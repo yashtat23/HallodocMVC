@@ -1,16 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\BusinessLogic",
-    "\\BusinessLogic\\Repository",
-    "\\DataAccess",
-    "\\DataAccess\\CustomModel",
     "\\Hallodocweb",
     "\\Hallodocweb\\Controllers",
     "\\Hallodocweb\\Views",
-    "\\Hallodocweb\\Views\\Admin",
-    "\\Hallodocweb\\Views\\patient"
+    "\\Hallodocweb\\Views\\Admin"
   ],
-  "SelectedNode": "\\Hallodocweb\\Views\\Admin\\AdminDashboard.cshtml",
+  "SelectedNode": "\\Hallodocweb\\Views\\Admin\\_CreateProviderAccount.cshtml",
   "PreviewInSolutionExplorer": false
 }

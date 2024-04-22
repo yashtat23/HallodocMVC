@@ -26,5 +26,8 @@ namespace BusinessLogic.Interfaces
         MonthWiseScheduling PhysicianMonthlySchedule(string date, int status, string aspnetuserid);
         bool concludecaresubmit(int ReqId, string ProviderNote);
         bool finalizesubmit(int reqid);
+
+        void SendRegistrationEmailCreateRequest(string email, string note, string sessionEmail);
+        void RequestAdmin(RequestAdmin model, string sessionEmail);
     }
 }

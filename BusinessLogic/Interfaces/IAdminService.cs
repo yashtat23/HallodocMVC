@@ -18,7 +18,7 @@ namespace BusinessLogic.Interfaces
        DashboardModel GetRequestsByStatus(int status,int CurrentPage);
 
         //DashboardModel GetRequestByRegion(int regionId, int tabNo);
-
+        LoginDetail GetLoginDetail(string email);
         StatusCountModel GetStatusCount();
 
         ViewCaseViewModel ViewCase(int reqClientId, int RequestTypeId, int ReqId);

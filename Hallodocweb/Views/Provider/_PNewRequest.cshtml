@@ -357,6 +357,7 @@ else
 }
 <div id="modelContentSendLink"></div>
 <div id="modelContent"></div>
+<div id="modelContent"></div>
 
 <!-- accordions -->
 @*<div class="accordion accordion-flush d-block d-md-none" id="accordionFlushExample">
@@ -372,13 +373,13 @@ else
             confirmButtonColor: "#198754",
             denyButtonText: `Cancel`
         }).then((result) => {
+            location.reload();
             if (result.isConfirmed) {
 
                 $.ajax({
                     method: "GET",
                     url: "/Provider/AcceptCase",
                     data: { requestId: requestId },
-
                     success: function (res) {
                         Swal.fire({
                             position: "top-end",
@@ -388,7 +389,6 @@ else
                             timer: 1500
                         });
                         ProviderDashboard(res);
-
                     },
 
                     error: function () {

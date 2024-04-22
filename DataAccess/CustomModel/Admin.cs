@@ -11,6 +11,11 @@ using System.Threading.Tasks;
 
 namespace DataAccess.CustomModel
 {
+    public class LoginDetail
+    {
+        public string? firstName { get; set; }
+        public string? lastName { get; set; }
+    }
 
     public class AdminLoginModelR
     {
@@ -18,8 +23,8 @@ namespace DataAccess.CustomModel
         public string? email { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
-        //  [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
-        //ErrorMessage = "8 characters long (one uppercase, one lowercase letter, one digit, and one special character.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+        ErrorMessage = "8 characters long (one uppercase, one lowercase letter, one digit, and one special character.")]
         public string? password { get; set; }
     }
 
@@ -563,10 +568,12 @@ namespace DataAccess.CustomModel
         public List<Region>? RegionList { get; set; }
         public IEnumerable<int> AdminRegion { get; set; }
 
+        [Required(ErrorMessage ="Addresss Required")]
         [RegularExpression(@"^[A-Za-z0-9]+(?:\s[A-Za-z0-9,]+)?$", ErrorMessage = "Invalid Address Name Format")]
         public string? Address1 { get; set; }
         [RegularExpression(@"^[A-Za-z0-9]+(?:\s[A-Za-z0-9,]+)?$", ErrorMessage = "Invalid Address Name Format")]
         public string? Address2 { get; set; }
+        [Required(ErrorMessage ="City is Required")]    
         [RegularExpression(@"^[a-zA-Z][a-zA-Z ]+$", ErrorMessage = "Please enter a valid city")]
         public string? City { get; set; }
         [Required(ErrorMessage = "State is required")]
@@ -681,7 +688,7 @@ namespace DataAccess.CustomModel
         public string BusinessWebsite { get; set; }
         [RegularExpression(@"^[ A-Za-z0-9]$", ErrorMessage = "Invalid Admin Note Format")]
         public string? Adminnotes { get; set; }
-
+        [Required(ErrorMessage ="Address is Required")]
         [RegularExpression(@"^[A-Za-z0-9]+(?:\s[A-Za-z0-9,]+)?$", ErrorMessage = "Invalid Business Name Format")]
         public string? Address1 { get; set; }
 
@@ -1261,5 +1268,14 @@ namespace DataAccess.CustomModel
         public BitArray isFinalize { get; set; }
     }
 
+    public class RequestAdmin
+    {
+        public int? reqId { get; set; }
+
+        [Required(ErrorMessage = "Please Enter Description")]
+        [RegularExpression(@"^\S.*$", ErrorMessage = "Note Can Not Be Null")]
+        public string? Note { get; set; }
+
+    }
 
 }
