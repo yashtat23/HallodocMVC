@@ -44,6 +44,7 @@ namespace HalloDoc.mvc.Controllers
             return View();
         }
 
+        [CustomAuthorize("Physician")]
         public IActionResult ProviderDashboard()
         {
 
@@ -104,7 +105,9 @@ namespace HalloDoc.mvc.Controllers
 
         public IActionResult FilterRegion(FilterModel filterModel)
         {
-            var list = _adminService.GetRequestByRegion(filterModel);
+            var aspid = GetLoginId();
+            var phyid = _providerService.GetPhysicianId(aspid);
+            var list = _providerService.GetRequestByRegion(filterModel, phyid);
             return PartialView("_PNewRequest", list);
         }
 
@@ -141,7 +144,7 @@ namespace HalloDoc.mvc.Controllers
         [HttpGet]
         public IActionResult PSendLink()
         {
-            return PartialView("_SendLink");
+            return PartialView("_PSendLink");
         }
         [HttpPost]
         public IActionResult SendLink(SendLinkModel model)
@@ -179,6 +182,7 @@ namespace HalloDoc.mvc.Controllers
             return client.SendMailAsync(new MailMessage(from: mail, to: email, subject, message));
         }
 
+        [CustomAuthorize("Physician")]
         public IActionResult ViewCase(int Requestclientid, int RequestTypeId, int ReqId)
         {
             var model = _adminService.ViewCase(Requestclientid, RequestTypeId, ReqId);
@@ -186,17 +190,24 @@ namespace HalloDoc.mvc.Controllers
             return View("_PViewCase", model);
         }
 
-        //[HttpPost]
-        //public IActionResult UpdateNotes(ViewNotesViewModel model)
-        //{
-        //    bool isUpdated = _adminService.UpdateAdminNotes(model.AdditionalNotes, model.ReqId, 2);
+        [HttpPost]
+        public IActionResult UpdateNotes(ViewNotesViewModel model)
+        {
+            int? reqId = HttpContext.Session.GetInt32("RNId");
+            bool isUpdated = _adminService.UpdateAdminNotes(model.AdditionalNotes, (int)reqId);
+            if (isUpdated)
+            {
+                _notyf.Success("Saved Changes!!");
+                return RedirectToAction("ViewNote", "Provider", new { ReqId = reqId });
 
-        //    return Json(new { isUpdated, reqId = model.ReqId });
-        //}
+            }
+            return View();
+        }
 
+        [CustomAuthorize("Physician")]
         public IActionResult ViewNote(int ReqId)
         {
-
+            HttpContext.Session.SetInt32("RNId", ReqId);
             ViewNotesViewModel data = _adminService.ViewNotes(ReqId);
             return View("_PViewNotes", data);
         }
@@ -273,7 +284,7 @@ namespace HalloDoc.mvc.Controllers
             return RedirectToAction("ProviderDashboard", "Provider");
         }
 
-
+        
         public IActionResult ViewUploads(int reqId)
         {
             HttpContext.Session.SetInt32("rid", reqId);
@@ -345,8 +356,8 @@ namespace HalloDoc.mvc.Controllers
 
         public Task SendEmail(string email, string subject, List<string> filenames)
         {
-            var mail = "tatva.dotnet.vatsalgadoya@outlook.com";
-            var password = "VatsalTatva@2024";
+            var mail = "tatva.dotnet.yashvariya@outlook.com";
+            var password = "Itzvariya@23";
 
             var client = new SmtpClient("smtp.office365.com", 587)
             {
@@ -386,6 +397,7 @@ namespace HalloDoc.mvc.Controllers
             return RedirectToAction("ProviderDashboard");
         }
 
+        [CustomAuthorize("Physician")]
         public IActionResult PViewDocument(int reqId)
         {
             HttpContext.Session.SetInt32("rid", reqId);
@@ -416,7 +428,7 @@ namespace HalloDoc.mvc.Controllers
             return RedirectToAction("ProviderDashboard", "Provider");
         }
 
-
+        [CustomAuthorize("Physician")]
         [HttpGet]
         public IActionResult POrder(int reqId)
         {
@@ -425,6 +437,7 @@ namespace HalloDoc.mvc.Controllers
             return View(order);
         }
 
+        [CustomAuthorize("Physician")]
         public IActionResult PEncounterForm(int reqId)
         {
             ViewBag.reqId = reqId;
@@ -467,7 +480,6 @@ namespace HalloDoc.mvc.Controllers
         [HttpPost]
         public IActionResult EncounterFormSubmit(EncounterFormModel model)
         {
-           
             _providerService.PSubmitEncounterForm(model);
             _notyf.Success("Successfully Finalize!!");
             return RedirectToAction("ProviderDashboard");
@@ -593,9 +605,10 @@ namespace HalloDoc.mvc.Controllers
         public IActionResult ViewShift(int ShiftDetailId)
         {
             var data = _adminService.ViewShift(ShiftDetailId);
-            return View("_PViewShift", data);
+            return PartialView("_PViewShift", data);
         }
 
+        [CustomAuthorize("Physician")]
         public IActionResult ConcludeCare(int reqId)
         {
             HttpContext.Session.SetInt32("rid", reqId);
@@ -661,10 +674,12 @@ namespace HalloDoc.mvc.Controllers
             return RedirectToAction("ProviderDashboard");
         }
 
+        [HttpPost]
         public IActionResult Finalizesubmit(int reqid)
         {
-            _providerService.finalizesubmit(reqid);
-            return RedirectToAction("ProviderDashboard");
+            var isFinalized = _providerService.finalizesubmit(reqid);
+            _notyf.Success("Form Finilize");
+            return Json(new { isFinalized });
         }
 
         public IActionResult RequestAdmin()
@@ -686,8 +701,12 @@ namespace HalloDoc.mvc.Controllers
             {
                 return NotFound();
             }
+        }
 
-
+        public IActionResult LogoutProvider()
+        {
+            Response.Cookies.Delete("jwt");
+            return RedirectToAction("AdminLogin", "Home");
         }
 
     }

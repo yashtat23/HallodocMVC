@@ -9,13 +9,13 @@
             <span style="color: darkblue;">(Active)</span>
         </span>
         <span class="d-flex gap-1 gap-md-3">
-            <button class="action-btn">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1">
                 <i class="bi bi-send"></i> <span class="d-none d-md-block" onclick="PSendLink()">
                     Send
                     Link
                 </span>
             </button>
-            <button class="action-btn" onclick="location.href='@Url.Action("CreateReq", "Admin")'">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="location.href='@Url.Action("CreateReq", "Admin")'">
                 <i class="bi bi-journal-text"></i> <span class="d-none d-md-block">Create Requests</span>
             </button>
             @*  <button class="action-btn" id="exportActiveReq">
@@ -240,12 +240,23 @@
                                                     </button>
                                                 </li>
                                                 }
+                                                else if (item.isFinalized == false || item.isFinalized == null)
+                                                {
+                                                <li>
+                                                    <a class="dropdown-item" href="@Url.Action("PEncounterForm", new {ReqId = item.reqId})">
+                                                        <i class="bi bi-file-earmark-text"></i>
+                                                        Encounter
+                                                    </a>
+                                                </li>
+                                                }
                                                 else
                                                 {
-                                                <a class="dropdown-item" href="@Url.Action("PEncounterForm", new {ReqId = item.reqId})">
-                                                    <i class="bi bi-file-earmark-text"></i>
-                                                    Encounter
-                                                </a>
+                                                <li>
+                                                    <button class="dropdown-item" onclick="activeencounterDownload(@item.reqId)">
+                                                        <i class="bi bi-file-earmark-text"></i>
+                                                        Download Encounter
+                                                    </button>
+                                                </li>
                                                 }
                                             </li>
                                         </ul>
@@ -295,6 +306,7 @@ else
 </div>
 
 <div id="modelContentcare"></div>
+<div id="activeModalContent"></div>
 
 <script>
     $("#exportActiveReq").click(function () {
@@ -334,6 +346,22 @@ else
             success: function () {
                 $('#encountertypeModal').modal('toggle');
                 location.reload();
+            },
+            error: function (error) {
+                console.log(error);
+                alert('Error Fetching Request')
+            },
+        });
+    }
+
+    function activeencounterDownload(reqId) {
+        $.ajax({
+            url: "/Provider/DownloadEncounterPopUp",
+            data: { reqId: reqId },
+            type: 'GET',
+            success: function (result) {
+                $('#activeModalContent').html(result);
+                $('#downloadEncounterModal').modal('toggle');
             },
             error: function (error) {
                 console.log(error);

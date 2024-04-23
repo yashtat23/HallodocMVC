@@ -21,6 +21,10 @@ namespace BusinessLogic.Interfaces
         LoginDetail GetLoginDetail(string email);
         StatusCountModel GetStatusCount();
 
+        List<Role> GetAdminRoles();
+
+        List<Role> GetPhyRoles();
+
         ViewCaseViewModel ViewCase(int reqClientId, int RequestTypeId, int ReqId);
 
         ViewNotesViewModel ViewNotes(int ReqId);
@@ -92,7 +96,7 @@ namespace BusinessLogic.Interfaces
 
         public ProviderModel providerContact(int PhysicianId);
 
-        void providerContactEmail(int phyIdMain, string msg);
+        bool providerContactEmail(int phyIdMain, string msg);
 
         EditPhysicianAccount EditPhysician(int PhysicianId);
 
@@ -168,13 +172,16 @@ namespace BusinessLogic.Interfaces
         WeekWiseScheduling GetWeekTable(string date, int regionid, int status);
         MonthWiseScheduling GetMonthTable(string date, int regionid, int status);
 
-        Task CreateShift(SchedulingViewModel model, string Email, List<int> repeatdays);
+        bool CreateShift(SchedulingViewModel model, string Email, List<int> repeatdays);
 
-        Task<CreateNewShift> ViewShift(int ShiftDetailId);
+        CreateNewShift ViewShift(int ShiftDetailId);
 
         List<BlockHistory> BlockHistory(BlockHistory2 blockHistory2);
         bool UnblockRequest(int blockId);
         bool IsBlockRequestActive(int blockId);
+
+        bool ProviderContactSms(int phyId, string msg, string tokenEmail);
+
         EmailSmsRecords2 EmailSmsLogs(int tempId, EmailSmsRecords2 recordsModel);
         bool EditShift(CreateNewShift model, string email);
 

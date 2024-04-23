@@ -9,7 +9,7 @@
 <div class="container">
     <div class=" mt-4 d-flex justify-content-between align-items-center">
         <h4>Encounter Form</h4>
-        <button id="back-btn" onclick="location.href='@Url.Action("ProviderDashboard", "Provider")'">&lt; Back</button>
+        <button id="back-btn" class="btn btn-outline-info mx-2 float-end" onclick="location.href='@Url.Action("ProviderDashboard", "Provider")'">&lt; Back</button>
 
     </div>
     <form asp-controller="Provider" asp-action="EncounterFormSubmit" class="shadow border rounded my-3 bg-white" method="post">
@@ -176,7 +176,12 @@
             type: 'POST',
             data: {reqid:reqid},
             success: function (result) {
-               
+                if (result.isFinalized) {
+                    toastr.success("Finalizwd!!");  
+                    window.location.href = "/Provider/ProviderDashboard";   
+                }else{
+                    toast.error("First save the form"); 
+                }
             },
             error: function () {
                 alert("Error");

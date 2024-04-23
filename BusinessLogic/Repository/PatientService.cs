@@ -126,6 +126,12 @@ namespace BusinessLogic.Repository
             client.Send(mailMessage);
         }
 
+        public Aspnetuser GetAspnetuser(string email)
+        {
+            var aspNetUser = _db.Aspnetusers.Include(x => x.Aspnetuserroles).FirstOrDefault(x => x.Email == email);
+            return aspNetUser;
+        }
+
         public LoginResponseViewModel PatientLogin(LoginVm model)
         {
             var user = _db.Aspnetusers.Include(u=>u.Aspnetuserroles).Where(u => u.Email == model.Email).FirstOrDefault();

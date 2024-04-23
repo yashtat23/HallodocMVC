@@ -12,6 +12,8 @@ namespace BusinessLogic.Interfaces
         DashboardModel GetRequestsByStatus(int tabNo, int CurrentPage, int phyid);
         public StatusCountModel GetStatusCount(int phyid);
 
+        DashboardModel GetRequestByRegion(FilterModel filterModel, int phyid);
+
         void acceptCase(int requestId,string loginUserId);
 
         bool TransferRequest(TransferRequest model);

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "NjXCgJ70RiEaGUU1DRTmqafARXHHmTy6a6+nwp8/Xm0H+/ofZAnO+6hYto+dObYFn+QieKXcs/3MNuE0MLdpCA==",
+  "dgSpecHash": "Brpax8CVWH2O4le3qpgRAn6eQ75+mlLWyIBxfbObK6iEGyKYbEUpiLS1lwC31agu8ox2ophOSPM+pubRRafqGA==",
   "success": true,
   "projectFilePath": "D:\\Final Project Main\\Hallodocweb\\Hallodocweb.csproj",
   "expectedPackageFiles": [
@@ -172,6 +172,8 @@
     "C:\\Users\\pce173\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
     "C:\\Users\\pce173\\.nuget\\packages\\system.collections.concurrent\\4.3.0\\system.collections.concurrent.4.3.0.nupkg.sha512",
     "C:\\Users\\pce173\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",
+    "C:\\Users\\pce173\\.nuget\\packages\\system.collections.nongeneric\\4.3.0\\system.collections.nongeneric.4.3.0.nupkg.sha512",
+    "C:\\Users\\pce173\\.nuget\\packages\\system.collections.specialized\\4.3.0\\system.collections.specialized.4.3.0.nupkg.sha512",
     "C:\\Users\\pce173\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0\\system.componentmodel.annotations.5.0.0.nupkg.sha512",
     "C:\\Users\\pce173\\.nuget\\packages\\system.composition\\6.0.0\\system.composition.6.0.0.nupkg.sha512",
     "C:\\Users\\pce173\\.nuget\\packages\\system.composition.attributedmodel\\6.0.0\\system.composition.attributedmodel.6.0.0.nupkg.sha512",
@@ -248,7 +250,8 @@
     "C:\\Users\\pce173\\.nuget\\packages\\system.threading.timer\\4.3.0\\system.threading.timer.4.3.0.nupkg.sha512",
     "C:\\Users\\pce173\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512",
     "C:\\Users\\pce173\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
-    "C:\\Users\\pce173\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512"
+    "C:\\Users\\pce173\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
+    "C:\\Users\\pce173\\.nuget\\packages\\twilio\\7.0.5\\twilio.7.0.5.nupkg.sha512"
   ],
   "logs": []
 }

@@ -83,9 +83,18 @@ namespace Hallodocweb.Controllers
             loginvm.Password = GenerateSHA256(loginvm.Password);
             if (ModelState.IsValid)
             {
+                var aspnetuser = _patientService.GetAspnetuser(loginvm.Email);
+
                 LoginResponseViewModel? result = _patientService.PatientLogin(loginvm);
                 if (result.Status == ResponseStatus.Success)
                 {
+                    int role = aspnetuser.Aspnetuserroles.Where(x => x.Userid == aspnetuser.Id).Select(x => x.Roleid).First();
+                    if (role != 2)
+                    {
+                        _notyf.Warning("Only Patient Can Login");
+                        return RedirectToAction("patientreg");
+                    }
+
                     HttpContext.Session.SetString("Email", loginvm.Email);
                     Response.Cookies.Append("jwt", result.Token);
                     _notyf.Success("Login Successfull!!!");
@@ -135,6 +144,11 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
+        public IActionResult LogoutPatient()
+        {
+            Response.Cookies.Delete("jwt");
+            return RedirectToAction("patientreg", "Patient");
+        }
 
         public IActionResult patientresetpass()
         {
@@ -233,7 +247,6 @@ namespace Hallodocweb.Controllers
             return View();
         }
 
-        [HttpPost]
         [HttpPost]
         public IActionResult conciergereq(ConciergeReqModel conciergeReqModel)
         {
@@ -342,7 +355,7 @@ namespace Hallodocweb.Controllers
         //    var y = _patientService.subinformation(patientInfo);
         //    return View(y);
         //}
-        //[CustomAuthorize("User")]
+        [CustomAuthorize("User")]
         public IActionResult patientsomeoneelse()
         {
             return View();
@@ -395,6 +408,7 @@ namespace Hallodocweb.Controllers
         //    return emailClaim.Value;
         //}
 
+        [CustomAuthorize("User")]
         public IActionResult patientdashboard()
         {
             var email = _htttpcontext.HttpContext.Session.GetString("Email");

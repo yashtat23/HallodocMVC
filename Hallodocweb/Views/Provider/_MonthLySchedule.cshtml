@@ -209,9 +209,24 @@
         </div>
     }
 </div>
-<div id="viewshift"></div>
+<div id="viewshiftmodelopen"></div>
 
 <script>
+    function viewshift(ShiftDetailId) {
+        $.ajax({
+            url: "/Provider/ViewShift",
+            type: "GET",
+            data: { ShiftDetailId: ShiftDetailId },
+            success: function (data) {
+                $("#viewshiftmodelopen").html(data);
+                $('#ViewShiftModelprovider').modal('show');
+            },
+            error: function () {
+                alert("No Projects Found");
+                $("#shift").html('An error has occurred');
+            }
+        });
+    };
     $(document).ready(function () {
         $('.readmorebtn').on('click', function () {
             let id = $(this).val();
@@ -272,20 +287,5 @@
         });
     });
 
-    function viewshift(ShiftDetailId) {
-        $.ajax({
-            url: "/Provider/ViewShift",
-            type: "GET",
-            data: { ShiftDetailId: ShiftDetailId },
-            success: function (data) {
-                $("#viewshift").html(data);
-                $('#ViewShiftModel').modal('show');
-            },
-            error: function () {
-                alert("No Projects Found");
-                $("#shift").html('An error has occurred');
-            }
-        });
-    };
 
 </script>

@@ -106,6 +106,12 @@ namespace Hallodocweb.Controllers
             return RedirectToAction("AdminLogin", "Home");
         }
 
+        public IActionResult LogoutProvider()
+        {
+            Response.Cookies.Delete("jwt");
+            return RedirectToAction("AdminLogin", "Home");
+        }
+
         [HttpPost]
         public IActionResult AdminLogin(AdminLoginModelR adminLoginModel)
         {

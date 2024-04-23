@@ -21,6 +21,7 @@ namespace BusinessLogic.Interfaces
         LoginResponseViewModel PatientLogin(LoginVm model);
         bool AddPatientInfo(PatientInfoModel patientInfoModel);
 
+        Aspnetuser GetAspnetuser(string email);
         bool AddFamilyReq(FamilyReqModel familyReqModel, string createaccountLink);
 
         bool AddConciergeReq(ConciergeReqModel conciergeReqModel, string createAccountLink);

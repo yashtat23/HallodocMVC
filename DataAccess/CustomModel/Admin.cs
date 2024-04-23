@@ -584,6 +584,24 @@ namespace DataAccess.CustomModel
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Entered phone format is not valid.")]
         public string? BillingPhone { get; set; }
         public int[] RegionArray { get; set; }
+        [Required(ErrorMessage = "Role is required")]
+        public int roleId { get; set; }
+        [Required(ErrorMessage = "Region is required")]
+        public int regionId { get; set; }
+        public List<Role> roles { get; set; }
+        //public List<Region> adminRegions { get; set; }
+        public List<Region> regions { get; set; }
+    }
+
+    public class AdminRegionTable
+    {
+        public int? AdminId { get; set; }
+
+        public int? Regionid { get; set; }
+
+        public string? Name { get; set; }
+
+        public bool ExistsInTable { get; set; }
     }
 
     //public class CreateProviderAccount
@@ -1002,6 +1020,9 @@ namespace DataAccess.CustomModel
         public string? phone { get; set; }
         public short? status { get; set; }
         public int? openReq { get; set; }
+        public int? adminId { get; set; }
+        public int? phyId { get; set; }
+
     }
 
     public class SchedulingViewModel

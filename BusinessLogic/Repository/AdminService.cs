@@ -28,6 +28,8 @@ using System.Text.Json;
 using OfficeOpenXml;
 //using Org.BouncyCastle.Ocsp;
 using DataAccess.Enums;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace BusinessLogic.Repository
 {
@@ -244,6 +246,21 @@ namespace BusinessLogic.Repository
             model.lastName = admin.Lastname;
             return model;
         }
+
+        public List<Role> GetAdminRoles()
+        {
+            BitArray deletedBit = new BitArray(new[] { false });
+            var roles = _db.Roles.Where(x => x.Isdeleted.Equals(deletedBit) && x.Accounttype == 1).ToList();
+            return roles;
+        }
+
+        public List<Role> GetPhyRoles()
+        {
+            BitArray deletedBit = new BitArray(new[] { false });
+            var roles = _db.Roles.Where(x => x.Isdeleted.Equals(deletedBit) && x.Accounttype == 2).ToList();
+            return roles;
+        }
+
         public DashboardModel GetRequestByRegion(FilterModel filterModel)
         {
 
@@ -1368,21 +1385,23 @@ namespace BusinessLogic.Repository
 
             return provider;
         }
-        public void providerContactEmail(int phyIdMain, string msg)
+        public bool providerContactEmail(int phyIdMain, string msg)
         {
-            ProviderModel _provider = new ProviderModel();
-
-            _provider.phyId = phyIdMain;
-
-            var provider = _db.Physicians.FirstOrDefault(x => x.Physicianid == phyIdMain);
-
             try
             {
+                ProviderModel _provider = new ProviderModel();
+
+                _provider.phyId = phyIdMain;
+
+                var provider = _db.Physicians.FirstOrDefault(x => x.Physicianid == phyIdMain);
+
                 SendRegistrationproviderContactEmail(provider.Email, msg, phyIdMain);
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                return false;
             }
 
         }
@@ -3169,15 +3188,17 @@ namespace BusinessLogic.Repository
             if (selectedValue == 1)
             { 
                 var admin = from admins in _db.Admins
-                            join role in _db.Roles on admins.Roleid equals role.Roleid
+                            //join role in _db.Roles on admins.Roleid equals role.Roleid
                             orderby admins.Createddate
                             select new UserAccess
                             {
                                 fname = admins.Firstname,
                                 lname = admins.Lastname,
-                                accType = role.Accounttype,
+                                accType = 1,    
                                 phone = admins.Mobile,
-                                status = admins.Status??null,
+                                status = admins.Status,
+                                openReq = _db.Requests.Where(x => x.Status != 10).Count(),
+                                adminId = admins.Adminid,
                             };
                 var result1 = admin.ToList();
                 return result1;
@@ -3185,15 +3206,17 @@ namespace BusinessLogic.Repository
             else if (selectedValue == 2)
             {
                 var physician = from phy in _db.Physicians
-                                join role in _db.Roles on phy.Roleid equals role.Roleid
+                                //join role in _db.Roles on phy.Roleid equals role.Roleid
                                 orderby phy.Createddate
                                 select new UserAccess
                                 {
                                     fname = phy.Firstname,
                                     lname = phy.Lastname,
-                                    accType = role.Accounttype,
+                                    accType = 2,
                                     phone = phy.Mobile,
                                     status = phy.Status,
+                                    openReq = _db.Requests.Where(x => x.Status != 10 && x.Physicianid == phy.Physicianid).Count(),
+                                    phyId = phy.Physicianid,
                                 };
                 var result2 = physician.ToList();
                 return result2;
@@ -3317,7 +3340,7 @@ namespace BusinessLogic.Repository
             return month;
         }
 
-        public async Task CreateShift(SchedulingViewModel model, string Email, List<int> repeatdays)
+        public bool CreateShift(SchedulingViewModel model, string Email, List<int> repeatdays)
         {
             Aspnetuser? aspNetUser = _db.Aspnetusers.FirstOrDefault(a => a.Email == Email);
 
@@ -3338,6 +3361,7 @@ namespace BusinessLogic.Repository
                             {
                                 //TempData["error"] = "Shift is already assigned in this time";
                                 //return RedirectToAction("Scheduling");
+                                return false;
                             }
                         }
                     }
@@ -3367,7 +3391,7 @@ namespace BusinessLogic.Repository
                 shift.Isrepeat = new BitArray(new[] { false });
             }
             _db.Shifts.Add(shift);
-            await _db.SaveChangesAsync();
+            _db.SaveChanges();
             DateOnly curdate = model.shiftdate;
 
             Shiftdetail shiftdetail = new Shiftdetail();
@@ -3378,7 +3402,7 @@ namespace BusinessLogic.Repository
             shiftdetail.Endtime = model.endtime;
             shiftdetail.Isdeleted = new BitArray(new[] { false });
             _db.Shiftdetails.Add(shiftdetail);
-            await _db.SaveChangesAsync();
+            _db.SaveChanges();
 
             var dayofweek = model.shiftdate.DayOfWeek.ToString();
             int valueforweek;
@@ -3443,30 +3467,28 @@ namespace BusinessLogic.Repository
                             Isdeleted = new BitArray(new[] { false })
                         };
                         _db.Shiftdetails.Add(shiftdetailnew);
-                        await _db.SaveChangesAsync();
+                         _db.SaveChanges();
                         newcurdate = newcurdate.AddDays(7);
                     }
                 }
             }
+            return true;
         }
 
-        public async Task<CreateNewShift> ViewShift(int ShiftDetailId)
+        public CreateNewShift ViewShift(int ShiftDetailId)
         {
-            Shiftdetail? shiftDetails = await _db.Shiftdetails.Include(a => a.Shift).Where(a => a.Shiftdetailid == ShiftDetailId).FirstOrDefaultAsync();
-            Physician? physicians = await _db.Physicians.Where(a => a.Physicianid == shiftDetails.Shift.Physicianid).FirstOrDefaultAsync();
-            Region? region = await _db.Regions.Where(a => a.Regionid == physicians!.Regionid).FirstOrDefaultAsync();
+            Shiftdetail? shiftDetails = _db.Shiftdetails.Include(a => a.Shift).Where(a => a.Shiftdetailid == ShiftDetailId).FirstOrDefault();
+            Physician? physicians = _db.Physicians.Where(a => a.Physicianid == shiftDetails.Shift.Physicianid).FirstOrDefault();
+            Region? region = _db.Regions.Where(a => a.Regionid == physicians!.Regionid).FirstOrDefault();
             CreateNewShift model = new CreateNewShift()
             {
                 PhysicianId = physicians.Physicianid,
                 PhysicianName = physicians.Firstname + " " + physicians.Lastname,
                 RegionId = region.Regionid,
                 RegionName = region.Name,
-                
                 ShiftDate = shiftDetails.Shiftdate,
                 Start = shiftDetails.Starttime,
                 End = shiftDetails.Endtime,
-                shiftdetailid=ShiftDetailId,
-                
             };
             return model;
         }
@@ -3566,6 +3588,53 @@ namespace BusinessLogic.Repository
 
                 return false;
             }
+        }
+
+        public bool ProviderContactSms(int phyId, string msg, string tokenEmail)
+        {
+
+            var provider = _db.Physicians.Where(x => x.Physicianid == phyId).Select(x => x).First();
+
+            try
+            {
+                var accountSid = "AC31e48506355f7353a331a925a5364db3";
+                var authToken = "05e8d0cb9a6a56c369e598d7fa97ec71";
+                var twilionumber = "+12562177781";
+
+                var messageBody = $"Hello {provider.Firstname} {provider.Lastname},\n {msg} \n\n\nRegards,\n(HelloDoc Admin)";
+
+                TwilioClient.Init(accountSid, authToken);
+
+                var messagee = MessageResource.Create(
+                from: new Twilio.Types.PhoneNumber(twilionumber),
+                body: messageBody,
+                to: new Twilio.Types.PhoneNumber("+91" + provider.Mobile)
+                );
+
+                Smslog smslog = new Smslog()
+                {
+                    Smstemplate = "Sender : " + twilionumber + "Reciver :" + provider.Mobile + "Message : " + msg,
+                    Mobilenumber = provider.Mobile,
+                    Roleid = 1,
+                    Adminid = _db.Admins.Where(r => r.Email == tokenEmail).Select(r => r.Adminid).First(),
+                    Createdate = DateTime.Now,
+                    Sentdate = DateTime.Now,
+                    Issmssent = new BitArray(1, true),
+                    Confirmationnumber = provider.Firstname.Substring(0, 2) + DateTime.Now.ToString().Substring(0, 19).Replace(" ", ""),
+                    Senttries = 1,
+                };
+
+                _db.Smslogs.Add(smslog);
+                _db.SaveChanges();
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+
         }
 
         public EmailSmsRecords2 EmailSmsLogs(int tempId, EmailSmsRecords2 recordsModel)

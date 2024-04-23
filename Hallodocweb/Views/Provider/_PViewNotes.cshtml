@@ -5,8 +5,14 @@
 @using DataAccess.CustomModel;
 @model ViewNotesViewModel;
 
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="~/css/AdminViewNote.css" />
+
+<button type="button" class=" btn shadow border-info float-end mt-3 me-5 ms-2"
+        style="border-radius: 10px; border-color: aqua" id="colorButton">
+    <i id="moon" class="bi bi-moon text-info fs-5"></i>
+    <i id="sun" class="bi bi-sun text-info fs-5 d-none"></i>
+</button>
 <div class="container-fluid d-flex justify-content-center row ">
 
     <div class="col-8">
@@ -16,11 +22,11 @@
                 <h4><strong>View Notes</strong></h4>
             </div>
 
-            <button onclick="location.href='@Url.Action("ProviderDashboard", "Provider")'" id="back-btn">&lt; Back</button>
+            <button class="btn btn-outline-info mx-2 float-end" onclick="location.href='@Url.Action("ProviderDashboard", "Provider")'" id="back-btn">&lt; Back</button>
 
         </div>
 
-        <form id="viewNotesForm" onsubmit="return ViewNoteValidation()">
+        <form id="viewNotesForm" asp-action="UpdateNotes">
             @*method="post" asp-action="UpdateNotes" asp-controller="Provider"*@
             <input asp-for="ReqId" hidden />
             <div class="shadow p-3 dashboard-card mt-4 bg-white dark-mode1">
@@ -32,8 +38,8 @@
 
                     <div class="col-md-6 col-12">
                         <div class="dropdown  mt-3 ">
-                            <button class="btn dark-mode1 shadow dropdown-toggle w-100 text-start notes text-black border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="~/images/transfer-horizontal-svgrepo-com.svg" class="svg mx-2" />
+                            <button class="btn dark-mode1 dropdown-toggle w-100 text-start notes text-black border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-arrow-left-right"></i>
                                 Transfer Notes
                             </button>
                             @if (Model.TransferNotesList != null && Model.TransferNotesList.Count > 0)
@@ -50,15 +56,15 @@
                     </div>
 
                     <div class="col-md-6 col-12">
-                        <div class="form-floating dark-mode1 shadow mt-3 notes">
-                            <img src="~/images/doctor.svg" class="svg mx-2" />
+                        <div class="form-floating dark-mode1 mt-3 notes">
+                            <i class="bi bi-person p-2 me-1"></i>
                             Physician Notes :
                             <span>@Model.PhysicianNotes</span>
                         </div>
                     </div>
                     <div class="col-md-6 col-12">
-                        <div class="form-floating shadow dark-mode1 mt-3 notes">
-                            <img src="~/images/admin.svg" class="svg mx-2" />
+                        <div class="form-floating dark-mode1 mt-3 notes">
+                            <i class="bi bi-person-gear p-2 me-1"></i>
                             Admin Notes :
                             <span>@Model.AdminNotes</span>
                         </div>
@@ -70,7 +76,6 @@
                                 <textarea style="height:100px" class="form-control dark-mode1" placeholder="Leave a comment here" id="notes" asp-for="AdditionalNotes"></textarea>
                                 <label for="floatingTextarea2">
                                     Admin Notes
-
                                 </label>
                                 <span asp-validation-for="AdditionalNotes" class="text-danger"></span>
                                 @*<small id="notesRequired" class="d-none" style=" color:red">Admin Note is required</small>*@
@@ -80,7 +85,7 @@
 
                     </div>
                     <div class="d-flex justify-content-end mt-3 gap-1">
-                        <button type="button" onclick="pSubmitViewNotes()" class="btn btn-primary">Save Changes</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
                     </div>
                 </div>
             </div>
@@ -92,7 +97,7 @@
 <script>
 
     function pSubmitViewNotes() {
-        if ($("#viewNotesForm").valid()) {
+        
             var payload = $('#viewNotesForm').serializeArray();
             $.ajax({
                 url: "/Provider/UpdateNotes",
@@ -113,7 +118,7 @@
                     alert("Error loading view notes");
                 }
             });
-        }
+        
 
     }
         //$('#notes').on('input', function () {

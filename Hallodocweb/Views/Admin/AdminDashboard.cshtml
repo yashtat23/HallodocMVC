@@ -187,12 +187,18 @@
                                 <li>
                                     <button class="nav-link mx-3" id="record-tab" data-bs-toggle="tab"
                                             data-bs-target="#record-tab-pane" type="button" role="tab"
-                                            aria-controls="record-tab-pane" onclick="emailLogs()" aria-selected="false">
+                                            aria-controls="record-tab-pane" onclick="emailLogs(0)" aria-selected="false">
                                         Email Logs
                                     </button>
 
                                 </li>
-                                <li><a class="dropdown-item" href="#">SMS Logs</a></li>
+                                <li>
+                                    <button class="nav-link mx-3" id="record-tab" data-bs-toggle="tab"
+                                            data-bs-target="#record-tab-pane" type="button" role="tab"
+                                            aria-controls="record-tab-pane" onclick="emailLogs(1)" aria-selected="false">
+                                        SMS Logs
+                                    </button>
+                                </li>
                                 <li>
                                     <button class="nav-link mx-3" id="record-tab" data-bs-toggle="tab"
                                             data-bs-target="#record-tab-pane" type="button" role="tab"
@@ -767,15 +773,23 @@
             })
         }
 
-        function emailLogs() {
+        function emailLogs(tempId) {
+            var payload = {
+                tempid: tempId
+            }
             $.ajax({
                 url: '/Admin/EmailLogs',
                 type: 'GET',
+                data: payload,
                 success: function (response) {
                     $("#record-tab-pane").html(response);
                 },
-                error: function (e) {
-                    alert("Error loading partial view");
+                error: function (xhr, status, error) {
+                    if (xhr.status === 401) {
+
+                        window.location.reload();
+                    }
+                    console.error(error);
                 }
             })
         }

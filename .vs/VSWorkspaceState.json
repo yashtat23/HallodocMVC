@@ -4,8 +4,9 @@
     "\\Hallodocweb",
     "\\Hallodocweb\\Controllers",
     "\\Hallodocweb\\Views",
-    "\\Hallodocweb\\Views\\Admin"
+    "\\Hallodocweb\\Views\\Admin",
+    "\\Hallodocweb\\Views\\Provider"
   ],
-  "SelectedNode": "\\Hallodocweb\\Views\\Admin\\_CreateProviderAccount.cshtml",
+  "SelectedNode": "\\Hallodocweb\\Views\\Provider\\_PViewNotes.cshtml",
   "PreviewInSolutionExplorer": false
 }

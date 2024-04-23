@@ -683,10 +683,28 @@ namespace Hallodocweb.Controllers
         }
 
         [HttpPost]
-        public IActionResult providerContactModalEmail(int phyIdMain, string msg)
+        public IActionResult providerContactModalEmail(int phyIdMain, string msg,string type)
         {
-            _adminService.providerContactEmail(phyIdMain, msg);
-            return RedirectToAction("AdminDashboard");
+            var email = GetTokenEmail();
+            if (type == "SMS")
+            {
+                var isSmsSend = _adminService.ProviderContactSms(phyIdMain, msg, email);
+                _notyf.Success("SMS Send Successfully!!");
+                return Json(new { isSend = isSmsSend });
+            }
+            else if (type == "Email")
+            {
+                var isSend = _adminService.providerContactEmail(phyIdMain, msg);
+                _notyf.Success("Email Send Successfully!!");
+                return Json(new { isSend = isSend });
+            }
+            else
+            {
+                var isSmsSend = _adminService.ProviderContactSms(phyIdMain, msg, email);
+                var isSend = _adminService.providerContactEmail(phyIdMain, msg);
+                _notyf.Success("SMS and Email Both are Send Successfully!!");
+                return Json(new { isSend = isSend, isSmsSend = isSmsSend });
+            }
         }
 
         public IActionResult EditProvider(int phyId)
@@ -1161,6 +1179,28 @@ namespace Hallodocweb.Controllers
             return PartialView("_UserAccess", obj);
         }
 
+        public IActionResult EditUserAccessAdmin(int adminid)
+        {
+            CreateAdminAccount data = new();
+            //data._providerEdit = _IAdminDash.adminEditPage(adminId);
+            //data.adminRegions = _adminService.AdminRegionTableById(adminid);
+            data.regions = _adminService.RegionTable();
+            data.roles = _adminService.GetAdminRoles();
+
+            return View("MyProfile", data);
+        }
+
+        public IActionResult EditUserAccessPhysician(int phyid)
+        {
+            var tokenemail = GetTokenEmail();
+            EditProviderModel2 model = new EditProviderModel2();
+            model.editPro = _adminService.EditProviderProfile(phyid, tokenemail);
+            model.regions = _adminService.RegionTable();
+            model.physicianregiontable = _adminService.PhyRegionTable(phyid);
+            model.roles = _adminService.GetPhyRoles();
+            return PartialView("_EditUserAccessPhysician", model);
+        }
+
         public IActionResult Scheduling(SchedulingViewModel model)
         {
 
@@ -1201,18 +1241,19 @@ namespace Hallodocweb.Controllers
         //}
 
         [HttpPost]
-        public async Task<IActionResult> AddShift(SchedulingViewModel model, List<int> repeatdays)
+        public IActionResult AddShift(SchedulingViewModel model, List<int> repeatdays)
         {
             var email = GetTokenEmail();
 
             //var email = User.FindFirstValue(ClaimTypes.Email);
-            await _adminService.CreateShift(model, email, repeatdays);
+            _adminService.CreateShift(model, email, repeatdays);
+            _notyf.Success("Shift Created You can see Now!!");
             return RedirectToAction("AdminDashboard");
         }
 
-        public async Task<IActionResult> ViewShift(int ShiftDetailId)
+        public IActionResult ViewShift(int ShiftDetailId)
         {
-            var data = await _adminService.ViewShift(ShiftDetailId);
+            var data =  _adminService.ViewShift(ShiftDetailId);
             return View("_ViewShift", data);
         }
 
@@ -1242,7 +1283,7 @@ namespace Hallodocweb.Controllers
         public IActionResult EmailLogs(EmailSmsRecords2 recordsModel)
         {
             EmailSmsRecords2 _data = new EmailSmsRecords2();
-            _data = _adminService.EmailSmsLogs(0, recordsModel);
+            _data = _adminService.EmailSmsLogs((int)recordsModel.tempid, recordsModel);
             return PartialView("_EmailLogs", _data);
         }
 

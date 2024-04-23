@@ -2,8 +2,6 @@
 @using DataAccess.Enums;
 @model DashboardModel;
 
-
-
 <div class="container-fluid pt-4">
     <div class="d-flex justify-content-between">
         <span class="fw-bold">
@@ -11,13 +9,13 @@
             <span style="color: darkblue;">(Pending)</span>
         </span>
         <span class="d-flex gap-1 gap-md-3">
-            <button class="action-btn">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1">
                 <i class="bi bi-send"></i> <span class="d-none d-md-block" onclick="PSendLink()">
                     Send
                     Link
                 </span>
             </button>
-            <button class="action-btn" onclick="location.href='@Url.Action("CreateReq", "Admin")'">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="location.href='@Url.Action("CreateReq", "Admin")'">
                 <i class="bi bi-journal-text"></i> <span class="d-none d-md-block">Create Requests</span>
             </button>
             @* <button class="action-btn" id="exportPendingReq">
@@ -37,7 +35,7 @@
     <div class="row mt-3 ">
         <div class="col-12 col-md-2 pt-2">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" placeholder="Search">
+                <input type="text" class="form-control" id="pendingsearch" onkeypress="pendingsearch(event)" placeholder="Search">
                 <label for="floatingInput"><i class="bi bi-search"></i> Search</label>
             </div>
         </div>
@@ -298,4 +296,34 @@ else
 
         Export(request);
     });
+
+    function pnewReqSearch(event) {
+        var x = event.code;
+        if (x == "Enter") {
+            pFilterData(2);
+        }
+
+    }
+    function pendingsearch(tabNo) {
+
+        var searchword = $('#pendingsearch').val();
+        let payload = {
+
+            tabNo: tabNo,
+            searchWord: searchword,
+
+        }
+        $.ajax({
+            url: '/Provider/FilterRegion',
+            type: 'GET',
+            data: payload,
+            success: function (response) {
+                $("#tab2").html(response);
+
+                $('#pendingsearch').val(searchword);
+
+            }
+        })
+    }
+
 </script>

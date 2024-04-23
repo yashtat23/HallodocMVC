@@ -64,10 +64,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0FjdGl2ZVJlcXVlc3RzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Final Project Main/Hallodocweb/Views/Admin/_ActiveSendlink.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0FjdGl2ZVNlbmRsaW5rLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/Final Project Main/Hallodocweb/Views/Admin/_AddVendor.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0FkZFZlbmRvci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -102,10 +98,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Final Project Main/Hallodocweb/Views/Admin/_ConcludeRequests.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0NvbmNsdWRlUmVxdWVzdHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Final Project Main/Hallodocweb/Views/Admin/_ConcludeSendLink.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0NvbmNsdWRlU2VuZExpbmsuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Final Project Main/Hallodocweb/Views/Admin/_ContactProvider.cshtml]
@@ -144,6 +136,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0VkaXRQcm92aWRlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Final Project Main/Hallodocweb/Views/Admin/_EditUserAccessPhysician.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0VkaXRVc2VyQWNjZXNzUGh5c2ljaWFuLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Final Project Main/Hallodocweb/Views/Admin/_EmailLogs.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0VtYWlsTG9ncy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -174,10 +170,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Final Project Main/Hallodocweb/Views/Admin/_PendingRequests.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1BlbmRpbmdSZXF1ZXN0cy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Final Project Main/Hallodocweb/Views/Admin/_PendingSendLink.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1BlbmRpbmdTZW5kTGluay5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Final Project Main/Hallodocweb/Views/Admin/_Provider.cshtml]
@@ -224,20 +216,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1RvY2xvc2VSZXF1ZXN0cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Final Project Main/Hallodocweb/Views/Admin/_ToCloseSendLink.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1RvQ2xvc2VTZW5kTGluay5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/Final Project Main/Hallodocweb/Views/Admin/_TransferRequests.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1RyYW5zZmVyUmVxdWVzdHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Final Project Main/Hallodocweb/Views/Admin/_UnpaidRequests.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1VucGFpZFJlcXVlc3RzLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Final Project Main/Hallodocweb/Views/Admin/_UnpaidSendLink.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1VucGFpZFNlbmRMaW5rLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Final Project Main/Hallodocweb/Views/Admin/_UserAccess.cshtml]
