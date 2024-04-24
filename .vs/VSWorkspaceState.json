@@ -5,8 +5,9 @@
     "\\Hallodocweb\\Controllers",
     "\\Hallodocweb\\Views",
     "\\Hallodocweb\\Views\\Admin",
-    "\\Hallodocweb\\Views\\Provider"
+    "\\Hallodocweb\\Views\\Provider",
+    "\\Hallodocweb\\Views\\Shared"
   ],
-  "SelectedNode": "\\Hallodocweb\\Views\\Provider\\_PViewNotes.cshtml",
+  "SelectedNode": "\\Hallodocweb\\Views\\Admin\\_ContactProvider.cshtml",
   "PreviewInSolutionExplorer": false
 }

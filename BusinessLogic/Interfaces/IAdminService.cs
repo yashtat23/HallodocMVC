@@ -128,6 +128,9 @@ namespace BusinessLogic.Interfaces
 
         List<AdminDashTableModel> Expert(int tabNo);
         CreateAccess FetchRole(short selectedValue);
+        CreateAdminAccount adminEditPage(int adminId);
+        List<AdminRegionTable> AdminRegionTableById(int adminid);
+        bool EditAdminDetailsDb(CreateAdminAccount model, string email, List<int> adminRegions);
         bool CreateRole(List<int> menuIds, string roleName, short accountType);
 
         bool RoleExists(string roleName, short accountType);

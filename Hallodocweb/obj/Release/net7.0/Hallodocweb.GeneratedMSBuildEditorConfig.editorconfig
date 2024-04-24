@@ -136,6 +136,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0VkaXRQcm92aWRlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Final Project Main/Hallodocweb/Views/Admin/_EditUserAccessAdmin.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0VkaXRVc2VyQWNjZXNzQWRtaW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Final Project Main/Hallodocweb/Views/Admin/_EditUserAccessPhysician.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX0VkaXRVc2VyQWNjZXNzUGh5c2ljaWFuLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

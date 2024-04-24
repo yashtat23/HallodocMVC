@@ -1,6 +1,9 @@
 ﻿@using DataAccess.CustomModel;
 @model List<UserAccess>;
 
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 <div class="container">
     <h4 class="my-4">User Access</h4>
 
@@ -104,7 +107,7 @@
             data: { adminid: id },
             success: function (response) {
 
-                // $("#access-tab-pane").html(response);
+                $("#access-tab-pane").html(response);
 
             },
             error: function (error) {

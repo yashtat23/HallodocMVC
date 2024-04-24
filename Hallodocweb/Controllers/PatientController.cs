@@ -96,6 +96,7 @@ namespace Hallodocweb.Controllers
                     }
 
                     HttpContext.Session.SetString("Email", loginvm.Email);
+                    HttpContext.Session.SetString("Email", loginvm.Email);
                     Response.Cookies.Append("jwt", result.Token);
                     _notyf.Success("Login Successfull!!!");
                     return RedirectToAction("PatientDashboard", "Patient");

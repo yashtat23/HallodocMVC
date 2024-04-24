@@ -591,6 +591,10 @@ namespace DataAccess.CustomModel
         public List<Role> roles { get; set; }
         //public List<Region> adminRegions { get; set; }
         public List<Region> regions { get; set; }
+        public List<AdminRegionTable> adminRegions { get; set; }
+        public int? adminId { get; set; }
+        public string? aspnetUserId { get; set; }
+
     }
 
     public class AdminRegionTable
