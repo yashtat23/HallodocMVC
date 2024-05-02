@@ -69,24 +69,24 @@
         <h4>Patient Location</h4>
         <div class="row mt-2">
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
-                <input asp-for="street" type="text" class="form-control" id="floatingInput" placeholder="Street">
+                <input asp-for="street" type="text" class="form-control" id="someoneslestreet" placeholder="Street">
                 <label for="floatingInput" class="email">Street</label>
                 <span class="text-danger" asp-validation-for="street"></span>
             </div>
             <div class="form-floating col-lg-6 col-md-12 col-sm-12">
-                <input asp-for="city" type="text" class="form-control" id="floatingPassword" placeholder="Password">
+                <input asp-for="city" type="text" class="form-control" id="someonelsecity" placeholder="Password">
                 <label for="floatingInput" class="email">City</label>
                 <span class="text-danger" asp-validation-for="city"></span>
             </div>
         </div>
         <div class="row mt-2">
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12">
-                <input asp-for="state" type="text" class="form-control" id="floatingInput" placeholder="State">
+                <input asp-for="state" type="text" class="form-control" id="someoneelsestate" placeholder="State">
                 <label for="floatingInput" class="email">State</label>
                 <span class="text-danger" asp-validation-for="state"></span>
             </div>
             <div class="form-floating col-lg-6 col-md-12 col-sm-12">
-                <input asp-for="zipCode" type="text" class="form-control" id="floatingPassword" placeholder="Zipcode">
+                <input asp-for="zipCode" type="text" class="form-control" id="someoneelsezipcode" placeholder="Zipcode">
                 <label for="floatingInput" class="email">Zip Code</label>
                 <span class="text-danger" asp-validation-for="zipCode"></span>
             </div>
@@ -95,7 +95,7 @@
                 <label for="floatingInput" class="email">Room # / Suite (optional)</label>
             </div>
             <div class="form-floating mb-3 col-lg-6 col-md-12 col-sm-12 mt-2">
-                <button type="button" class="btn btn-outline-primary dark-mode1" style="height:3.3rem ; width:6rem"> <i class="bi bi-geo-alt"></i> Map</button>
+                <button type="button" onclick="someoneelsemap()" class="btn btn-outline-primary dark-mode1" style="height:3.3rem ; width:6rem"> <i class="bi bi-geo-alt"></i> Map</button>
             </div>
         </div>
 
@@ -124,4 +124,14 @@
                 "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
         });
     }
+
+    function someoneelsemap() {
+        var street = $("#someoneslestreet").val();
+        var city = $("#someonelsecity").val();
+        var state = $("#someoneelsestate").val();
+        var zipcode = $("#someoneelsezipcode").val();
+
+        window.location.href = "https://www.google.com/maps/search/?api=1&query=" + street + city + state + zipcode;
+    }
+
 </script>

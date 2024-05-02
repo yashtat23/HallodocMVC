@@ -374,6 +374,7 @@ namespace BusinessLogic.Repository
             request.Email = familyReqModel.email;
             request.Relationname = familyReqModel.relation;
             request.Userid = user.Userid;
+            request.Calltype = 0;
 
             _db.Requests.Add(request);
             _db.SaveChanges();
@@ -492,6 +493,7 @@ namespace BusinessLogic.Repository
             request.Email = conciergeReqModel.email;
             request.Relationname = "Concierge";
             request.Userid = user.Userid;
+            request.Calltype = 0;
 
             _db.Requests.Add(request);
             _db.SaveChanges();
@@ -601,6 +603,7 @@ namespace BusinessLogic.Repository
             request.Email = businessReqModel.email;
             request.Relationname = "Business";
             request.Userid = user.Userid;
+            request.Calltype = 0;
 
             _db.Requests.Add(request);
             _db.SaveChanges();
@@ -954,6 +957,7 @@ namespace BusinessLogic.Repository
             request.Phonenumber = patientRequestModel.phonenumber;
             request.Email = patientRequestModel.email;
             request.Userid = request.Userid;
+                request.Calltype = 0;
 
             _db.Requests.Add(request);
             _db.SaveChanges();
@@ -1116,6 +1120,7 @@ namespace BusinessLogic.Repository
             request.Email = loginPatient.Email;
             request.Relationname = "Friend";
             request.Userid = user.Userid;
+            request.Calltype = 0;
 
             _db.Requests.Add(request);
             _db.SaveChanges();

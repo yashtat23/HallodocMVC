@@ -404,14 +404,13 @@
     });
 
     function ProviderCreatePasswordVisible2() {
-        let a = document.getElementById("providerCreatePasswordBtn")
-        console.log(a)
-        if (a.classList.contains("fa-eye")) {
-            a.classList.remove("fa-eye")
-            a.classList.add("fa-eye-slash")
+        let a = document.getElementById("providerCreatePasswordBtn");
+        if (a.classList.contains("bi bi-eye")) {
+            a.classList.remove("bi bi-eye")
+            a.classList.add("bi bi-eye-slash")
         } else {
-            a.classList.remove("fa-eye-slash")
-            a.classList.add("fa-eye")
+            a.classList.remove("bi bi-eye-slash")
+            a.classList.add("bi bi-eye")
         }
 
         var x = document.getElementById("providerCreatePassword");

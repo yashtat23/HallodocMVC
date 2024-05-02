@@ -32,7 +32,7 @@
 <div class="container">
     <input type="text" id="searchBar" placeholder="Search...">
     
-    <table class="table mt-5" >
+    <table class="table mt-5" id="dtBasicExample">
         <thead>
             <tr>
                 <th scope="col">Patient ID</th>
@@ -121,5 +121,30 @@
             }
         })
     }
+
+    $(document).ready(function () {
+
+                $('#dtBasicExample').DataTable({
+                    "initComplete": function (settings, json) {
+
+                        $('#my-search-input').val(settings.oPreviousSearch.sSearch);
+
+                        $('#my-search-input').on('keyup', function () {
+                            var searchValue = $(this).val();
+                            settings.oPreviousSearch.sSearch = searchValue;
+                            settings.oApi._fnReDraw(settings);
+                        });
+                    },
+                    "lengthMenu": [[5, 10, -1], [5, 10, "All"]],
+                    "pageLength": 5,
+                    language: {
+                        oPaginate: {
+                            sNext: '<i class="bi bi-caret-right-fill text-info"></i>',
+                            sPrevious: '<i class="bi bi-caret-left-fill text-info"></i>'
+                        }
+                    }
+                });
+                $('.dataTables_filter').hide();
+            });
 
 </script>

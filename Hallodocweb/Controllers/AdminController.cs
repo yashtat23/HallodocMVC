@@ -431,7 +431,7 @@ namespace Hallodocweb.Controllers
             bool isClear = _adminService.Clearcase(reqId);
             if (isClear)
             {
-                _notyf.Success("Cleared SUccessfully");
+                _notyf.Success("Cleared Successfully");
                 return RedirectToAction("AdminDashboard");
             }
             _notyf.Error("Failed");
@@ -445,7 +445,6 @@ namespace Hallodocweb.Controllers
         {
             var model = _adminService.Agreement(requestClientid);
             model.reqType = reqType;
-            _notyf.Success("Link send Successfully");
             return PartialView("_SendAgreement", model);
         }
 
@@ -454,9 +453,9 @@ namespace Hallodocweb.Controllers
         public IActionResult SendAgreementSubmit(SendAgreement model)
         {
             var link = Url.Action("ReviewAgreement", "Home", new { ReqClientId = model.ReqClientId }, Request.Scheme);
-
+            _notyf.Success("Link send Successfully");
             _adminService.SendAgreementEmail(model, link);
-            return RedirectToAction("AdminDashboard");
+            return RedirectToAction("ProviderDashboard","Provider");
         }
 
         public IActionResult CloseCase(int reqId)
@@ -468,14 +467,33 @@ namespace Hallodocweb.Controllers
         [HttpPost]
         public IActionResult EditCloseCase(CloseCase closeCase)
         {
-            var edit = _adminService.EditCloseCase(closeCase);
-            return View("AdminDashboard", edit);
+            bool edit = _adminService.EditCloseCase(closeCase);
+            if (edit)
+            {
+                _notyf.Success("Saved");
+            }
+            else
+            {
+                _notyf.Error("Failed");
+            }
+            return RedirectToAction("AdminDashboard", edit);
         }
 
         public IActionResult ChangeCloseCase(CloseCase closeCase)
         {
-            var change = _adminService.ChangeCloseCase(closeCase);
-            return View("AdminDashboard");
+            //var change = _adminService.ChangeCloseCase(closeCase);
+            //return View("AdminDashboard");
+            bool isClosed = _adminService.ChangeCloseCase(closeCase);
+            if (isClosed)
+            {
+                _notyf.Success("Closed Successfully");
+                return RedirectToAction("AdminDashboard");
+            }
+            else
+            {
+                _notyf.Error("Failed To Close");
+                return RedirectToAction("CloseCase", new { ReqId = closeCase.ReqId });
+            }
         }
 
         public IActionResult AdminProfile()
@@ -676,32 +694,32 @@ namespace Hallodocweb.Controllers
             _adminService.StopNotification(PhysicianId);
         }
 
-        public IActionResult ContactProvider(int physicianId)
+        public IActionResult ContactProvider(int phyIdMain)
         {
-            var contact = _adminService.providerContact(physicianId);
+            var contact = _adminService.providerContact(phyIdMain);
             return PartialView("_ContactProvider", contact);
         }
 
         [HttpPost]
-        public IActionResult providerContactModalEmail(int phyIdMain, string msg,string type)
+        public IActionResult providerContactModalEmail(int phyId, string msg,string type)
         {
             var email = GetTokenEmail();
             if (type == "SMS")
             {
-                var isSmsSend = _adminService.ProviderContactSms(phyIdMain, msg, email);
+                var isSmsSend = _adminService.ProviderContactSms(phyId, msg, email);
                 //_notyf.Success("SMS Send Successfully!!");
                 return Json(new { isSend = isSmsSend });
             }
             else if (type == "email")
             {
-                var isSend = _adminService.providerContactEmail(phyIdMain, msg);
+                var isSend = _adminService.providerContactEmail(phyId, msg);
                 //_notyf.Success("Email Send Successfully!!");
                 return Json(new { isSend = isSend });
             }
             else
             {
-                var isSmsSend = _adminService.ProviderContactSms(phyIdMain, msg, email);
-                var isSend = _adminService.providerContactEmail(phyIdMain, msg);
+                var isSmsSend = _adminService.ProviderContactSms(phyId, msg, email);
+                var isSend = _adminService.providerContactEmail(phyId, msg);
                 //_notyf.Success("SMS and Email Both are Send Successfully!!");
                 return Json(new { isSend = isSend, isSmsSend = isSmsSend });
             }
@@ -997,6 +1015,7 @@ namespace Hallodocweb.Controllers
         {
             AdminEditPhysicianProfile data = new ();
             var createprovideraccount = _adminService.createProviderAccount(obj, physicianregions);
+            //_notyf.Success("Provider Account has been created");
             return Json(new { flag = createprovideraccount.flag });
         }
 
@@ -1284,15 +1303,22 @@ namespace Hallodocweb.Controllers
         public IActionResult BlockHistoryCheckBox(int blockId)
         {
             bool isActive = _adminService.IsBlockRequestActive(blockId);
-            return Json(new { isActive });
+            return Json(new { isActive = isActive });
         }
 
         [HttpGet]
         public IActionResult EmailLogs(EmailSmsRecords2 recordsModel)
         {
+            try
+            {
             EmailSmsRecords2 _data = new EmailSmsRecords2();
             _data = _adminService.EmailSmsLogs((int)recordsModel.tempid, recordsModel);
-            return PartialView("_EmailLogs", _data);
+                return PartialView("_EmailLogs", _data);
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex);
+            }
         }
 
         public IActionResult ReturnShift(int ShiftDetailId)

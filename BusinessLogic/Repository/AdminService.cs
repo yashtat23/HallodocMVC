@@ -866,6 +866,24 @@ namespace BusinessLogic.Repository
             mailMessage.To.Add(model.email);
 
             client.Send(mailMessage);
+
+                Emaillog emailLog = new Emaillog()
+                {
+                    Subjectname = mailMessage.Subject,
+                    Emailtemplate = "Send Agreement",
+                    Emailid = model.email,
+                    Roleid = 1,
+                    Adminid = 12,
+                    Physicianid = 32,
+                    Createdate = DateTime.Now,
+                    Sentdate = DateTime.Now,
+                    Isemailsent = new BitArray(1, true),
+
+                };
+
+                _db.Emaillogs.Add(emailLog);
+                _db.SaveChanges();
+
             }
             catch (Exception e)
             {
@@ -973,16 +991,16 @@ namespace BusinessLogic.Repository
         {
             try
             {
-                var requestclient = _db.Requestclients.FirstOrDefault(x => x.Requestid == closeCase.ReqId);
-                requestclient.Phonenumber = closeCase.phoneno;
-                requestclient.Email = closeCase.email;
-                _db.Requestclients.Update(requestclient);
+                var reqClient = _db.Requestclients.FirstOrDefault(x => x.Requestid == closeCase.ReqId);
+                reqClient.Phonenumber = closeCase.phoneno;
+                reqClient.Email = closeCase.email;
+                _db.Requestclients.Update(reqClient);
                 _db.SaveChanges();
-
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return false;
             }
         }
@@ -991,15 +1009,24 @@ namespace BusinessLogic.Repository
         {
             try
             {
-                Request req = _db.Requests.FirstOrDefault(x => x.Requestid == closeCase.ReqId);
-
-
-                req.Status = (int)StatusEnum.Unpaid;
-                _db.Requests.Update(req);
+                var request = _db.Requests.FirstOrDefault(x => x.Requestid == closeCase.ReqId);
+                request.Status = (int)StatusEnum.Unpaid;
+                _db.Requests.Update(request);
+                _db.Requeststatuslogs.Add(new Requeststatuslog()
+                {
+                    Requestid = closeCase.ReqId,
+                    Status = (int)StatusEnum.Unpaid,
+                    Notes = "Case closed and unpaid",
+                    Createddate = DateTime.Now,
+                });
                 _db.SaveChanges();
                 return true;
             }
-            catch { return false; }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
         }
 
         public EncounterFormModel EncounterForm(int reqId)
@@ -1169,6 +1196,7 @@ namespace BusinessLogic.Repository
             mailMessage.To.Add(email);
 
             client.Send(mailMessage);
+
         }
         public bool CreateRequest(CreateRequestModel model, string sessionEmail, string createAccountLink)
         {
@@ -1243,6 +1271,7 @@ namespace BusinessLogic.Repository
                 req.Confirmationnumber = admin.Firstname.Substring(0, 1) + DateTime.Now.ToString().Substring(0, 19);
                 req.Createddate = DateTime.Now;
                 req.Isurgentemailsent = new BitArray(1);
+                req.Calltype = 0;
                 req.Isurgentemailsent[0] = false;
                 _db.Requests.Add(req);
 
@@ -1483,58 +1512,6 @@ namespace BusinessLogic.Repository
 
             return obj;
         }
-
-        //public bool EditSavePhysician(EditPhysicianAccount editPhysicianAccount)
-        //{
-        //    try
-        //    {
-
-        //        var physician = _db.Physicians.FirstOrDefault(x => x.Physicianid == editPhysicianAccount.PhysicianId);
-        //        //var aspnetuser = _db.Aspnetusers.FirstOrDefault(x => x.Id == physician.Aspnetuserid);
-        //        //var region = _db.Regions.Where(x => x.Regionid == physician.Regionid).Select(x=>x.Name).First();
-        //        switch (editPhysicianAccount.FormId)
-        //        {
-        //            case 1:
-        //                break;
-        //            case 2:
-        //                physician.Firstname = editPhysicianAccount.FirstName;
-        //                physician.Lastname = editPhysicianAccount.LastName;
-        //                physician.Email = editPhysicianAccount.Email;
-        //                physician.Mobile = editPhysicianAccount.Phone;
-        //                physician.Medicallicense = editPhysicianAccount.MedicalLicenseNumber;
-        //                physician.Npinumber = editPhysicianAccount.NPINumber;
-        //                physician.Syncemailaddress = editPhysicianAccount.SyncEmail;
-        //                _db.Physicians.Update(physician);
-        //                _db.SaveChanges();
-        //                break;
-        //            case 3:
-        //                physician.Address1 = editPhysicianAccount.Address1;
-        //                physician.Address2 = editPhysicianAccount.Address2;
-        //                physician.City = editPhysicianAccount.City;
-        //                physician.Zip = editPhysicianAccount.Zip;
-        //                physician.Altphone = editPhysicianAccount.Phone;
-        //                _db.Physicians.Update(physician);
-        //                _db.SaveChanges();
-        //                break;
-        //            case 4:
-        //                physician.Businessname = editPhysicianAccount.BusinessName;
-        //                physician.Businesswebsite = editPhysicianAccount.BusinessWebsite;
-        //                _db.Physicians.Update(physician);
-        //                _db.SaveChanges();
-        //                break;
-        //            case 5:
-        //                break;
-        //        }
-
-        //        return true;
-        //    }
-        //    catch
-        //    {
-        //        return false;
-        //    }
-
-
-        //}
 
         public List<Physicianlocation> GetPhysicianlocations()
         {
@@ -2115,6 +2092,7 @@ namespace BusinessLogic.Repository
                     admin.Createdby = aspnetId;
                     admin.Createddate = DateTime.Now;
                     admin.Isdeleted = new BitArray(1, false);
+                    admin.Status = 1;
 
                     _db.Admins.Add(admin);
                     _db.SaveChanges();
@@ -2310,12 +2288,12 @@ namespace BusinessLogic.Repository
         {
             AdminEditPhysicianProfile model = new AdminEditPhysicianProfile();
 
-            AdminEditPhysicianProfile flag = new AdminEditPhysicianProfile();
+            //AdminEditPhysicianProfile flag = new AdminEditPhysicianProfile();
 
             var aspUser = _db.Aspnetusers.FirstOrDefault(r => r.Email == obj.Email);
 
 
-            if (aspUser == null)
+            if (aspUser == null && obj.latitude != 0)
             {
 
                 Aspnetuser _user = new Aspnetuser();
@@ -3013,7 +2991,7 @@ namespace BusinessLogic.Repository
                     {
                         requestList = requestList.Where(r => r.statusId == recordsModel.searchRecordOne).Select(r => r).ToList();
                     }
-
+                    
                     if (recordsModel.searchRecordTwo != null)
                     {
                         requestList = requestList.Where(r => r.patientname.Trim().ToLower().Contains(recordsModel.searchRecordTwo.Trim().ToLower())).Select(r => r).ToList();
@@ -3775,7 +3753,7 @@ namespace BusinessLogic.Repository
                         createddate = item.Createdate,
                         sentdate = item.Sentdate,
                         sent = item.Issmssent[0] ? "Yes" : "No",
-                        recipient = _db.Requestclients.Where(i => i.Requestid == item.Requestid).Select(i => i.Firstname).FirstOrDefault(),
+                        recipient = "Patient",
                         rolename = _db.Aspnetroles.Where(i => i.Id == item.Roleid).Select(i => i.Name).First(),
                         senttries = item.Senttries,
                         confirmationNumber = item.Confirmationnumber,

@@ -15,7 +15,7 @@
                     Link
                 </span>
             </button>
-            <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="location.href='@Url.Action("CreateReq", "Admin")'">
+            <button class="action-btn my-3 d-flex gap-2 dark-mode1" onclick="location.href='@Url.Action("PCreateReq", "Provider")'">
                 <i class="bi bi-journal-text"></i> <span class="d-none d-md-block">Create Requests</span>
             </button>
 
@@ -45,7 +45,7 @@
         </div>
         <div class="col-12 col-md-4 d-flex justify-content-around align-items-center">
 
-            <div class="d-none d-md-block">
+            <div class="d-none d-md-block border">
                 <div onclick="allElements()" style="cursor:pointer" class="border-2">All</div>
             </div>
             <div class="d-flex align-items-center" style="cursor:pointer" onclick="patientElements()"><div class="patient_circle"></div><span>Patient</span></div>

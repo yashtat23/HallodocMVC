@@ -89,6 +89,10 @@
       "PackagePath": "staticwebassets\\PhysicianImages\\31\\ProfilePhoto.jpg"
     },
     {
+      "Id": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\PhysicianImages\\32\\ProfilePhoto.jpg",
+      "PackagePath": "staticwebassets\\PhysicianImages\\32\\ProfilePhoto.jpg"
+    },
+    {
       "Id": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\Rotativa\\wkhtmltoimage.exe",
       "PackagePath": "staticwebassets\\Rotativa\\wkhtmltoimage.exe"
     },
@@ -237,6 +241,10 @@
       "PackagePath": "staticwebassets\\UploadedFiles\\HalloDoc - DB.xlsx"
     },
     {
+      "Id": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\UploadedFiles\\Hospital (1).sql",
+      "PackagePath": "staticwebassets\\UploadedFiles\\Hospital (1).sql"
+    },
+    {
       "Id": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\UploadedFiles\\LesfImage.png",
       "PackagePath": "staticwebassets\\UploadedFiles\\LesfImage.png"
     },
@@ -283,6 +291,10 @@
     {
       "Id": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\UploadedFiles\\ass-4-1-1.png",
       "PackagePath": "staticwebassets\\UploadedFiles\\ass-4-1-1.png"
+    },
+    {
+      "Id": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\UploadedFiles\\ass-4-2 (1).png",
+      "PackagePath": "staticwebassets\\UploadedFiles\\ass-4-2 (1).png"
     },
     {
       "Id": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\UploadedFiles\\ass-4-2.png",

@@ -376,6 +376,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmlkZXJcX1BDb25jbHVkZVJlcXVlc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Final Project Main/Hallodocweb/Views/Provider/_PCreateReq.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmlkZXJcX1BDcmVhdGVSZXEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Final Project Main/Hallodocweb/Views/Provider/_PDownloadModal.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmlkZXJcX1BEb3dubG9hZE1vZGFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

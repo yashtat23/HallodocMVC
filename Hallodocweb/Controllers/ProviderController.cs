@@ -437,6 +437,15 @@ namespace HalloDoc.mvc.Controllers
             return View(order);
         }
 
+        [HttpPost]
+        public IActionResult POrderdetail(Order order)
+        {
+            _adminService.SendOrderDetails(order);
+            _notyf.Success("Successfull!!");
+            return RedirectToAction("ProviderDashboard", "Provider");
+        }
+
+
         [CustomAuthorize("Physician")]
         public IActionResult PEncounterForm(int reqId)
         {
@@ -547,7 +556,37 @@ namespace HalloDoc.mvc.Controllers
         //    return View(data);
         //}
 
+        [HttpGet]
+        public IActionResult PCreateReq()
+        {
+            return View("_PCreateReq");
+        }
 
+        [HttpPost]
+        public IActionResult PCreateReq(CreateRequestModel model)
+        {
+            var request = HttpContext.Request;
+            var token = request.Cookies["jwt"];
+            if (token == null || !_jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
+            {
+                _notyf.Error("Token Expired,Login Again");
+                return View(model);
+            }
+            string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+            string createAccountLink = baseUrl + Url.Action("CreateAccount", "Patient");
+            var email = GetTokenEmail();
+            var isSaved = _providerService.PCreateRequest(model, email, createAccountLink);
+            if (isSaved)
+            {
+                _notyf.Success("Request Created");
+                return RedirectToAction("ProviderDashboard");
+            }
+            else
+            {
+                _notyf.Error("Failed to Create");
+                return View(model);
+            }
+        }
 
         public string GetTokenEmail()
         {

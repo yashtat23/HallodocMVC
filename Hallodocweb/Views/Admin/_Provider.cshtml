@@ -160,9 +160,9 @@
         $.ajax({
             url: "/Admin/ContactProvider",
             type: 'GET',
-            data: { PhysicianId: phyId },
+            data: { phyIdMain: phyId },
             success: function (result) {
-                console.log(result);
+              
                 $("#providerContactModal").html(result);
                 $('#ContactProviderModal').modal('show');
             },

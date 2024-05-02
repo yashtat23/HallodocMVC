@@ -249,7 +249,7 @@ namespace DataAccess.CustomModel
 
     public class CloseCase
     {
-        public int? ReqId { get; set; }
+        public int ReqId { get; set; }
         public List<Requestwisefile> file { get; set; }
 
         public string Firstname { get; set; }

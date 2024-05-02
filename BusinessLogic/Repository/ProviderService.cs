@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Collections;
 using System.Net.Mail;
 using System.Net;
+using DataAccess.Enums;
 
 namespace BusinessLogic.Repository
 {
@@ -654,6 +655,147 @@ namespace BusinessLogic.Repository
                 }
             }
         }
+
+
+        public void SendRegistrationEmailCreateRequest(string email, string registrationLink)
+        {
+            string senderEmail = "tatva.dotnet.yashvariya@outlook.com";
+            string senderPassword = "Itzvariya@23";
+            SmtpClient client = new SmtpClient("smtp.office365.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential(senderEmail, senderPassword),
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false
+            };
+
+            MailMessage mailMessage = new MailMessage
+            {
+                From = new MailAddress(senderEmail, "HalloDoc"),
+                Subject = "Create Account",
+                IsBodyHtml = true,
+                Body = $"Click the following link to Create Account: <a href='{registrationLink}'>{registrationLink}</a>"
+            };
+
+
+
+            mailMessage.To.Add(email);
+
+            client.Send(mailMessage);
+        }
+
+        public bool PCreateRequest(CreateRequestModel model, string sessionEmail, string createAccountLink)
+        {
+            CreateRequestModel _create = new CreateRequestModel();
+
+            var stateMain = _db.Regions.Where(r => r.Name.ToLower() == model.state.ToLower().Trim()).FirstOrDefault();
+
+            if (stateMain == null)
+            {
+                return false;
+            }
+            else
+            {
+                Request req = new();
+                Requestclient reqClient = new();
+                User user = new User();
+                Aspnetuser asp = new Aspnetuser();
+                Requestnote note = new Requestnote();
+
+                var admin = _db.Physicians.Where(r => r.Email == sessionEmail).Select(r => r).First();
+
+                var existUser = _db.Aspnetusers.FirstOrDefault(r => r.Email == model.email);
+
+                if (existUser == null)
+                {
+                    asp.Id = Guid.NewGuid().ToString();
+                    asp.Username = model.firstname + "_" + model.lastname;
+                    asp.Email = model.email;
+                    asp.Phonenumber = model.phone;
+                    asp.Createddate = DateTime.Now;
+                    _db.Aspnetusers.Add(asp);
+                    _db.SaveChanges();
+
+                    user.Aspnetuserid = asp.Id;
+                    user.Firstname = model.firstname;
+                    user.Lastname = model.lastname;
+                    user.Email = model.email;
+                    user.Mobile = model.phone;
+                    user.City = model.city;
+                    user.State = model.state;
+                    user.Street = model.street;
+                    user.Zipcode = model.zipcode;
+                    user.Strmonth = model.dateofbirth.Substring(5, 2);
+                    user.Intdate = Convert.ToInt16(model.dateofbirth.Substring(8, 2));
+                    user.Intyear = Convert.ToInt16(model.dateofbirth.Substring(0, 4));
+                    user.Createdby = admin.Physicianid.ToString();
+                    user.Createddate = DateTime.Now;
+                    user.Regionid = stateMain.Regionid;
+                    _db.Users.Add(user);
+                    _db.SaveChanges();
+
+
+
+
+                    try
+                    {
+                        SendRegistrationEmailCreateRequest(model.email, createAccountLink);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+
+                req.Requesttypeid = (int)RequestTypeEnum.Patient;
+                req.Userid = _db.Users.Where(x=>x.Email==model.email).Select(x=>x.Userid).FirstOrDefault();
+                req.Firstname = admin.Firstname;
+                req.Lastname = admin.Lastname;
+                req.Phonenumber = admin.Mobile;
+                req.Email = admin.Email;
+                req.Physicianid = _db.Physicians.Where(x=>x.Email == sessionEmail).Select(x=>x.Physicianid).FirstOrDefault();
+                req.Status = (int)StatusEnum.Accepted;
+                req.Confirmationnumber = admin.Firstname.Substring(0, 1) + DateTime.Now.ToString().Substring(0, 19);
+                req.Createddate = DateTime.Now;
+                req.Isurgentemailsent = new BitArray(1);
+                req.Isurgentemailsent[0] = false;
+                req.Calltype = 0;   
+                _db.Requests.Add(req);
+                _db.SaveChanges();
+
+                reqClient.Requestid = req.Requestid;
+                reqClient.Firstname = model.firstname;
+                reqClient.Lastname = model.lastname;
+                reqClient.Phonenumber = model.phone;
+                reqClient.Strmonth = model.dateofbirth.Substring(5, 2);
+                reqClient.Intdate = Convert.ToInt16(model.dateofbirth.Substring(8, 2));
+                reqClient.Intyear = Convert.ToInt16(model.dateofbirth.Substring(0, 4));
+                reqClient.Street = model.street;
+                reqClient.City = model.city;
+                reqClient.State = model.state;
+                reqClient.Zipcode = model.zipcode;
+                reqClient.Regionid = stateMain.Regionid;
+                reqClient.Email = model.email;
+
+                _db.Requestclients.Add(reqClient);
+                _db.SaveChanges();
+
+                note.Requestid = req.Requestid;
+                note.Adminnotes = model.admin_notes;
+                note.Createdby = _db.Aspnetusers.Where(r => r.Email == sessionEmail).Select(r => r.Id).First();
+                note.Createddate = DateTime.Now;
+                _db.Requestnotes.Add(note);
+                _db.SaveChanges();
+
+                return true;
+            }
+
+
+
+
+        }
+
 
     }
 }

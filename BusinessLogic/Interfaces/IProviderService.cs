@@ -31,5 +31,7 @@ namespace BusinessLogic.Interfaces
 
         void SendRegistrationEmailCreateRequest(string email, string note, string sessionEmail);
         void RequestAdmin(RequestAdmin model, string sessionEmail);
+
+        bool PCreateRequest(CreateRequestModel model, string sessionEmail, string createAccountLink);
     }
 }
