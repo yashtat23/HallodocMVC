@@ -15,7 +15,6 @@ using Rotativa.AspNetCore;
 using System.Text;
 using static BusinessLogic.Interfaces.IAuth;
 
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>();
 // Add services to the container.
@@ -36,7 +35,7 @@ builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IProviderService, ProviderService>();
-
+builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 
 //Jwt configuration starts here
 var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();

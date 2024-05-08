@@ -788,3 +788,13 @@ D:\Final Project Main\Hallodocweb\obj\Debug\net7.0\Hallodocweb.pdb
 D:\Final Project Main\Hallodocweb\obj\Debug\net7.0\Hallodocweb.genruntimeconfig.cache
 D:\Final Project Main\Hallodocweb\obj\Debug\net7.0\ref\Hallodocweb.dll
 D:\Final Project Main\Hallodocweb\bin\Debug\net7.0\Twilio.dll
+D:\Final Project Main\Hallodocweb\bin\Debug\net7.0\EntityFramework.SqlServer.dll
+D:\Final Project Main\Hallodocweb\bin\Debug\net7.0\EntityFramework.dll
+D:\Final Project Main\Hallodocweb\bin\Debug\net7.0\LinqKit.dll
+D:\Final Project Main\Hallodocweb\bin\Debug\net7.0\LinqKit.Core.dll
+D:\Final Project Main\Hallodocweb\bin\Debug\net7.0\System.Data.SqlClient.dll
+D:\Final Project Main\Hallodocweb\bin\Debug\net7.0\runtimes\win-arm64\native\sni.dll
+D:\Final Project Main\Hallodocweb\bin\Debug\net7.0\runtimes\win-x64\native\sni.dll
+D:\Final Project Main\Hallodocweb\bin\Debug\net7.0\runtimes\win-x86\native\sni.dll
+D:\Final Project Main\Hallodocweb\bin\Debug\net7.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\Final Project Main\Hallodocweb\bin\Debug\net7.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll

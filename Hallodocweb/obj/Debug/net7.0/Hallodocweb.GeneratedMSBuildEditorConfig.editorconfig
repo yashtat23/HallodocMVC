@@ -348,6 +348,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmlkZXJcUmVwb3J0UGRmLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Final Project Main/Hallodocweb/Views/Provider/_BiWeeklyTimesheet.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmlkZXJcX0JpV2Vla2x5VGltZXNoZWV0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Final Project Main/Hallodocweb/Views/Provider/_InvoicingPartialView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmlkZXJcX0ludm9pY2luZ1BhcnRpYWxWaWV3LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Final Project Main/Hallodocweb/Views/Provider/_MonthLySchedule.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmlkZXJcX01vbnRoTHlTY2hlZHVsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -384,6 +392,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmlkZXJcX1BEb3dubG9hZE1vZGFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Final Project Main/Hallodocweb/Views/Provider/_PInvoicing.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmlkZXJcX1BJbnZvaWNpbmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Final Project Main/Hallodocweb/Views/Provider/_PMyProfile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmlkZXJcX1BNeVByb2ZpbGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -418,6 +430,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Final Project Main/Hallodocweb/Views/Provider/_PViewShift.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmlkZXJcX1BWaWV3U2hpZnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Final Project Main/Hallodocweb/Views/Provider/_TimeSheetReiembursementPartialView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmlkZXJcX1RpbWVTaGVldFJlaWVtYnVyc2VtZW50UGFydGlhbFZpZXcuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Final Project Main/Hallodocweb/Views/Shared/Error.cshtml]

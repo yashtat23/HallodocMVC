@@ -46,6 +46,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Orderdetail> Orderdetails { get; set; }
 
+    public virtual DbSet<PayRate> PayRates { get; set; }
+
     public virtual DbSet<Physician> Physicians { get; set; }
 
     public virtual DbSet<Physicianlocation> Physicianlocations { get; set; }
@@ -88,9 +90,13 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<WeeklyTimeSheet> WeeklyTimeSheets { get; set; }
+
+    public virtual DbSet<WeeklyTimeSheetDetail> WeeklyTimeSheetDetails { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("User ID = postgres;Password=2376;Server=localhost;Port=5432;Database=Hallodoc;Integrated Security=true;Pooling=true;");
+        => optionsBuilder.UseNpgsql("User ID = postgres;Password=2376;Server=localhost;Database=Hallodoc;Integrated Security=true;Pooling=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -732,6 +738,20 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.Vendor).WithMany(p => p.Orderdetails)
                 .HasForeignKey(d => d.Vendorid)
                 .HasConstraintName("fk_orderdetails");
+        });
+
+        modelBuilder.Entity<PayRate>(entity =>
+        {
+            entity.HasKey(e => e.PayRateId).HasName("PayRate_pkey");
+
+            entity.ToTable("PayRate");
+
+            entity.Property(e => e.CreatedDate).HasColumnType("timestamp without time zone");
+
+            entity.HasOne(d => d.Physician).WithMany(p => p.PayRates)
+                .HasForeignKey(d => d.PhysicianId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("phyrate_physicianid_fk");
         });
 
         modelBuilder.Entity<Physician>(entity =>
@@ -1640,6 +1660,43 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.Region).WithMany(p => p.Users)
                 .HasForeignKey(d => d.Regionid)
                 .HasConstraintName("fk_users2");
+        });
+
+        modelBuilder.Entity<WeeklyTimeSheet>(entity =>
+        {
+            entity.HasKey(e => e.TimeSheetId).HasName("WeeklyTimeSheet_pkey");
+
+            entity.ToTable("WeeklyTimeSheet");
+
+            entity.Property(e => e.AdminNote).HasColumnType("character varying");
+            entity.Property(e => e.CreatedDate).HasColumnType("timestamp without time zone");
+
+            entity.HasOne(d => d.Admin).WithMany(p => p.WeeklyTimeSheets)
+                .HasForeignKey(d => d.AdminId)
+                .HasConstraintName("WeeklyTimeSheet_AdminId_fkey");
+
+            entity.HasOne(d => d.PayRate).WithMany(p => p.WeeklyTimeSheets)
+                .HasForeignKey(d => d.PayRateId)
+                .HasConstraintName("WeeklyTimeSheet_PayRateId_fkey");
+
+            entity.HasOne(d => d.Provider).WithMany(p => p.WeeklyTimeSheets)
+                .HasForeignKey(d => d.ProviderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("WeeklyTimeSheet_ProviderId_fkey");
+        });
+
+        modelBuilder.Entity<WeeklyTimeSheetDetail>(entity =>
+        {
+            entity.HasKey(e => e.TimeSheetDetailId).HasName("WeeklyTimeSheetDetail_pkey");
+
+            entity.ToTable("WeeklyTimeSheetDetail");
+
+            entity.Property(e => e.Bill).HasMaxLength(100);
+            entity.Property(e => e.Item).HasMaxLength(100);
+
+            entity.HasOne(d => d.TimeSheet).WithMany(p => p.WeeklyTimeSheetDetails)
+                .HasForeignKey(d => d.TimeSheetId)
+                .HasConstraintName("WeeklyTimeSheetDetail_TimeSheetId_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

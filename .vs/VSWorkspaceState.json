@@ -1,6 +1,8 @@
 {
   "ExpandedNodes": [
     "",
+    "\\BusinessLogic",
+    "\\BusinessLogic\\Repository",
     "\\Hallodocweb",
     "\\Hallodocweb\\Controllers",
     "\\Hallodocweb\\Views",
@@ -8,6 +10,6 @@
     "\\Hallodocweb\\Views\\Provider",
     "\\Hallodocweb\\Views\\Shared"
   ],
-  "SelectedNode": "\\Hallodocweb\\Views\\Admin\\_ContactProvider.cshtml",
+  "SelectedNode": "\\Hallodocweb\\Views\\Shared\\_Layout.cshtml",
   "PreviewInSolutionExplorer": false
 }

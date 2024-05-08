@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "nhNJKmZ9nONV6YIKypPFYLs1W3MjggHzvmE0C/Yhl88=",
+  "Hash": "l2FoaGJZzKBTA18M+Nvb4g4MpnbO2eVAExUgawCt4lk=",
   "Source": "Hallodocweb",
   "BasePath": "_content/Hallodocweb",
   "Mode": "Default",
@@ -1870,6 +1870,40 @@
       "OriginalItemSpec": "wwwroot\\PhysicianImages\\32\\ProfilePhoto.jpg"
     },
     {
+      "Identity": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\PhysicianImages\\34\\Independent_Contractor.pdf",
+      "SourceId": "Hallodocweb",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\",
+      "BasePath": "_content/Hallodocweb",
+      "RelativePath": "PhysicianImages/34/Independent_Contractor.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\PhysicianImages\\34\\Independent_Contractor.pdf"
+    },
+    {
+      "Identity": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\PhysicianImages\\34\\ProfilePhoto.jpg",
+      "SourceId": "Hallodocweb",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\",
+      "BasePath": "_content/Hallodocweb",
+      "RelativePath": "PhysicianImages/34/ProfilePhoto.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\PhysicianImages\\34\\ProfilePhoto.jpg"
+    },
+    {
       "Identity": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\provideruploads\\Updated-Training-Plan-20March24_fae562.pdf",
       "SourceId": "Hallodocweb",
       "SourceType": "Discovered",
@@ -3126,23 +3160,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\UploadedFiles\\Updated-Training-Plan-20March24.pdf"
-    },
-    {
-      "Identity": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\UploadedFiles\\\uD83D\uDC51\uD83E\uDD81\uD83D\uDC9B.jpg",
-      "SourceId": "Hallodocweb",
-      "SourceType": "Discovered",
-      "ContentRoot": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\",
-      "BasePath": "_content/Hallodocweb",
-      "RelativePath": "UploadedFiles/\uD83D\uDC51\uD83E\uDD81\uD83D\uDC9B.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\UploadedFiles\\\uD83D\uDC51\uD83E\uDD81\uD83D\uDC9B.jpg"
     }
   ]
 }

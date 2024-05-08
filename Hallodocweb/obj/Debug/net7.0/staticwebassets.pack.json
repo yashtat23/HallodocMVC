@@ -93,6 +93,14 @@
       "PackagePath": "staticwebassets\\PhysicianImages\\32\\ProfilePhoto.jpg"
     },
     {
+      "Id": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\PhysicianImages\\34\\Independent_Contractor.pdf",
+      "PackagePath": "staticwebassets\\PhysicianImages\\34\\Independent_Contractor.pdf"
+    },
+    {
+      "Id": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\PhysicianImages\\34\\ProfilePhoto.jpg",
+      "PackagePath": "staticwebassets\\PhysicianImages\\34\\ProfilePhoto.jpg"
+    },
+    {
       "Id": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\Rotativa\\wkhtmltoimage.exe",
       "PackagePath": "staticwebassets\\Rotativa\\wkhtmltoimage.exe"
     },
@@ -383,10 +391,6 @@
     {
       "Id": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\UploadedFiles\\pexels-vlad-alexandru-popa-1402787.jpg",
       "PackagePath": "staticwebassets\\UploadedFiles\\pexels-vlad-alexandru-popa-1402787.jpg"
-    },
-    {
-      "Id": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\UploadedFiles\\\uD83D\uDC51\uD83E\uDD81\uD83D\uDC9B.jpg",
-      "PackagePath": "staticwebassets\\UploadedFiles\\\uD83D\uDC51\uD83E\uDD81\uD83D\uDC9B.jpg"
     },
     {
       "Id": "D:\\Final Project Main\\Hallodocweb\\wwwroot\\css\\AdminDashboard.css",
