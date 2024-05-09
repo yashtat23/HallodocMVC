@@ -128,10 +128,15 @@
                                             aria-controls="provider-tab-pane" onclick="ShowScheduling()" aria-selected="false">
                                         Scheduling
                                     </button>
-                                    @* <a class="dropdown-item" href="#">Scheduling</a> *@
                                 </li>
-@*                                 <li><a class="dropdown-item" href="#">Invoicing</a></li>
- *@                            </ul>
+                                <li>
+                                    <button class="nav-link mx-3" id="provider-tab" data-bs-toggle="tab"
+                                            data-bs-target="#provider-tab-pane" type="button" role="tab"
+                                            aria-controls="provider-tab-pane" aria-selected="false" onclick="Invoicing()">
+                                        Invoicing
+                                    </button>
+                                </li>
+                          </ul>
                         </div>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -791,6 +796,23 @@
                     console.error(error);
                 }
             })
+        }
+
+        function Invoicing() {
+            $.ajax({
+                url: '/Admin/Invoicing',
+                type: 'GET',
+                success: function (response) {
+                    $("#provider-tab-pane").html(response);
+                },
+                error: function (xhr, status, error) {
+                    if (xhr.status === 401) {
+
+                        window.location.reload();
+                    }
+                    console.error(error);
+                }
+            });
         }
 
     </script>

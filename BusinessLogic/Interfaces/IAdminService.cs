@@ -1,4 +1,5 @@
 ﻿using DataAccess.CustomModel;
+using DataAccess.CustomModels;
 using DataAccess.DataModels;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -207,5 +208,10 @@ namespace BusinessLogic.Interfaces
 
         Order FetchProfession();
 
+        List<PhysicianViewModel> GetPhysiciansForInvoicing();
+
+        string CheckInvoicingApprove(string selectedValue, int PhysicianId);
+
+        InvoicingViewModel GetApprovedViewData(string selectedValue, int PhysicianId);
     }
 }

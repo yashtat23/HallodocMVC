@@ -34,15 +34,16 @@ namespace Hallodocweb.Controllers
         private readonly INotyfService _notyf;
         private readonly IPatientService _petientService;
         private readonly IJwtService _jwtService;
+        private readonly IProviderService _providerService;
 
-        public AdminController(ILogger<AdminController> logger, IAdminService adminService, INotyfService notyf, IPatientService petientService, IJwtService jwtService)
+        public AdminController(ILogger<AdminController> logger, IAdminService adminService, INotyfService notyf, IPatientService petientService, IJwtService jwtService,IProviderService providerService)
         {
             _logger = logger;
             _adminService = adminService;
             _notyf = notyf;
             _petientService = petientService;
             _jwtService = jwtService;
-
+            _providerService = providerService;
         }
 
         public static string GenerateSHA256(string input)
@@ -1448,6 +1449,27 @@ namespace Hallodocweb.Controllers
                 data.roles = _adminService.physicainRole();
                 return PartialView("_CreateProviderAccount", data);
             }
+        }
+
+        public IActionResult Invoicing()
+        {
+            ViewBag.username = HttpContext.Session.GetString("Admin");
+            InvoicingViewModel model = new InvoicingViewModel();
+            model.dates = _providerService.GetDates();
+            model.PhysiciansList = _adminService.GetPhysiciansForInvoicing();
+            return PartialView("_Invoicing", model);
+        }
+
+        public IActionResult CheckInvoicingApprove(string selectedValue, int PhysicianId)
+        {
+            string result = _adminService.CheckInvoicingApprove(selectedValue, PhysicianId);
+            return Json(result);
+        }
+
+        public IActionResult GetApprovedViewData(string selectedValue, int PhysicianId)
+        {
+            InvoicingViewModel model = _adminService.GetApprovedViewData(selectedValue, PhysicianId);
+            return PartialView("_ApproveInvoicing", model);
         }
 
     }
