@@ -4191,5 +4191,49 @@ namespace BusinessLogic.Repository
 
         }
 
+        public void ApproveTimeSheet(InvoicingViewModel model, int? AdminID)
+        {
+            WeeklyTimeSheet weeklyTimeSheet = _weeklyTimeSheetRepo.GetFirstOrDefault(u => u.ProviderId == model.PhysicianId && u.StartDate == model.startDate && u.EndDate == model.endDate);
+            if (weeklyTimeSheet != null)
+            {
+                weeklyTimeSheet.AdminId = AdminID;
+                weeklyTimeSheet.Status = 2;
+                weeklyTimeSheet.Bonusamount = model.BonusAmount;
+                weeklyTimeSheet.AdminNote = model.AdminNotes;
+                _weeklyTimeSheetRepo.Update(weeklyTimeSheet);
+            }
+        }
+
+        public GetPayRate GetPayRate(int physicianId, int callid)
+        {
+            var payrate = _db.PayRates.FirstOrDefault(i => i.PhysicianId == physicianId);
+            var Aspid = _db.Physicians.Where(a => a.Physicianid == physicianId).Select(a => a.Aspnetuserid).FirstOrDefault();
+            if (payrate == null)
+            {
+                var GetPayRate = new GetPayRate()
+                {
+                    PhysicianId = physicianId,
+                    callid = callid,
+                };
+                return GetPayRate;
+            }
+            else
+            {
+                var GetPayRate = new GetPayRate()
+                {
+                    PhysicianId = physicianId,
+                    NightShift_Weekend = payrate.NightShiftWeekend != 0 ? payrate.NightShiftWeekend : default,
+                    Shift = payrate.Shift != 0 ? payrate.Shift : default,
+                    HouseCalls_Nights_Weekend = payrate.HouseCallNightWeekend != 0 ? payrate.HouseCallNightWeekend : default,
+                    PhoneConsult = payrate.PhoneConsult != 0 ? payrate.PhoneConsult : default,
+                    PhoneConsults_Nights_Weekend = payrate.PhoneConsultNightWeekend != 0 ? payrate.PhoneConsultNightWeekend : default,
+                    BatchTesting = payrate.BatchTesting != 0 ? payrate.BatchTesting : default,
+                    HouseCalls = payrate.HouseCall != 0 ? payrate.HouseCall : default,
+                    callid = callid,
+                };
+                return GetPayRate;
+            }
+        }
+
     }
 }

@@ -1669,6 +1669,7 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("WeeklyTimeSheet");
 
             entity.Property(e => e.AdminNote).HasColumnType("character varying");
+            entity.Property(e => e.Bonusamount).HasColumnName("bonusamount");
             entity.Property(e => e.CreatedDate).HasColumnType("timestamp without time zone");
 
             entity.HasOne(d => d.Admin).WithMany(p => p.WeeklyTimeSheets)

@@ -1303,4 +1303,20 @@ namespace DataAccess.CustomModel
 
     }
 
+    public class GetPayRate
+    {
+        public int PhysicianId { get; set; }
+        public int? NightShift_Weekend { get; set; }
+        public int? Shift { get; set; }
+        public int? HouseCalls_Nights_Weekend { get; set; }
+        public int? PhoneConsult { get; set; }
+        public int? PhoneConsults_Nights_Weekend { get; set; }
+        public int? BatchTesting { get; set; }
+        public int? HouseCalls { get; set; }
+        public string? AspId { get; set; }
+        public int callid { get; set; }
+        public DateTime? created_date { get; set; }
+
+    }
+
 }

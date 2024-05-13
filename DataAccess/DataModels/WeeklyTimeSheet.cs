@@ -25,6 +25,8 @@ public partial class WeeklyTimeSheet
 
     public string? AdminNote { get; set; }
 
+    public int? Bonusamount { get; set; }
+
     public virtual Admin? Admin { get; set; }
 
     public virtual PayRate? PayRate { get; set; }
